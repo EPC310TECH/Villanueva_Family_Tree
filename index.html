@@ -150,7 +150,7 @@
 
     /* ── FINDINGS ───────────────────── */
     .findings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 44px; }
-    @media(max-width:720px){ .findings-grid{grid-template-columns:1fr;} }
+    @media(max-width:720px){ .findings-grid{grid-template-columns:1fr;} .conq-grid{grid-template-columns:1fr !important;} }
     .finding-card {
       background: var(--card); border: 1px solid var(--border); border-radius: 12px;
       padding: 26px; position: relative; overflow: hidden;
@@ -494,8 +494,8 @@
         <span class="finding-n">× 4,758</span>
         <span class="finding-label">Highest pedigree collapse</span>
         <p class="finding-body">
-          <strong>Fernán González, Conde de Castilla</strong> (b. 910) appears across <em>4,758 separate lineage paths</em> in this tree — meaning he is a mathematical common ancestor converging through thousands of distinct family branches simultaneously.<br><br>
-          His consort <strong>Sancha Sánchez de Navarra</strong> shares the same figure. Together they represent the single most significant bottleneck in the entire dataset — every branch of this family traces back through them.
+          <strong>Fernán González, Count of Castile</strong> (b. 910) appears across <em>4,758 separate lineage paths</em> in this tree — meaning he is a mathematical common ancestor converging through thousands of distinct family branches simultaneously.<br><br>
+          His consort <strong>Sancha Sánchez de Navarra, Queen Consort of León</strong> shares the same figure. Together they represent the single most significant bottleneck in the entire dataset — every branch of this family traces back through them.
         </p>
       </div>
 
@@ -555,14 +555,14 @@
       <div class="finding-card wide reveal" style="--accent:#18a870">
         <span class="finding-label">Top ancestors by pedigree collapse — how many lines converge on each person</span>
         <div class="collapse-list">
-          <div class="collapse-row"><span class="collapse-name">Fernán González, conde de Castilla (b. 910, gen 7)</span><span class="collapse-badge">× 4,758</span></div>
-          <div class="collapse-row"><span class="collapse-name">Sancha Sánchez de Navarra, reina consorte de León (b. 900, gen 7)</span><span class="collapse-badge">× 4,758</span></div>
-          <div class="collapse-row"><span class="collapse-name">Sancho Garcés, 1er. Rey de Pamplona (b. 865, gen 8)</span><span class="collapse-badge">× 4,018</span></div>
-          <div class="collapse-row"><span class="collapse-name">Toda Aznárez de Larraún, Reina de Navarra (b. 876, gen 8)</span><span class="collapse-badge">× 3,893</span></div>
-          <div class="collapse-row"><span class="collapse-name">Gonzalo Fernández de Lara, conde de Burgos (b. 863, gen 8)</span><span class="collapse-badge">× 3,040</span></div>
-          <div class="collapse-row"><span class="collapse-name">Diego Muñoz, 1er. Conde de Saldaña (b. 900, gen 6)</span><span class="collapse-badge">× 2,704</span></div>
+          <div class="collapse-row"><span class="collapse-name">Fernán González, Count of Castile (b. 910, gen 7)</span><span class="collapse-badge">× 4,758</span></div>
+          <div class="collapse-row"><span class="collapse-name">Sancha Sánchez de Navarra, Queen Consort of León (b. 900, gen 7)</span><span class="collapse-badge">× 4,758</span></div>
+          <div class="collapse-row"><span class="collapse-name">Sancho Garcés, 1st King of Pamplona (b. 865, gen 8)</span><span class="collapse-badge">× 4,018</span></div>
+          <div class="collapse-row"><span class="collapse-name">Toda Aznárez de Larraún, Queen of Navarre (b. 876, gen 8)</span><span class="collapse-badge">× 3,893</span></div>
+          <div class="collapse-row"><span class="collapse-name">Gonzalo Fernández de Lara, Count of Burgos (b. 863, gen 8)</span><span class="collapse-badge">× 3,040</span></div>
+          <div class="collapse-row"><span class="collapse-name">Diego Muñoz, 1st Count of Saldaña (b. 900, gen 6)</span><span class="collapse-badge">× 2,704</span></div>
           <div class="collapse-row"><span class="collapse-name">García Jiménez de Pamplona (b. 835, gen 9)</span><span class="collapse-badge">× 2,345</span></div>
-          <div class="collapse-row"><span class="collapse-name">Hermenegildo Guterres, conde de Coimbra y Portugal (b. 842, gen 8)</span><span class="collapse-badge">× 1,994</span></div>
+          <div class="collapse-row"><span class="collapse-name">Hermenegildo Guterres, Count of Coimbra and Portugal (b. 842, gen 8)</span><span class="collapse-badge">× 1,994</span></div>
         </div>
         <p class="finding-body" style="margin-top:16px">
           Pedigree collapse is a known mathematical phenomenon in genealogy: the further back you go, the more your ancestors must "share" people, since the number of slots (2, 4, 8, 16…) grows faster than the population of the time. In this tree it's dramatic — a handful of 9th–10th century Navarrese and Castilian counts appear in the ancestry of virtually every later Iberian royal house.
@@ -577,6 +577,42 @@
           The tree documents <em>40 ancestors</em> placed in Mexico — the colonial-era bridge between the Iberian lineages and the present-day Villanueva / Jasso family.<br><br>
           Among the most recent documented ancestors: <strong>Maria Soledad Bañuelos de la Torre</strong> (b. 1788) and <strong>Blasa Bartola Cipriana de la Torre y de Aro</strong> (b. 1746) — families of Spanish colonial descent settled in central Mexico.
         </p>
+      </div>
+
+      <!-- Finding: Conquistadors -->
+      <div class="finding-card wide reveal" style="--accent:#2d78d8">
+        <span class="finding-n" style="color:#2d78d8">4</span>
+        <span class="finding-label">Soldiers of the Spanish conquest</span>
+        <p class="finding-body" style="margin-bottom:18px">
+          Among your documented ancestors are soldiers from the Spanish conquest era — men who crossed the Atlantic and took part in the military campaigns that ended the Aztec Empire and opened the Mexican frontier.
+        </p>
+        <div class="conq-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+          <div style="border-left:2px solid #2d78d8;padding-left:12px">
+            <div style="font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:#2d78d8;margin-bottom:4px">Confirmed · Cortés captain</div>
+            <div style="font-size:.88rem;color:#e8dfcc;font-weight:600;margin-bottom:5px">Conquistador y Capitán Luis Marín <span style="color:var(--muted);font-weight:400">b. 1490 · d. 1547</span></div>
+            <p class="finding-body">One of Hernán Cortés's most trusted officers during the 1519–1521 conquest of the Aztec Empire. After Tenochtitlán fell, Cortés personally sent him to conquer Chiapas in 1524. His daughter <strong>Marina Mendoza de Marín</strong> carries his line into the family tree.</p>
+          </div>
+
+          <div style="border-left:2px solid rgba(45,120,216,.5);padding-left:12px">
+            <div style="font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(45,120,216,.7);margin-bottom:4px">Likely · same generation</div>
+            <div style="font-size:.88rem;color:#e8dfcc;font-weight:600;margin-bottom:5px">Pedro de Bobadilla <span style="color:var(--muted);font-weight:400">d. ~1550</span></div>
+            <p class="finding-body">Titled <em>"Conquistador de Nueva España"</em> — the formal designation given to veterans of the Cortés campaign. His death date (~1550) places him squarely in the conquest generation. Birth year is not recorded in the dataset.</p>
+          </div>
+
+          <div style="border-left:2px solid rgba(45,120,216,.3);padding-left:12px">
+            <div style="font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(45,120,216,.5);margin-bottom:4px">Next generation · Nueva Galicia</div>
+            <div style="font-size:.88rem;color:#e8dfcc;font-weight:600;margin-bottom:5px">Francisco de Bobadilla <span style="color:var(--muted);font-weight:400">b. 1515 · d. 1570</span></div>
+            <p class="finding-body"><em>"Conquistador de la Nueva Galicia"</em> — part of the 1530s–40s Spanish push into the northwest frontier (modern Jalisco and Zacatecas). Born too young for Cortés's original campaign, but part of the same colonial wave that followed it.</p>
+          </div>
+
+          <div style="border-left:2px solid rgba(45,120,216,.2);padding-left:12px">
+            <div style="font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(45,120,216,.4);margin-bottom:4px">Later generation · Chichimec War</div>
+            <div style="font-size:.88rem;color:#e8dfcc;font-weight:600;margin-bottom:5px">Capitán General Baltasar Temiño y Bañuelos <span style="color:var(--muted);font-weight:400">b. 1530 · d. 1600</span></div>
+            <p class="finding-body">Fought in the <strong>Chichimec War</strong> — the prolonged guerrilla conflict across north-central Mexico (1550–1590). His campaigns helped secure the silver-road from Zacatecas to Mexico City that funded the Spanish Empire for two centuries.</p>
+          </div>
+
+        </div>
       </div>
 
       <!-- Finding 7: Generation depth -->
