@@ -4,525 +4,790 @@
   <meta charset="utf-8">
   <title>Villanueva Family Tree</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Interactive 3D genealogy visualizations spanning 40+ generations of the Villanueva / Jasso lineage — from 10th-century Iberian kingdoms to the present day.">
+  <meta name="description" content="An interactive 3D genealogy visualization spanning 1,623 years — from 4th-century Norse sea kings to the present-day Villanueva / Jasso family.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg:      #0d0b15;
-      --surface: #13111e;
-      --card:    #18152a;
-      --border:  rgba(216,175,67,.13);
+      --surface: #111020;
+      --card:    #16132a;
+      --border:  rgba(216,175,67,.12);
       --gold:    #e8b820;
       --gold2:   #c9981a;
-      --text:    #d4c9a8;
-      --muted:   #7a6e56;
+      --gold3:   rgba(216,175,67,.08);
+      --text:    #cfc4a3;
+      --muted:   #6b6050;
       --royal:   #e8b820;
       --noble:   #c83040;
       --clergy:  #9040c0;
       --military:#2d78d8;
       --official:#18a870;
       --indigenous:#c86828;
+      --serif:   "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
     }
-
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      line-height: 1.5;
-    }
+    body { background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; line-height: 1.65; }
 
-    /* ── header ──────────────────────────────── */
-    header {
+    /* ── canvas bg ─────── */
+    #bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .55; }
+
+    /* ── layout ─────────── */
+    .wrap { position: relative; z-index: 1; }
+
+    /* ── HERO ──────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center;
-      padding: 72px 24px 52px;
-      position: relative;
-      overflow: hidden;
+      padding: 60px 24px 80px;
     }
-    header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(216,175,67,.07) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .crest {
-      font-size: 52px;
-      line-height: 1;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 0 18px rgba(216,175,67,.35));
-    }
-    h1 {
-      font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
-      font-size: clamp(2rem, 5vw, 3.4rem);
+    .crest { font-size: 56px; margin-bottom: 22px; filter: drop-shadow(0 0 24px rgba(216,175,67,.4)); animation: pulse 4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{filter:drop-shadow(0 0 20px rgba(216,175,67,.3))} 50%{filter:drop-shadow(0 0 36px rgba(216,175,67,.6))} }
+
+    h1.title {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 6vw, 4rem);
       font-weight: 400;
       letter-spacing: .04em;
       color: var(--gold);
-      text-shadow: 0 2px 20px rgba(216,175,67,.25);
-      margin-bottom: 10px;
+      line-height: 1.15;
+      margin-bottom: 14px;
     }
     .tagline {
-      font-size: .95rem;
+      font-size: clamp(.9rem, 2vw, 1.1rem);
       color: var(--muted);
-      letter-spacing: .06em;
+      letter-spacing: .08em;
       text-transform: uppercase;
+      margin-bottom: 52px;
     }
 
-    /* ── nav hint ─────────────────────────────── */
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin: 28px auto 0;
-      max-width: 560px;
+    /* stat counters */
+    .stats-row { display: flex; gap: 10px 36px; flex-wrap: wrap; justify-content: center; margin-bottom: 52px; }
+    .stat-block { text-align: center; }
+    .stat-n {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      color: var(--gold);
+      line-height: 1;
+      display: block;
     }
-    .ctrl {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(216,175,67,.07);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: .78rem;
-      color: var(--muted);
-    }
-    .ctrl svg { flex-shrink: 0; opacity: .7; }
+    .stat-l { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; display: block; }
 
-    /* ── section ──────────────────────────────── */
-    section {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px 64px;
+    /* CTA buttons */
+    .cta-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold); color: #0d0b15;
+      font-weight: 700; letter-spacing: .04em;
+      padding: 13px 28px; border-radius: 6px;
+      text-decoration: none; font-size: .9rem;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 24px rgba(216,175,67,.25);
     }
-    .section-title {
-      font-family: "Iowan Old Style", Palatino, serif;
-      font-size: 1.05rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 22px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
+    .btn-primary:hover { background: #f5c930; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(216,175,67,.35); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(216,175,67,.35); color: var(--gold2);
+      padding: 12px 24px; border-radius: 6px;
+      text-decoration: none; font-size: .9rem;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); background: rgba(216,175,67,.06); }
+
+    .scroll-hint { margin-top: 68px; color: var(--muted); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; animation: bob 2s ease-in-out infinite; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+
+    /* ── SECTION COMMON ─────────── */
+    section { position: relative; z-index: 1; }
+    .section-inner { max-width: 960px; margin: 0 auto; padding: 88px 24px; }
+    .section-inner.wide { max-width: 1200px; }
+
+    .eyebrow {
+      font-size: .72rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--gold2); margin-bottom: 12px; display: block;
+    }
+    h2.section-h {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 400; color: #e8dfcc;
+      margin-bottom: 20px; line-height: 1.2;
+    }
+    .lead {
+      font-size: 1.05rem; color: var(--text); line-height: 1.75;
+      max-width: 680px; margin-bottom: 0;
     }
 
-    /* ── featured grid ────────────────────────── */
-    .featured { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 52px; }
+    /* divider */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-    /* ── standard grid ────────────────────────── */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-
-    /* ── card ─────────────────────────────────── */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 22px 22px 18px;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: border-color .2s, box-shadow .2s, transform .15s;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+    /* ── ABOUT ──────────────────────── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; align-items: start; }
+    @media(max-width:680px){ .about-grid{grid-template-columns:1fr;} }
+    .about-text p { margin-bottom: 16px; line-height: 1.75; color: var(--text); }
+    .about-visual {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 28px; display: flex; flex-direction: column; gap: 12px;
     }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
+    .progress-row { display: flex; flex-direction: column; gap: 5px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); }
+    .progress-bar { height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+    /* ── HOW TO USE ─────────────────── */
+    .howto-section { background: var(--surface); }
+    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 44px; }
+    .ctrl-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 22px 20px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .ctrl-icon { font-size: 26px; }
+    .ctrl-action { font-size: .95rem; color: var(--gold); font-weight: 600; }
+    .ctrl-desc { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+
+    .feature-list { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .feature { display: flex; align-items: flex-start; gap: 10px; font-size: .84rem; color: var(--text); }
+    .feature-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 7px; flex-shrink: 0; }
+
+    /* ── FINDINGS ───────────────────── */
+    .findings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 44px; }
+    @media(max-width:720px){ .findings-grid{grid-template-columns:1fr;} }
+    .finding-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 26px; position: relative; overflow: hidden;
+    }
+    .finding-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
       background: var(--accent, var(--gold));
-      opacity: 0;
-      transition: opacity .2s;
     }
-    .card:hover { border-color: rgba(216,175,67,.4); box-shadow: 0 4px 28px rgba(0,0,0,.5); transform: translateY(-2px); }
-    .card:hover::before { opacity: 1; }
-
-    .card-label {
-      font-size: .68rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
+    .finding-card.wide { grid-column: 1/-1; }
+    .finding-n {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3.2rem);
       color: var(--accent, var(--gold));
-      font-weight: 600;
+      line-height: 1; display: block; margin-bottom: 8px;
     }
-    .card-name {
-      font-family: "Iowan Old Style", Palatino, serif;
-      font-size: 1.12rem;
-      color: #e8e0cc;
-      line-height: 1.3;
+    .finding-label { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; display: block; }
+    .finding-body { font-size: .88rem; color: var(--text); line-height: 1.65; }
+    .finding-body strong { color: #e8dfcc; }
+    .finding-body em { font-style: normal; color: var(--gold2); }
+
+    /* Geo bars */
+    .geo-bars { display: flex; flex-direction: column; gap: 9px; margin-top: 16px; }
+    .geo-row { display: flex; align-items: center; gap: 10px; font-size: .78rem; }
+    .geo-name { width: 76px; color: var(--muted); flex-shrink: 0; }
+    .geo-track { flex: 1; height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+    .geo-bar { height: 100%; border-radius: 3px; background: var(--gold); }
+    .geo-count { width: 34px; text-align: right; color: var(--text); }
+
+    /* collapse list */
+    .collapse-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .collapse-row { display: flex; align-items: center; gap: 10px; }
+    .collapse-name { font-size: .8rem; color: var(--text); flex: 1; }
+    .collapse-badge {
+      font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+      background: rgba(216,175,67,.12); color: var(--gold); flex-shrink: 0;
     }
-    .card-sub {
-      font-size: .8rem;
-      color: var(--muted);
-      line-height: 1.4;
+
+    /* house list */
+    .house-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .house-tag {
+      border: 1px solid var(--border); border-radius: 16px; padding: 4px 12px;
+      font-size: .78rem; color: var(--text); background: rgba(255,255,255,.025);
     }
-    .card-stats {
-      display: flex;
-      gap: 16px;
-      margin-top: auto;
-      padding-top: 12px;
+
+    /* ── TIMELINE ────────────────────── */
+    .timeline-section { background: var(--surface); }
+    .timeline { position: relative; margin-top: 44px; }
+    .timeline-track {
+      height: 3px; background: rgba(216,175,67,.15); border-radius: 2px;
+      margin: 0 0 32px; position: relative;
+    }
+    .timeline-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg,var(--gold2),var(--gold)); width: 0; transition: width 1.4s ease; }
+    .timeline-markers { display: flex; justify-content: space-between; margin-top: 0; }
+    .tmark { text-align: center; flex: 1; }
+    .tmark-yr { font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .tmark-event { font-size: .72rem; color: var(--text); margin-top: 4px; line-height: 1.3; }
+    .tmark-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin: 0 auto 6px; opacity: .5; }
+    .tmark.key .tmark-dot { opacity: 1; background: var(--gold); box-shadow: 0 0 8px rgba(216,175,67,.5); }
+    .tmark.key .tmark-yr { color: var(--gold2); }
+
+    /* ── VISUALIZATIONS ─────────────── */
+    .viz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 44px; }
+    .viz-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px 18px; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 6px;
+      transition: border-color .2s, transform .15s, box-shadow .2s;
+    }
+    .viz-card:hover { border-color: rgba(216,175,67,.4); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0,0,0,.5); }
+    .viz-card-label { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gold2); }
+    .viz-card-name { font-family: var(--serif); font-size: 1rem; color: #e4dac0; line-height: 1.3; }
+    .viz-card-stats { font-size: .76rem; color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border); }
+
+    /* featured trio */
+    .featured-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 44px; }
+    @media(max-width:720px){ .featured-trio{grid-template-columns:1fr;} }
+    .feat-card {
+      background: var(--card); border: 1px solid rgba(216,175,67,.22); border-radius: 12px;
+      padding: 28px 24px; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color .2s, transform .15s;
+      position: relative; overflow: hidden;
+    }
+    .feat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--gold); }
+    .feat-card:hover { border-color: rgba(216,175,67,.5); transform: translateY(-2px); }
+    .feat-n { font-family: var(--serif); font-size: 2rem; color: var(--gold); line-height: 1; }
+    .feat-label { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .feat-name { font-family: var(--serif); font-size: 1.15rem; color: #e8dfcc; }
+    .feat-desc { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+    .feat-link { font-size: .8rem; color: var(--gold2); margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
+
+    /* ── ONGOING ─────────────────────── */
+    .ongoing-section { background: var(--surface); }
+    .ongoing-inner { max-width: 720px; margin: 0 auto; padding: 88px 24px; text-align: center; }
+    .ongoing-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(24,168,112,.1); border: 1px solid rgba(24,168,112,.25);
+      color: #18a870; border-radius: 20px; padding: 5px 14px;
+      font-size: .78rem; letter-spacing: .08em; margin-bottom: 28px;
+    }
+    .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: #18a870; animation: blink 1.6s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+    .ongoing-inner h2 { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 400; color: #e8dfcc; margin-bottom: 18px; }
+    .ongoing-inner p { color: var(--text); font-size: 1rem; line-height: 1.75; margin-bottom: 14px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .roadmap { display: flex; flex-direction: column; gap: 10px; margin: 32px auto 0; max-width: 480px; text-align: left; }
+    .roadmap-item { display: flex; align-items: center; gap: 12px; font-size: .88rem; color: var(--text); }
+    .roadmap-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* ── LEGEND STRIP ─────────────────── */
+    .legend-strip {
+      display: flex; flex-wrap: wrap; gap: 10px 24px;
+      max-width: 960px; margin: 0 auto; padding: 28px 24px;
       border-top: 1px solid var(--border);
     }
-    .stat { display: flex; flex-direction: column; gap: 1px; }
-    .stat-n { font-size: .95rem; font-weight: 600; color: var(--gold); font-variant-numeric: tabular-nums; }
-    .stat-l { font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .leg { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: var(--muted); }
+    .leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
-    .card-open {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 14px;
-      font-size: .78rem;
-      color: var(--gold2);
-      text-decoration: none;
-      letter-spacing: .04em;
-    }
-    .card-open::after { content: '→'; transition: transform .15s; }
-    .card:hover .card-open::after { transform: translateX(4px); }
-
-    /* ── legend ───────────────────────────────── */
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 22px;
-      max-width: 1100px;
-      margin: -20px auto 52px;
-      padding: 0 20px;
-    }
-    .leg { display: flex; align-items: center; gap: 7px; font-size: .78rem; color: var(--muted); }
-    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-
-    /* ── footer ───────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--border);
-      text-align: center;
-      padding: 32px 20px;
-      font-size: .78rem;
-      color: var(--muted);
-      line-height: 1.9;
-    }
+    /* ── FOOTER ─────────── */
+    footer { border-top: 1px solid var(--border); padding: 36px 24px; text-align: center; font-size: .78rem; color: var(--muted); line-height: 2; }
     footer a { color: var(--gold2); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    @media (max-width: 540px) {
-      header { padding: 48px 16px 36px; }
-      .featured { grid-template-columns: 1fr; }
-    }
+    /* ── reveal animation ─ */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: .1s; }
+    .reveal-d2 { transition-delay: .2s; }
+    .reveal-d3 { transition-delay: .3s; }
+    .reveal-d4 { transition-delay: .4s; }
   </style>
 </head>
 <body>
 
-<header>
+<canvas id="bg"></canvas>
+
+<div class="wrap">
+
+<!-- ═══════════════════════════════════════════════════════ HERO -->
+<section class="hero">
   <div class="crest">⚜</div>
-  <h1>Villanueva Family Tree</h1>
-  <p class="tagline">Interactive 3D Genealogy · 40+ Generations · Iberia to the Americas</p>
-  <div class="controls">
-    <span class="ctrl">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="10" x2="8" y2="14" stroke="currentColor" stroke-width="1.5"/></svg>
-      Scroll to zoom
-    </span>
-    <span class="ctrl">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8 Q8 2 13 8 Q8 14 3 8Z"/></svg>
-      Drag to orbit in 3D
-    </span>
-    <span class="ctrl">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="10" height="10" rx="2"/><line x1="8" y1="3" x2="8" y2="13"/></svg>
-      Shift+drag to pan
-    </span>
-    <span class="ctrl">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>
-      Click to trace lineage
-    </span>
-  </div>
-</header>
+  <h1 class="title">Villanueva Family Tree</h1>
+  <p class="tagline">1,623 Years · 22 Generations · Iberia to the Americas</p>
 
+  <div class="stats-row">
+    <div class="stat-block">
+      <span class="stat-n" data-count="4554">0</span>
+      <span class="stat-l">Ancestors</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-n" data-count="5731">0</span>
+      <span class="stat-l">Family Bonds</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-n" data-count="22">0</span>
+      <span class="stat-l">Generations</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-n" data-count="419">0</span>
+      <span class="stat-l">Royal Ancestors</span>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <a href="ancestor_mappings/master-lineage.html" class="btn-primary">
+      <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="3"/><line x1="10" y1="1" x2="10" y2="7" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="13" x2="10" y2="19" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="10" x2="7" y2="10" stroke="currentColor" stroke-width="1.5"/><line x1="13" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="1.5"/></svg>
+      Explore the 3D Tree
+    </a>
+    <a href="ancestor_mappings/antonio-jasso-lineage.html" class="btn-secondary">
+      Antonio Jasso Lineage →
+    </a>
+  </div>
+
+  <p class="scroll-hint">↓ &nbsp; scroll to learn more</p>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════ ABOUT -->
 <section>
-  <p class="section-title">Combined Visualizations</p>
-  <div class="featured">
+  <div class="section-inner">
+    <span class="eyebrow reveal">About this project</span>
+    <h2 class="section-h reveal reveal-d1">What is the Villanueva Family Tree?</h2>
 
-    <a class="card" href="ancestor_mappings/master-lineage.html">
-      <span class="card-label" style="--accent:#e8b820">All Sources Combined</span>
-      <span class="card-name">Master Lineage</span>
-      <span class="card-sub">Every ancestor from all source files merged into one interconnected graph. The most complete picture of the family tree.</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">4,554</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">5,731</span><span class="stat-l">Bonds</span></div>
+    <div class="about-grid">
+      <div class="about-text reveal reveal-d2">
+        <p>This is an interactive 3D genealogy visualization tracing the ancestry of the <strong style="color:#e8dfcc">Villanueva / Jasso family</strong> — rooted in present-day Mexico — backwards through centuries of Iberian nobility, medieval kingdoms, and early medieval Europe.</p>
+        <p>Each node in the graph is a real documented person. Edges represent parent–child bonds. The further up you navigate, the further back in time — stretching all the way to the 4th century AD.</p>
+        <p>The data was sourced from <a href="https://www.geni.com" target="_blank" style="color:var(--gold2)">Geni.com</a> and processed through a custom Python pipeline that parses, deduplicates, classifies, and renders everything into a single force-directed graph.</p>
+        <p>Nodes are sized by <strong style="color:#e8dfcc">pedigree collapse</strong> — how many separate lineage paths converge on that one ancestor. The most important nodes in the medieval period appear in thousands of convergent lines simultaneously. Nodes are colored by historical role: royal, noble, clergy, military, and so on.</p>
       </div>
-      <span class="card-open">Open visualization</span>
-    </a>
 
-    <a class="card" href="ancestor_mappings/antonio-jasso-lineage.html">
-      <span class="card-label" style="--accent:#2d78d8">Villanueva · Jasso · Corral · Godinez</span>
-      <span class="card-name">Antonio Jasso — Combined</span>
-      <span class="card-sub">Merged lineage rooted at Antonio Jasso (b. 1988), tracing all known Villanueva, Jasso, Corral, and Godinez branches.</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">3,385</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">4,273</span><span class="stat-l">Bonds</span></div>
+      <div class="about-visual reveal reveal-d3">
+        <p style="font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Ancestor composition</p>
+        <div class="progress-row">
+          <div class="progress-label"><span>Untitled / Commoner</span><span>3,475</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="background:#7a6e5a" data-w="76"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label"><span>Nobility</span><span>627</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="background:#c83040" data-w="14"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label"><span>Royalty</span><span>419</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="background:#e8b820" data-w="9"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label"><span>Military / Conquest</span><span>16</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="background:#2d78d8" data-w="1"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label"><span>Office / Civic</span><span>10</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="background:#18a870" data-w="1"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label"><span>Clergy</span><span>4</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="background:#9040c0" data-w="0.5"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label"><span>Indigenous</span><span>3</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="background:#c86828" data-w="0.5"></div></div>
+        </div>
+        <p style="font-size:.72rem;color:var(--muted);margin-top:16px;line-height:1.5">Most ancestors lack historical records. The high royal and noble count reflects documented medieval Iberian genealogy, where record-keeping was concentrated in courts and monasteries.</p>
       </div>
-      <span class="card-open">Open visualization</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/ancestors-of-beatriz-del-corral-lineage.html">
-      <span class="card-label" style="--accent:#c83040">Corral · Iberian Nobility</span>
-      <span class="card-name">Beatriz del Corral — Full Ancestry</span>
-      <span class="card-sub">Complete ancestry of Beatriz del Corral, connecting to the royal houses of León, Castile, Portugal, and Navarre.</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">3,878</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">4,711</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open visualization</span>
-    </a>
-
-  </div>
-
-  <p class="section-title">Individual Lineages</p>
-  <div class="grid">
-
-    <a class="card" href="ancestor_mappings/merged-lineage.html">
-      <span class="card-label">Jasso + Corral</span>
-      <span class="card-name">Antonio Jasso + Beatriz del Corral</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">3,992</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">4,844</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/saint-ferdinand-iii-king-of-castile-leon-ancestors-20-lineage.html">
-      <span class="card-label">Royal · Castile &amp; León</span>
-      <span class="card-name">Saint Ferdinand III</span>
-      <span class="card-sub">King of Castile &amp; León, c. 1199–1252</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">2,161</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">2,482</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/sancho-el-canamero-de-leon-senor-de-monteagudo-ancestors-20-lineage.html">
-      <span class="card-label">Noble · León</span>
-      <span class="card-name">Sancho el Cañamero de León</span>
-      <span class="card-sub">Señor de Monteagudo</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,648</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,914</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/lope-diaz-de-haro-ii-senor-de-vizcaya-ancestors-20-lineage.html">
-      <span class="card-label">Noble · Vizcaya</span>
-      <span class="card-name">Lope Díaz de Haro II</span>
-      <span class="card-sub">Señor de Vizcaya</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,235</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,435</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/afonso-viii-o-nobre-rei-de-castela-ancestors-20-lineage.html">
-      <span class="card-label">Royal · Castile</span>
-      <span class="card-name">Alfonso VIII the Noble</span>
-      <span class="card-sub">Rey de Castela, c. 1155–1214</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,314</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,525</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/urraca-de-leon-senora-consorte-de-vizcaya-ancestors-20-lineage.html">
-      <span class="card-label">Royal · León</span>
-      <span class="card-name">Urraca de León</span>
-      <span class="card-sub">Señora consorte de Vizcaya</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,280</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,476</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/pedro-el-castellano-fernandez-de-castro-senor-de-paredes-de-nava-y-del-infantado-de-leon-lineage.html">
-      <span class="card-label">Noble · Castro</span>
-      <span class="card-name">Pedro "el Castellano" Fernández de Castro</span>
-      <span class="card-sub">Señor de Paredes de Nava</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,198</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,374</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/estefania-alfonso-senora-del-infantado-de-leon-ancestors-20-lineage.html">
-      <span class="card-label">Royal · León</span>
-      <span class="card-name">Estefanía Alfonso</span>
-      <span class="card-sub">Señora del Infantado de León</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,070</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,243</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/fernando-ii-rey-de-leon-ancestors-20-lineage.html">
-      <span class="card-label">Royal · León</span>
-      <span class="card-name">Fernando II, Rey de León</span>
-      <span class="card-sub">c. 1137–1188</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,063</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,233</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/garcia-pires-de-braganca-ancestors-20-lineage.html">
-      <span class="card-label">Noble · Portugal</span>
-      <span class="card-name">Garcia Pires de Bragança</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">1,031</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,185</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/gontinha-soares-de-tougues-ancestors-20-lineage.html">
-      <span class="card-label">Noble · Portugal</span>
-      <span class="card-name">Gontinha Soares de Tougues</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">929</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,079</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/urraca-de-portugal-reina-consorte-de-leon-ancestors-20-lineage.html">
-      <span class="card-label">Royal · Portugal · León</span>
-      <span class="card-name">Urraca de Portugal</span>
-      <span class="card-sub">Reina consorte de León</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">902</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">1,045</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/eleanor-of-england-queen-consort-of-castile-ancestors-20-lineage.html">
-      <span class="card-label">Royal · England · Castile</span>
-      <span class="card-name">Eleanor of England</span>
-      <span class="card-sub">Queen consort of Castile, 1162–1214</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">866</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">992</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/afonso-godinez-lineage.html">
-      <span class="card-label">Noble · Portugal</span>
-      <span class="card-name">Afonso Godinez</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">566</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">685</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/jimena-gomez-de-manzanedo-ancestors-20-lineage.html">
-      <span class="card-label">Noble · Castile</span>
-      <span class="card-name">Jimena Gómez de Manzanedo</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">570</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">677</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/fernando-rodrigues-de-castro-o-castelhano-ancestors-20-lineage.html">
-      <span class="card-label">Noble · Castro · Portugal</span>
-      <span class="card-name">Fernando Rodríguez de Castro</span>
-      <span class="card-sub">O Castelhano</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">457</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">532</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/elvira-alfonso-condesa-de-tolosa-ancestors-20-lineage.html">
-      <span class="card-label">Royal · León · Toulouse</span>
-      <span class="card-name">Elvira Alfonso</span>
-      <span class="card-sub">Condesa de Tolosa</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">375</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">438</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/beatriz-del-corral-lineage.html">
-      <span class="card-label">Corral</span>
-      <span class="card-name">Beatriz del Corral — Core</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">3,878</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">4,711</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/elvira-perez-de-azagra-ancestors-20-lineage.html">
-      <span class="card-label">Noble · Navarre</span>
-      <span class="card-name">Elvira Pérez de Azagra</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">130</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">133</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/conde-de-leon-martin-flainez-senor-de-tordesillas-ancestors-20-lineage.html">
-      <span class="card-label">Noble · León</span>
-      <span class="card-name">Martín Flaínez</span>
-      <span class="card-sub">Conde de León, Señor de Tordesillas</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">112</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">119</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
-    <a class="card" href="ancestor_mappings/sancha-fernandez-ancestors-4-lineage.html">
-      <span class="card-label">Noble · Castile</span>
-      <span class="card-name">Sancha Fernández</span>
-      <div class="card-stats">
-        <div class="stat"><span class="stat-n">4</span><span class="stat-l">Ancestors</span></div>
-        <div class="stat"><span class="stat-n">3</span><span class="stat-l">Bonds</span></div>
-      </div>
-      <span class="card-open">Open</span>
-    </a>
-
+    </div>
   </div>
 </section>
 
-<div class="legend">
-  <div class="leg"><span class="dot" style="background:#e8b820"></span>Royalty</div>
-  <div class="leg"><span class="dot" style="background:#c83040"></span>Nobility</div>
-  <div class="leg"><span class="dot" style="background:#9040c0"></span>Clergy</div>
-  <div class="leg"><span class="dot" style="background:#2d78d8"></span>Military / Conquest</div>
-  <div class="leg"><span class="dot" style="background:#18a870"></span>Office / Civic</div>
-  <div class="leg"><span class="dot" style="background:#c86828"></span>Indigenous</div>
-  <div class="leg"><span class="dot" style="background:#7a6e5a"></span>Untitled</div>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════ HOW TO USE -->
+<section class="howto-section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Navigation guide</span>
+    <h2 class="section-h reveal reveal-d1">How to use the visualization</h2>
+    <p class="lead reveal reveal-d2">The graph renders in your browser — no installation needed. It's fully 3D: you can orbit, zoom, and pan to explore the structure from any angle.</p>
+
+    <div class="controls-grid" style="margin-top:40px">
+      <div class="ctrl-card reveal reveal-d1">
+        <span class="ctrl-icon">🖱️</span>
+        <span class="ctrl-action">Drag to orbit</span>
+        <span class="ctrl-desc">Left-click and drag anywhere on the canvas to rotate the 3D graph freely. Tilt and spin to see depth layers.</span>
+      </div>
+      <div class="ctrl-card reveal reveal-d2">
+        <span class="ctrl-icon">⇧</span>
+        <span class="ctrl-action">Shift+drag to pan</span>
+        <span class="ctrl-desc">Hold Shift (or Alt) while dragging to pan across the graph without rotating.</span>
+      </div>
+      <div class="ctrl-card reveal reveal-d3">
+        <span class="ctrl-icon">🔍</span>
+        <span class="ctrl-action">Scroll to zoom</span>
+        <span class="ctrl-desc">Scroll wheel zooms in and out toward your cursor position — great for diving into a specific branch.</span>
+      </div>
+      <div class="ctrl-card reveal reveal-d4">
+        <span class="ctrl-icon">👆</span>
+        <span class="ctrl-action">Click to trace</span>
+        <span class="ctrl-desc">Click any node to open its info card and highlight all ancestors and descendants. The shortest path from the root is shown in yellow.</span>
+      </div>
+    </div>
+
+    <div class="feature-list" style="margin-top:32px">
+      <div class="feature reveal"><span class="feature-dot"></span>Search bar — type a name to jump to any ancestor</div>
+      <div class="feature reveal reveal-d1"><span class="feature-dot"></span>Switch between generation and birth-year axis</div>
+      <div class="feature reveal reveal-d2"><span class="feature-dot"></span>Click the reset button to re-center the view</div>
+      <div class="feature reveal reveal-d3"><span class="feature-dot"></span>Nodes cluster by geographic region automatically</div>
+      <div class="feature reveal reveal-d4"><span class="feature-dot"></span>Node size = pedigree importance; color = historical role</div>
+      <div class="feature reveal"><span class="feature-dot"></span>Yellow path = shortest route from you to any ancestor</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════ TIMELINE -->
+<section class="timeline-section">
+  <div class="section-inner">
+    <span class="eyebrow reveal">Temporal span</span>
+    <h2 class="section-h reveal reveal-d1">1,623 years of documented history</h2>
+    <p class="lead reveal reveal-d2">From a Norse sea king born in 365 AD to a living family member born in 1988 — the tree spans more than sixteen centuries of recorded human history.</p>
+
+    <div class="timeline reveal" style="margin-top:52px">
+      <div class="timeline-track"><div class="timeline-fill" id="tfill"></div></div>
+      <div class="timeline-markers">
+        <div class="tmark key">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">365</div>
+          <div class="tmark-event">Gor Thorrasson<br>Norse Sea King</div>
+        </div>
+        <div class="tmark">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">563</div>
+          <div class="tmark-event">Chindasvinto<br>Visigoth King</div>
+        </div>
+        <div class="tmark key">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">800</div>
+          <div class="tmark-event">Carolingian<br>era ancestors</div>
+        </div>
+        <div class="tmark key">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">910</div>
+          <div class="tmark-event">Fernán González<br>Conde de Castilla</div>
+        </div>
+        <div class="tmark">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">1150</div>
+          <div class="tmark-event">Golden age of<br>Iberian dynasties</div>
+        </div>
+        <div class="tmark">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">1492</div>
+          <div class="tmark-event">Spain reaches<br>the Americas</div>
+        </div>
+        <div class="tmark">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">1700</div>
+          <div class="tmark-event">Colonial Mexico<br>ancestors</div>
+        </div>
+        <div class="tmark key">
+          <div class="tmark-dot"></div>
+          <div class="tmark-yr">1988</div>
+          <div class="tmark-event">Antonio Jasso<br>gen-0 root</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════ FINDINGS -->
+<section>
+  <div class="section-inner wide">
+    <span class="eyebrow reveal">Data analysis</span>
+    <h2 class="section-h reveal reveal-d1">What the data reveals</h2>
+    <p class="lead reveal reveal-d2">Patterns hidden inside the genealogy — surfaced by analyzing node connectivity, birth years, geographic distribution, and pedigree collapse.</p>
+
+    <div class="findings-grid" style="margin-top:44px">
+
+      <!-- Finding 1: Pedigree collapse -->
+      <div class="finding-card reveal" style="--accent:#e8b820">
+        <span class="finding-n">× 4,758</span>
+        <span class="finding-label">Highest pedigree collapse</span>
+        <p class="finding-body">
+          <strong>Fernán González, Conde de Castilla</strong> (b. 910) appears across <em>4,758 separate lineage paths</em> in this tree — meaning he is a mathematical common ancestor converging through thousands of distinct family branches simultaneously.<br><br>
+          His consort <strong>Sancha Sánchez de Navarra</strong> shares the same figure. Together they represent the single most significant bottleneck in the entire dataset — every branch of this family traces back through them.
+        </p>
+      </div>
+
+      <!-- Finding 2: Geographic -->
+      <div class="finding-card reveal reveal-d1" style="--accent:#2d78d8">
+        <span class="finding-n">10+</span>
+        <span class="finding-label">Countries represented</span>
+        <p class="finding-body">The ancestry spans far beyond Iberia. Documented ancestors hail from across Europe, the Near East, and the Americas.</p>
+        <div class="geo-bars">
+          <div class="geo-row"><span class="geo-name">France</span><div class="geo-track"><div class="geo-bar" style="width:100%"></div></div><span class="geo-count">968</span></div>
+          <div class="geo-row"><span class="geo-name">Spain</span><div class="geo-track"><div class="geo-bar" style="width:59%"></div></div><span class="geo-count">569</span></div>
+          <div class="geo-row"><span class="geo-name">Italy</span><div class="geo-track"><div class="geo-bar" style="width:25%"></div></div><span class="geo-count">245</span></div>
+          <div class="geo-row"><span class="geo-name">Portugal</span><div class="geo-track"><div class="geo-bar" style="width:15%"></div></div><span class="geo-count">149</span></div>
+          <div class="geo-row"><span class="geo-name">England</span><div class="geo-track"><div class="geo-bar" style="width:6%"></div></div><span class="geo-count">62</span></div>
+          <div class="geo-row"><span class="geo-name">Mexico</span><div class="geo-track"><div class="geo-bar" style="width:4%"></div></div><span class="geo-count">40</span></div>
+        </div>
+      </div>
+
+      <!-- Finding 3: Oldest ancestor -->
+      <div class="finding-card reveal" style="--accent:#9040c0">
+        <span class="finding-n">365 AD</span>
+        <span class="finding-label">Oldest documented ancestor</span>
+        <p class="finding-body">
+          <strong>Gor Thorrasson, Sea King</strong> — born in the 4th century — is the earliest known person in the tree at generation 16. He appears in the lineage through the Norse royal lines that eventually merged with Frankish and then Iberian nobility over the following centuries.<br><br>
+          Other early ancestors include <strong>Chindasvinto, King of the Visigoths</strong> (b. 563) and <strong>Miro, King of the Suevi</strong> (b. 550) — kings of post-Roman Iberia.
+        </p>
+      </div>
+
+      <!-- Finding 4: Houses -->
+      <div class="finding-card reveal reveal-d1" style="--accent:#c83040">
+        <span class="finding-n">40+</span>
+        <span class="finding-label">Noble and royal houses</span>
+        <p class="finding-body">The tree passes through dozens of documented dynastic houses spanning the medieval Iberian and European world.</p>
+        <div class="house-cloud">
+          <span class="house-tag">Haro</span>
+          <span class="house-tag">Asturias</span>
+          <span class="house-tag">Lara</span>
+          <span class="house-tag">Burgundy</span>
+          <span class="house-tag">Coimbra</span>
+          <span class="house-tag">Castro</span>
+          <span class="house-tag">Gascogne</span>
+          <span class="house-tag">Toulouse</span>
+          <span class="house-tag">Cabrera</span>
+          <span class="house-tag">Provence</span>
+          <span class="house-tag">Trastámara</span>
+          <span class="house-tag">Guzmán</span>
+          <span class="house-tag">Jiménez</span>
+          <span class="house-tag">Villamayor</span>
+          <span class="house-tag">Maia</span>
+          <span class="house-tag">Pallars</span>
+          <span class="house-tag">Béziers</span>
+          <span class="house-tag">Rouergue</span>
+        </div>
+      </div>
+
+      <!-- Finding 5: Wide - most connected -->
+      <div class="finding-card wide reveal" style="--accent:#18a870">
+        <span class="finding-label">Top ancestors by pedigree collapse — how many lines converge on each person</span>
+        <div class="collapse-list">
+          <div class="collapse-row"><span class="collapse-name">Fernán González, conde de Castilla (b. 910, gen 7)</span><span class="collapse-badge">× 4,758</span></div>
+          <div class="collapse-row"><span class="collapse-name">Sancha Sánchez de Navarra, reina consorte de León (b. 900, gen 7)</span><span class="collapse-badge">× 4,758</span></div>
+          <div class="collapse-row"><span class="collapse-name">Sancho Garcés, 1er. Rey de Pamplona (b. 865, gen 8)</span><span class="collapse-badge">× 4,018</span></div>
+          <div class="collapse-row"><span class="collapse-name">Toda Aznárez de Larraún, Reina de Navarra (b. 876, gen 8)</span><span class="collapse-badge">× 3,893</span></div>
+          <div class="collapse-row"><span class="collapse-name">Gonzalo Fernández de Lara, conde de Burgos (b. 863, gen 8)</span><span class="collapse-badge">× 3,040</span></div>
+          <div class="collapse-row"><span class="collapse-name">Diego Muñoz, 1er. Conde de Saldaña (b. 900, gen 6)</span><span class="collapse-badge">× 2,704</span></div>
+          <div class="collapse-row"><span class="collapse-name">García Jiménez de Pamplona (b. 835, gen 9)</span><span class="collapse-badge">× 2,345</span></div>
+          <div class="collapse-row"><span class="collapse-name">Hermenegildo Guterres, conde de Coimbra y Portugal (b. 842, gen 8)</span><span class="collapse-badge">× 1,994</span></div>
+        </div>
+        <p class="finding-body" style="margin-top:16px">
+          Pedigree collapse is a known mathematical phenomenon in genealogy: the further back you go, the more your ancestors must "share" people, since the number of slots (2, 4, 8, 16…) grows faster than the population of the time. In this tree it's dramatic — a handful of 9th–10th century Navarrese and Castilian counts appear in the ancestry of virtually every later Iberian royal house.
+        </p>
+      </div>
+
+      <!-- Finding 6: Mexico bridge -->
+      <div class="finding-card reveal" style="--accent:#c86828">
+        <span class="finding-n">40</span>
+        <span class="finding-label">Mexican colonial ancestors</span>
+        <p class="finding-body">
+          The tree documents <em>40 ancestors</em> placed in Mexico — the colonial-era bridge between the Iberian lineages and the present-day Villanueva / Jasso family.<br><br>
+          Among the most recent documented ancestors: <strong>Maria Soledad Bañuelos de la Torre</strong> (b. 1788) and <strong>Blasa Bartola Cipriana de la Torre y de Aro</strong> (b. 1746) — families of Spanish colonial descent settled in central Mexico.
+        </p>
+      </div>
+
+      <!-- Finding 7: Generation depth -->
+      <div class="finding-card reveal reveal-d1" style="--accent:#e8b820">
+        <span class="finding-n">22</span>
+        <span class="finding-label">Documented generations</span>
+        <p class="finding-body">
+          The deepest branch reaches <em>generation 22</em> — about 22 parent–child steps back from the living root. At roughly 25–30 years per generation that implies ancestry stretching to the 400s–500s, which aligns with the earliest documented people in the dataset.<br><br>
+          Of 4,554 ancestors, <strong>2,962 have a documented birth year</strong> — about 65% of the total. The remaining 35% are known from genealogical records but lack confirmed dates.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════ VISUALIZATIONS -->
+<section>
+  <div class="section-inner wide">
+    <span class="eyebrow reveal">All visualizations</span>
+    <h2 class="section-h reveal reveal-d1">Explore the trees</h2>
+    <p class="lead reveal reveal-d2">Each file is a standalone interactive graph. Start with the Master Lineage for the full picture, or dive into individual ancestor trees.</p>
+
+    <div class="featured-trio">
+      <a class="feat-card reveal" href="ancestor_mappings/master-lineage.html">
+        <span class="feat-label">All sources combined</span>
+        <span class="feat-n">4,554</span>
+        <span class="feat-name">Master Lineage</span>
+        <span class="feat-desc">The complete merged graph — every ancestor from every source file in one visualization.</span>
+        <span class="feat-link">Open → </span>
+      </a>
+      <a class="feat-card reveal reveal-d1" href="ancestor_mappings/antonio-jasso-lineage.html">
+        <span class="feat-label">Villanueva · Jasso · Corral · Godinez</span>
+        <span class="feat-n">3,385</span>
+        <span class="feat-name">Antonio Jasso — Combined</span>
+        <span class="feat-desc">Merged lineage rooted at Antonio Jasso (b. 1988), tracing all known family branches.</span>
+        <span class="feat-link">Open → </span>
+      </a>
+      <a class="feat-card reveal reveal-d2" href="ancestor_mappings/ancestors-of-beatriz-del-corral-lineage.html">
+        <span class="feat-label">Corral · Iberian Nobility</span>
+        <span class="feat-n">3,878</span>
+        <span class="feat-name">Beatriz del Corral</span>
+        <span class="feat-desc">Full ancestry connecting to the royal houses of León, Castile, Portugal, and Navarre.</span>
+        <span class="feat-link">Open → </span>
+      </a>
+    </div>
+
+    <div class="viz-grid" style="margin-top:20px">
+      <a class="viz-card reveal" href="ancestor_mappings/merged-lineage.html"><span class="viz-card-label">Jasso + Corral</span><span class="viz-card-name">Antonio Jasso + Beatriz del Corral</span><span class="viz-card-stats">3,992 ancestors · 4,844 bonds</span></a>
+      <a class="viz-card reveal reveal-d1" href="ancestor_mappings/saint-ferdinand-iii-king-of-castile-leon-ancestors-20-lineage.html"><span class="viz-card-label">Royal · Castile &amp; León</span><span class="viz-card-name">Saint Ferdinand III</span><span class="viz-card-stats">2,161 ancestors · 2,482 bonds</span></a>
+      <a class="viz-card reveal reveal-d2" href="ancestor_mappings/sancho-el-canamero-de-leon-senor-de-monteagudo-ancestors-20-lineage.html"><span class="viz-card-label">Noble · León</span><span class="viz-card-name">Sancho el Cañamero de León</span><span class="viz-card-stats">1,648 ancestors · 1,914 bonds</span></a>
+      <a class="viz-card reveal" href="ancestor_mappings/lope-diaz-de-haro-ii-senor-de-vizcaya-ancestors-20-lineage.html"><span class="viz-card-label">Noble · Vizcaya</span><span class="viz-card-name">Lope Díaz de Haro II</span><span class="viz-card-stats">1,235 ancestors · 1,435 bonds</span></a>
+      <a class="viz-card reveal reveal-d1" href="ancestor_mappings/afonso-viii-o-nobre-rei-de-castela-ancestors-20-lineage.html"><span class="viz-card-label">Royal · Castile</span><span class="viz-card-name">Alfonso VIII the Noble</span><span class="viz-card-stats">1,314 ancestors · 1,525 bonds</span></a>
+      <a class="viz-card reveal reveal-d2" href="ancestor_mappings/urraca-de-leon-senora-consorte-de-vizcaya-ancestors-20-lineage.html"><span class="viz-card-label">Royal · León</span><span class="viz-card-name">Urraca de León</span><span class="viz-card-stats">1,280 ancestors · 1,476 bonds</span></a>
+      <a class="viz-card reveal" href="ancestor_mappings/estefania-alfonso-senora-del-infantado-de-leon-ancestors-20-lineage.html"><span class="viz-card-label">Royal · León</span><span class="viz-card-name">Estefanía Alfonso</span><span class="viz-card-stats">1,070 ancestors · 1,243 bonds</span></a>
+      <a class="viz-card reveal reveal-d1" href="ancestor_mappings/fernando-ii-rey-de-leon-ancestors-20-lineage.html"><span class="viz-card-label">Royal · León</span><span class="viz-card-name">Fernando II, Rey de León</span><span class="viz-card-stats">1,063 ancestors · 1,233 bonds</span></a>
+      <a class="viz-card reveal reveal-d2" href="ancestor_mappings/garcia-pires-de-braganca-ancestors-20-lineage.html"><span class="viz-card-label">Noble · Portugal</span><span class="viz-card-name">Garcia Pires de Bragança</span><span class="viz-card-stats">1,031 ancestors · 1,185 bonds</span></a>
+      <a class="viz-card reveal" href="ancestor_mappings/gontinha-soares-de-tougues-ancestors-20-lineage.html"><span class="viz-card-label">Noble · Portugal</span><span class="viz-card-name">Gontinha Soares de Tougues</span><span class="viz-card-stats">929 ancestors · 1,079 bonds</span></a>
+      <a class="viz-card reveal reveal-d1" href="ancestor_mappings/urraca-de-portugal-reina-consorte-de-leon-ancestors-20-lineage.html"><span class="viz-card-label">Royal · Portugal · León</span><span class="viz-card-name">Urraca de Portugal</span><span class="viz-card-stats">902 ancestors · 1,045 bonds</span></a>
+      <a class="viz-card reveal reveal-d2" href="ancestor_mappings/eleanor-of-england-queen-consort-of-castile-ancestors-20-lineage.html"><span class="viz-card-label">Royal · England · Castile</span><span class="viz-card-name">Eleanor of England</span><span class="viz-card-stats">866 ancestors · 992 bonds</span></a>
+      <a class="viz-card reveal" href="ancestor_mappings/afonso-godinez-lineage.html"><span class="viz-card-label">Noble · Portugal</span><span class="viz-card-name">Afonso Godinez</span><span class="viz-card-stats">566 ancestors · 685 bonds</span></a>
+      <a class="viz-card reveal reveal-d1" href="ancestor_mappings/jimena-gomez-de-manzanedo-ancestors-20-lineage.html"><span class="viz-card-label">Noble · Castile</span><span class="viz-card-name">Jimena Gómez de Manzanedo</span><span class="viz-card-stats">570 ancestors · 677 bonds</span></a>
+      <a class="viz-card reveal reveal-d2" href="ancestor_mappings/fernando-rodrigues-de-castro-o-castelhano-ancestors-20-lineage.html"><span class="viz-card-label">Noble · Castro</span><span class="viz-card-name">Fernando Rodríguez de Castro</span><span class="viz-card-stats">457 ancestors · 532 bonds</span></a>
+      <a class="viz-card reveal" href="ancestor_mappings/elvira-alfonso-condesa-de-tolosa-ancestors-20-lineage.html"><span class="viz-card-label">Royal · León</span><span class="viz-card-name">Elvira Alfonso, Condesa de Tolosa</span><span class="viz-card-stats">375 ancestors · 438 bonds</span></a>
+      <a class="viz-card reveal reveal-d1" href="ancestor_mappings/elvira-perez-de-azagra-ancestors-20-lineage.html"><span class="viz-card-label">Noble · Navarre</span><span class="viz-card-name">Elvira Pérez de Azagra</span><span class="viz-card-stats">130 ancestors · 133 bonds</span></a>
+      <a class="viz-card reveal reveal-d2" href="ancestor_mappings/conde-de-leon-martin-flainez-senor-de-tordesillas-ancestors-20-lineage.html"><span class="viz-card-label">Noble · León</span><span class="viz-card-name">Martín Flaínez, Conde de León</span><span class="viz-card-stats">112 ancestors · 119 bonds</span></a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════ ONGOING -->
+<section class="ongoing-section">
+  <div class="ongoing-inner">
+    <div class="ongoing-badge reveal"><span class="pulse-dot"></span>Active Research</div>
+    <h2 class="reveal reveal-d1">This tree is still growing</h2>
+    <p class="reveal reveal-d2">The Villanueva Family Tree is an ongoing research project. New ancestor data is being added regularly as more source files are processed and new branches are traced through Geni.com and archival records.</p>
+    <p class="reveal reveal-d3">Every new addition is automatically merged into the master graph, with deduplication ensuring that shared ancestors across branches are counted only once and their pedigree weight accumulates correctly.</p>
+
+    <div class="roadmap reveal" style="margin-top:36px">
+      <div class="roadmap-item"><span class="roadmap-icon">✅</span>Core Villanueva / Jasso lineage — documented</div>
+      <div class="roadmap-item"><span class="roadmap-icon">✅</span>Beatriz del Corral full ancestry — documented</div>
+      <div class="roadmap-item"><span class="roadmap-icon">✅</span>Extended Iberian nobility — 20+ branches imported</div>
+      <div class="roadmap-item"><span class="roadmap-icon">🔄</span>Additional maternal and paternal branches — in progress</div>
+      <div class="roadmap-item"><span class="roadmap-icon">🔄</span>Colonial Mexico records — expanding</div>
+      <div class="roadmap-item"><span class="roadmap-icon">📋</span>DNA cross-reference — planned</div>
+      <div class="roadmap-item"><span class="roadmap-icon">📋</span>Living relatives network — planned</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ LEGEND -->
+<div class="legend-strip">
+  <div class="leg"><span class="leg-dot" style="background:#e8b820"></span>Royalty</div>
+  <div class="leg"><span class="leg-dot" style="background:#c83040"></span>Nobility</div>
+  <div class="leg"><span class="leg-dot" style="background:#9040c0"></span>Clergy</div>
+  <div class="leg"><span class="leg-dot" style="background:#2d78d8"></span>Military / Conquest</div>
+  <div class="leg"><span class="leg-dot" style="background:#18a870"></span>Office / Civic</div>
+  <div class="leg"><span class="leg-dot" style="background:#c86828"></span>Indigenous</div>
+  <div class="leg"><span class="leg-dot" style="background:#7a6e5a"></span>Untitled / Unknown role</div>
+  <span style="margin-left:auto;font-size:.72rem;color:var(--muted)">Node size = pedigree collapse · Color = historical role</span>
 </div>
 
 <footer>
-  <p>Data sourced from <a href="https://www.geni.com" target="_blank" rel="noopener">Geni.com</a> · Rendered with D3.js · Hosted on <a href="https://github.com/EPC310TECH/Villanueva_Family_Tree" target="_blank" rel="noopener">GitHub</a></p>
-  <p style="margin-top:6px">Node size reflects pedigree collapse (how many lines converge on one ancestor) · Node color reflects rank / title category</p>
+  <p>Data sourced from <a href="https://www.geni.com" target="_blank" rel="noopener">Geni.com</a> &nbsp;·&nbsp; Rendered with <a href="https://d3js.org" target="_blank" rel="noopener">D3.js</a> &nbsp;·&nbsp; Source on <a href="https://github.com/EPC310TECH/Villanueva_Family_Tree" target="_blank" rel="noopener">GitHub</a></p>
+  <p style="margin-top:4px">Villanueva Family Tree · Active research project · More ancestors being added</p>
 </footer>
+
+</div><!-- /wrap -->
+
+<script>
+// ── Particle background canvas ────────────────────────────────────
+(function(){
+  const c=document.getElementById('bg');
+  const ctx=c.getContext('2d');
+  let W,H,pts;
+  function init(){
+    W=c.width=innerWidth;H=c.height=innerHeight;
+    const n=Math.min(90,Math.floor(W*H/14000));
+    pts=Array.from({length:n},()=>({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,
+      r:Math.random()*1.6+.5,
+      cat:['#e8b820','#c83040','#7a6e5a','#7a6e5a','#7a6e5a','#2d78d8','#9040c0'][Math.floor(Math.random()*7)]
+    }));
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    // edges
+    ctx.lineWidth=.5;
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d>160)continue;
+        ctx.globalAlpha=(1-d/160)*.18;
+        ctx.strokeStyle='#d4c9a8';
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
+      }
+    }
+    ctx.globalAlpha=1;
+    // nodes
+    for(const p of pts){
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.2832);
+      ctx.fillStyle=p.cat;ctx.globalAlpha=.55;ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+    }
+    ctx.globalAlpha=1;
+    requestAnimationFrame(frame);
+  }
+  init();frame();
+  addEventListener('resize',init);
+})();
+
+// ── Animated counters ─────────────────────────────────────────────
+(function(){
+  const els=document.querySelectorAll('[data-count]');
+  let done=false;
+  function run(){
+    if(done)return;done=true;
+    els.forEach(el=>{
+      const target=+el.dataset.count,dur=1600,start=performance.now();
+      (function tick(now){
+        const p=Math.min(1,(now-start)/dur),q=1-Math.pow(1-p,3);
+        el.textContent=Math.round(q*target).toLocaleString();
+        if(p<1)requestAnimationFrame(tick);
+      })(start);
+    });
+  }
+  const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting)run();},{threshold:.3});
+  if(els[0])obs.observe(els[0]);
+})();
+
+// ── Scroll reveal ──────────────────────────────────────────────────
+(function(){
+  const items=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  items.forEach(i=>obs.observe(i));
+})();
+
+// ── Progress bars ──────────────────────────────────────────────────
+(function(){
+  const bars=document.querySelectorAll('.progress-fill');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const w=e.target.dataset.w;
+        setTimeout(()=>{e.target.style.width=w+'%';},100);
+      }
+    });
+  },{threshold:.5});
+  bars.forEach(b=>{b.style.width='0%';obs.observe(b);});
+})();
+
+// ── Timeline fill ──────────────────────────────────────────────────
+(function(){
+  const fill=document.getElementById('tfill');
+  if(!fill)return;
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting)setTimeout(()=>{fill.style.width='100%';},200);
+  },{threshold:.5});
+  obs.observe(fill);
+})();
+</script>
 
 </body>
 </html>
