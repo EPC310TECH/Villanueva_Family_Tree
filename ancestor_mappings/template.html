@@ -65,6 +65,11 @@
   .card .kin{display:flex;gap:18px;padding-top:13px;margin-top:13px;border-top:1px solid var(--line)}
   .card .kin div{font:400 12px/1 ui-sans-serif,system-ui,sans-serif;color:var(--parchment-dim)}
   .card .kin b{display:block;font:400 19px/1 "Iowan Old Style",Palatino,serif;color:var(--or);margin-bottom:4px}
+  .card .links{display:flex;gap:6px;flex-wrap:wrap;padding:11px 17px 13px;border-top:1px solid var(--line)}
+  .card .links a{font:600 9px/1 ui-sans-serif,sans-serif;letter-spacing:.17em;text-transform:uppercase;color:var(--parchment-dim);text-decoration:none;padding:4px 7px;border:1px solid var(--hair);border-radius:2px;white-space:nowrap;transition:color .12s,border-color .12s}
+  .card .links a:hover{color:var(--or);border-color:var(--or)}
+  .leg{cursor:pointer;user-select:none;transition:opacity .15s}
+  .leg.off{opacity:.22}
 
   .ruler{position:fixed;left:0;top:0;bottom:0;width:54px;z-index:3;pointer-events:none}
   .ruler .mark{position:absolute;left:0;width:100%;border-top:1px solid rgba(233,222,195,.07)}
@@ -195,7 +200,15 @@ const META   = /*__META__*/;
   document.getElementById('cEdges').textContent=links.length.toLocaleString();
   document.getElementById('cSpan').textContent=isFinite(minYr)?(maxYr-minYr):'—';
   document.getElementById('legendRows').innerHTML=LEGEND.map(l=>
-    `<div class="leg"><span class="swatch" style="background:${l.color}"></span>${l.label}<span class="n">${counts[l.key]||0}</span></div>`).join('');
+    `<div class="leg" data-cat="${l.key}" title="Click to show/hide"><span class="swatch" style="background:${l.color}"></span>${l.label}<span class="n">${counts[l.key]||0}</span></div>`).join('');
+
+  const hiddenCats=new Set();
+  document.getElementById('legendRows').addEventListener('click',ev=>{
+    const row=ev.target.closest('[data-cat]');if(!row)return;
+    const cat=row.dataset.cat;
+    if(hiddenCats.has(cat)){hiddenCats.delete(cat);row.classList.remove('off');}
+    else{hiddenCats.add(cat);row.classList.add('off');}
+  });
 
   const canvas=document.getElementById('cv'),ctx=canvas.getContext('2d');
   let W=0,H=0,DPR=Math.min(window.devicePixelRatio||1,2);
@@ -310,13 +323,16 @@ const META   = /*__META__*/;
     // Pass 1: all non-shortest-path edges
     ctx.lineWidth=Math.max(.4,.6*k);
     for(const e of links){
+      const hSrc=hiddenCats.has(e.source.cat),hTgt=hiddenCats.has(e.target.cat);
+      if(hSrc&&hTgt)continue;// both endpoints hidden — skip entirely
       const[ax,ay]=S3(e.source.x,e.source.y,e.source.z||0);
       const[bx,by]=S3(e.target.x,e.target.y,e.target.z||0);
       if((ax<-50&&bx<-50)||(ax>W+50&&bx>W+50)||(ay<-50&&by<-50)||(ay>H+50&&by>H+50))continue;
       const isPath=pathLinks&&(pathLinks.has(e.source.id+'-'+e.target.id)||pathLinks.has(e.target.id+'-'+e.source.id));
       if(isPath)continue;// drawn in pass 2
       const on=lineLinks&&lineLinks.has(e.source.id+'-'+e.target.id);
-      if(dim&&!on)ctx.strokeStyle='rgba(233,222,195,.035)';
+      const edgeDim=dim||(hSrc||hTgt);
+      if(edgeDim&&!on)ctx.strokeStyle='rgba(233,222,195,.025)';
       else if(on){ctx.strokeStyle='rgba(243,214,128,.55)';ctx.lineWidth=Math.max(.9,1.1*k);}
       else ctx.strokeStyle='rgba(233,222,195,.11)';
       ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();
@@ -347,6 +363,7 @@ const META   = /*__META__*/;
       if(x<-30||x>W+30||y<-30||y>H+30)continue;
       const on=inLine?inLine.has(n.id):true;
       const m=n.mult||1;
+      if(hiddenCats.has(n.cat)){ctx.beginPath();ctx.arc(x,y,r,0,6.2832);ctx.fillStyle='rgba(80,70,55,.08)';ctx.fill();continue;}
       if(!on){ctx.beginPath();ctx.arc(x,y,r,0,6.2832);ctx.fillStyle='rgba(110,100,82,.14)';ctx.fill();continue;}
       // Outer halo for high-pedigree-collapse nodes
       if(m>=4){
@@ -364,6 +381,7 @@ const META   = /*__META__*/;
     if(k>0.8){
       ctx.font='12px "Iowan Old Style",Palatino,serif';ctx.textBaseline='middle';
       for(const{n,sx:x,sy:y,ps} of proj){
+        if(hiddenCats.has(n.cat))continue;
         const m=n.mult||1;
         const byRank=(m>=5)||(n.cat==='royal'&&k>0.8)||(n.cat==='noble'&&k>1.4);
         const byLine=inLine&&inLine.has(n.id);
@@ -510,13 +528,19 @@ const META   = /*__META__*/;
     if(n.mult>1)rows.push(['Pedigree collapse',n.mult+' separate lines']);
     let body=rows.map(r=>`<div class="row"><div class="k">${r[0]}</div><div class="v">${esc(r[1])}</div></div>`).join('');
     body+=`<div class="kin"><div><b>${kin.ancestors}</b>Ancestors</div><div><b>${kin.descendants}</b>Descendants</div><div><b>${(parentsOf.get(n.id)||[]).length}</b>Parents</div></div>`;
+    const sn=encodeURIComponent(n.name.split(',')[0].trim());
+    body+=`<div class="links">
+      <a href="https://en.wikipedia.org/w/index.php?search=${sn}&ns0=1" target="_blank" rel="noopener noreferrer">Wikipedia</a>
+      <a href="https://www.geni.com/search?search_type=people&names=${sn}" target="_blank" rel="noopener noreferrer">Geni.com</a>
+      <a href="https://en.geneanet.org/genealogy/?input=${sn}" target="_blank" rel="noopener noreferrer">Geneanet</a>
+    </div>`;
     document.getElementById('dBody').innerHTML=body;document.getElementById('card').classList.add('show');
   }
   function hideCard(){document.getElementById('card').classList.remove('show');}
   document.getElementById('cardX').onclick=clearSelection;
 
   const q=document.getElementById('q'),results=document.getElementById('results');let qto=null;
-  q.addEventListener('input',()=>{clearTimeout(qto);qto=setTimeout(runSearch,110);});
+  q.addEventListener('input',()=>{clearTimeout(qto);qto=setTimeout(runSearch,110);clearSelection();});
   function runSearch(){
     const term=q.value.trim().toLowerCase();if(term.length<2){results.innerHTML='';return;}
     const hits=[];
@@ -524,7 +548,7 @@ const META   = /*__META__*/;
     hits.sort((a,b)=>a[0]-b[0]);
     results.innerHTML=hits.slice(0,40).map(function(h){var n=h[1];return `<div class="res" data-id="${n.id}"><span><span class="dot" style="background:${color(n.cat)}"></span>${esc(n.name)}</span><span class="yr">${n.birth!=null?n.birth:'—'}</span></div>`;}).join('');
   }
-  results.addEventListener('click',ev=>{const el=ev.target.closest('.res');if(!el)return;const n=byId.get(+el.dataset.id);if(n){selectNode(n,true);results.innerHTML='';q.value=n.name;}});
+  results.addEventListener('click',ev=>{const el=ev.target.closest('.res');if(!el)return;const n=byId.get(+el.dataset.id);if(n){results.innerHTML='';q.value='';selectNode(n,true);}});
   q.addEventListener('keydown',ev=>{if(ev.key==='Enter'){const f=results.querySelector('.res');if(f)f.click();}if(ev.key==='Escape'){results.innerHTML='';q.blur();}});
 
   const bGen=document.getElementById('axisGen'),bYear=document.getElementById('axisYear');
