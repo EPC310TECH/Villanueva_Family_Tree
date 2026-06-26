@@ -81,7 +81,34 @@
   @keyframes spin{to{transform:rotate(360deg)}}
   .curtain p{font-style:italic;color:var(--parchment-dim);font-size:14px}
   .hint{bottom:26px;right:26px;text-align:right;font:400 11.5px/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--parchment-dim);opacity:.7}
-  @media (max-width:720px){.masthead{max-width:62vw}.title{font-size:22px}.subtitle{display:none}.search{width:175px;top:20px;right:16px}.card{width:min(88vw,290px)}.hint{display:none}}
+  @media (max-width:720px){
+    .masthead{max-width:54vw}
+    .title{font-size:20px}
+    .subtitle,.counts{display:none}
+    .search{width:140px;top:14px;right:14px}
+    .search input{padding:9px 11px;font-size:13px}
+    .results{max-height:55vh}
+    /* Panel (legend + controls) — hidden on mobile; use desktop for filters */
+    .panel{display:none}
+    /* Card becomes a bottom sheet on mobile */
+    .card{
+      top:auto !important;bottom:0;left:0;right:0;
+      width:100% !important;max-width:100% !important;
+      border-radius:14px 14px 0 0;
+      transform:translateY(110%);opacity:1;
+      transition:transform .28s cubic-bezier(.32,.72,0,1);
+      max-height:72vh;overflow-y:auto;
+      padding-bottom:env(safe-area-inset-bottom,0px)
+    }
+    .card.show{transform:translateY(0)}
+    .card .rule{border-radius:14px 14px 0 0}
+    /* Drag handle pill */
+    .card::before{content:'';display:block;width:36px;height:4px;background:rgba(233,222,195,.22);border-radius:2px;margin:10px auto -4px}
+    /* Ruler: smaller text */
+    .ruler .mark span{font-size:9px;letter-spacing:.05em}
+    /* Hint: touch-specific, show at bottom centre */
+    .hint{display:block;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);right:0;left:0;text-align:center;font-size:11px}
+  }
   @media (prefers-reduced-motion:reduce){.seal{animation:none}}
 </style>
 </head>
@@ -126,7 +153,7 @@
   <div class="body" id="dBody"></div>
 </div>
 
-<div class="ui hint">Scroll to zoom · drag to orbit · shift+drag to pan · click to select</div>
+<div class="ui hint" id="hint">Scroll to zoom · drag to orbit · shift+drag to pan · click to select</div>
 <div class="tip" id="tip"></div>
 <div class="curtain" id="curtain"><div class="seal"></div><p>Drawing the lineage…</p></div>
 
@@ -502,6 +529,58 @@ const META   = {"title":"The Ancestry of Fernando Rodriguez de Castro","subtitle
     tx=(ev.clientX-W/2)*(1-f)+tx*f;ty=(ev.clientY-H/2)*(1-f)+ty*f;
     k=Math.max(0.04,Math.min(10,k*f));
   },{passive:false});
+
+  // ── Touch controls: 1-finger orbit, 2-finger pinch-zoom + pan, tap to select ──
+  let _touch=null;
+  canvas.addEventListener('touchstart',ev=>{
+    ev.preventDefault();
+    const ts=ev.touches;
+    if(ts.length===1){
+      _touch={n:1,sx:ts[0].clientX,sy:ts[0].clientY,
+              tx0:tx,ty0:ty,rX0:rotX,rY0:rotY,moved:false};
+    }else if(ts.length>=2){
+      const mx=(ts[0].clientX+ts[1].clientX)/2,my=(ts[0].clientY+ts[1].clientY)/2;
+      _touch={n:2,dist0:Math.hypot(ts[0].clientX-ts[1].clientX,ts[0].clientY-ts[1].clientY),
+              k0:k,tx0:tx,ty0:ty,mx0:mx,my0:my};
+    }
+  },{passive:false});
+  canvas.addEventListener('touchmove',ev=>{
+    ev.preventDefault();
+    if(!_touch)return;
+    const ts=ev.touches;
+    if(_touch.n===1&&ts.length>=1){
+      const dx=ts[0].clientX-_touch.sx,dy=ts[0].clientY-_touch.sy;
+      if(Math.hypot(dx,dy)>5)_touch.moved=true;
+      rotY=_touch.rY0+dx*0.007;
+      rotX=Math.max(-1.45,Math.min(1.45,_touch.rX0+dy*0.007));
+    }else if(_touch.n===2&&ts.length>=2){
+      const dist=Math.hypot(ts[0].clientX-ts[1].clientX,ts[0].clientY-ts[1].clientY);
+      const cmx=(ts[0].clientX+ts[1].clientX)/2,cmy=(ts[0].clientY+ts[1].clientY)/2;
+      const f=dist/_touch.dist0;
+      k=Math.max(0.04,Math.min(10,_touch.k0*f));
+      // Zoom toward initial pinch centre, plus pan with its movement
+      tx=f*(_touch.tx0+W/2-_touch.mx0)+cmx-W/2;
+      ty=f*(_touch.ty0+H/2-_touch.my0)+cmy-H/2;
+    }
+  },{passive:false});
+  canvas.addEventListener('touchend',ev=>{
+    ev.preventDefault();
+    if(!_touch)return;
+    if(_touch.n===1&&!_touch.moved){
+      const n=pick(_touch.sx,_touch.sy);if(n)selectNode(n);else clearSelection();
+    }
+    if(ev.touches.length===0){_touch=null;}
+    else if(ev.touches.length===1&&_touch.n===2){
+      const t=ev.touches[0];
+      _touch={n:1,sx:t.clientX,sy:t.clientY,tx0:tx,ty0:ty,rX0:rotX,rY0:rotY,moved:false};
+    }
+  },{passive:false});
+
+  // Show touch-appropriate hint on mobile
+  if('ontouchstart' in window){
+    const h=document.getElementById('hint');
+    if(h)h.textContent='Drag to orbit · pinch to zoom · tap to select';
+  }
 
   function selectNode(n,focus){
     selected=n;const kin=traceLineage(n.id);
