@@ -16,3 +16,9 @@ ancestor_mappings/*.pdf
 .vscode/
 .idea/
 *.swp
+
+# Private / maternal genealogy data — never pushed to GitHub
+private/
+
+# Local-only visualizations
+pedigree_collapse_viz.html
