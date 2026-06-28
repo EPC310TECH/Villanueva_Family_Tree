@@ -153,7 +153,7 @@ def implex(root, nodes, parents, max_gen=25):
     for node, dd in ways.items():
         if node == root:
             continue
-        distinct_ancestors.add(node)
+        contributed = False
         for d, w in dd.items():
             if d == 0:
                 continue
@@ -161,6 +161,9 @@ def implex(root, nodes, parents, max_gen=25):
             per_gen[d][0] += w
             slots_distinct_by_gen[d].add(node)
             total_slots += w
+            contributed = True
+        if contributed:
+            distinct_ancestors.add(node)
     report = []
     for g in sorted(per_gen):
         filled = per_gen[g][0]
@@ -208,7 +211,7 @@ def inbreeding_F(root, nodes, parents):
               file=sys.stderr)
     phi, _ = make_phi(nodes, parents)
     if len(ps) < 2:
-        return 0.0, ps  # subject with <2 known parents -> F undefined-as-0
+        return float("nan"), ps  # fewer than 2 parents known -> F undefined
     old_limit = _sys.getrecursionlimit()
     _sys.setrecursionlimit(50000)
     try:
@@ -229,7 +232,7 @@ def main():
     ap.add_argument("graph", help="cleaned graph JSON from geni_pipeline.py --json")
     ap.add_argument("--root", help="root node id (default: the gen==1 subject)")
     ap.add_argument("--root-name", help="root by exact name instead of id")
-    ap.add_argument("--max-gen", type=int, default=25)
+    ap.add_argument("--max-gen", type=int, default=50)
     ap.add_argument("--json", dest="out", help="write full metrics as JSON")
     a = ap.parse_args()
 
@@ -251,7 +254,9 @@ def main():
           f"{summ['cumulative_collapse']:.2%}")
     pn = ", ".join(nodes[p].get('name', p) for p in rps) if rps else "(<2 known)"
     import math as _math
-    if _math.isnan(F):
+    if _math.isnan(F) and len(rps) < 2:
+        print(f"Wright's F (inbreeding coefficient): undefined (<2 parents known)   [parents: {pn}]")
+    elif _math.isnan(F):
         print(f"Wright's F (inbreeding coefficient): n/a (graph cycles prevent computation)   [parents: {pn}]")
     else:
         print(f"Wright's F (inbreeding coefficient): {F:.6f}   [parents: {pn}]")
