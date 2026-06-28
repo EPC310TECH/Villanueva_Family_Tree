@@ -57,6 +57,53 @@ def load_graph(path):
     return nodes, dict(parents), dict(children)
 
 
+def merge_graphs(paternal_path, maternal_path):
+    """
+    Combine a paternal and a private maternal lineage HTML into a single
+    graph so that both of Antonio's parents are present for F computation.
+
+    The maternal graph's node IDs are offset to avoid collisions.
+    Antonio (id=0 in both) is merged into a single root node connected to
+    both David (paternal, gen 1) and Maria Margaret (maternal, gen 1).
+    """
+    p_nodes, p_parents, p_children = load_graph(paternal_path)
+    m_nodes, m_parents, m_children = load_graph(maternal_path)
+
+    # Offset maternal IDs so they don't clash
+    offset = max(p_nodes.keys()) + 10000
+    def mid(i):
+        return i if i == 0 else i + offset   # Antonio stays 0; others offset
+
+    merged_nodes = dict(p_nodes)   # paternal nodes unchanged
+    for nid, node in m_nodes.items():
+        new_id = mid(nid)
+        if new_id in merged_nodes:
+            continue   # Antonio (id=0) already present from paternal side
+        merged_nodes[new_id] = dict(node, id=new_id)
+
+    merged_parents = defaultdict(list)
+    for child, ps in p_parents.items():
+        merged_parents[child].extend(ps)
+    for child, ps in m_parents.items():
+        new_child = mid(child)
+        for p in ps:
+            new_p = mid(p)
+            if new_p not in merged_parents[new_child]:
+                merged_parents[new_child].append(new_p)
+
+    merged_children = defaultdict(list)
+    for par, cs in p_children.items():
+        merged_children[par].extend(cs)
+    for par, cs in m_children.items():
+        new_par = mid(par)
+        for c in cs:
+            new_c = mid(c)
+            if new_c not in merged_children[new_par]:
+                merged_children[new_par].append(new_c)
+
+    return merged_nodes, dict(merged_parents), dict(merged_children)
+
+
 def find_root(nodes, children, override=None, override_name=None):
     if override is not None:
         # node ids are integers; argparse gives us a string
@@ -204,18 +251,30 @@ def make_phi(nodes, parents):
 def inbreeding_F(root, nodes, parents):
     import sys as _sys
     ps = parents.get(root, [])
+
+    # Report nodes with >2 parents — these are usually the same person appearing
+    # in multiple source trees with different assigned parents (data conflict).
+    # Run fix_graph_data.py first to remove bad-direction edges; remaining cases
+    # are genuine source conflicts and should be reviewed manually.
     overloaded = {i: len(p) for i, p in parents.items() if len(p) > 2}
     if overloaded:
-        print(f"  ! warning: {len(overloaded)} node(s) have >2 parents "
-              f"(merge collision in dedupe?); F may be off. e.g. {list(overloaded)[:5]}",
+        print(f"  ! {len(overloaded)} node(s) have >2 parents (conflicting sources "
+              f"assign different parents to the same person). "
+              f"Using first 2 parents for F. e.g. {list(overloaded)[:5]}",
               file=sys.stderr)
-    phi, _ = make_phi(nodes, parents)
-    if len(ps) < 2:
+
+    # Cap every node to 2 parents for Wright's F calculation.
+    # Biologically only 2 parents are possible; extras are data artefacts.
+    capped = {nid: ps2[:2] for nid, ps2 in parents.items()}
+
+    phi, _ = make_phi(nodes, capped)
+    ps_root = capped.get(root, [])
+    if len(ps_root) < 2:
         return float("nan"), ps  # fewer than 2 parents known -> F undefined
     old_limit = _sys.getrecursionlimit()
     _sys.setrecursionlimit(50000)
     try:
-        result = phi(ps[0], ps[1]), ps
+        result = phi(ps_root[0], ps_root[1]), ps
     except RecursionError:
         print("  ! Wright's F skipped: recursion depth exceeded (graph has cycles).",
               file=sys.stderr)
@@ -234,9 +293,14 @@ def main():
     ap.add_argument("--root-name", help="root by exact name instead of id")
     ap.add_argument("--max-gen", type=int, default=50)
     ap.add_argument("--json", dest="out", help="write full metrics as JSON")
+    ap.add_argument("--maternal", metavar="PATH",
+                    help="private maternal lineage HTML to merge for F computation")
     a = ap.parse_args()
 
-    nodes, parents, children = load_graph(a.graph)
+    if a.maternal:
+        nodes, parents, children = merge_graphs(a.graph, a.maternal)
+    else:
+        nodes, parents, children = load_graph(a.graph)
     root = find_root(nodes, children, a.root, a.root_name)
     rname = nodes[root].get("name", root)
 
