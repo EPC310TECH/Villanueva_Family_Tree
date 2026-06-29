@@ -267,6 +267,53 @@ for n in nodes:
 print(f"Map nodes: {len(map_nodes)}  |  skipped (no birth/coords): {skipped}")
 payload = json.dumps(map_nodes, ensure_ascii=False, separators=(",",":"))
 
+# ── migration flows (parent → child edges that cross regions) ─────────────────
+id_to_coords = {}
+for n in nodes:
+    if not n.get("birth"):
+        continue
+    coords = get_coords(n, n["id"])
+    if coords is None:
+        continue
+    id_to_coords[n["id"]] = (coords[0], coords[1], n["birth"])
+
+from collections import defaultdict
+flow_groups = defaultdict(list)   # (flat,flng,tlat,tlng) → [years]
+
+for edge in graph["edges"]:
+    parent = id_to_coords.get(edge["s"])
+    child  = id_to_coords.get(edge["t"])
+    if not parent or not child:
+        continue
+    plat, plng, _ = parent
+    clat, clng, cyear = child
+    dlat = abs(plat - clat)
+    dlng = abs(plng - clng)
+    if math.sqrt(dlat**2 + dlng**2) < 1.5:   # skip same-region hops
+        continue
+    # Skip flows that imply pre-Columbian presence in the Americas —
+    # some nodes have country="United States" from bad source data but were born
+    # centuries before European contact; any Americas destination before 1492 is bogus.
+    AMERICAS_LNG = -40
+    if (clng < AMERICAS_LNG or plng < AMERICAS_LNG) and cyear < 1492:
+        continue
+    # quantise to ~1° grid to group nearby flows
+    key = (round(plat), round(plng), round(clat), round(clng))
+    flow_groups[key].append(cyear)
+
+# one representative flow per group per 25-year window
+flows = []
+for (flat, flng, tlat, tlng), years in flow_groups.items():
+    years.sort()
+    prev = -9999
+    for y in years:
+        if y - prev >= 25:
+            flows.append({"y": y, "f": [flat, flng], "t": [tlat, tlng]})
+            prev = y
+
+flows_js = json.dumps(flows, ensure_ascii=False, separators=(",",":"))
+print(f"Migration flows computed: {len(flows)}")
+
 # ── era JSON for JS ───────────────────────────────────────────────────────────
 eras_js = json.dumps([
     {"s": s, "e": e, "name": nm, "desc": ds}
@@ -419,10 +466,10 @@ html,body{{height:100%;background:#111009;font-family:ui-sans-serif,system-ui,sa
   <div class="ctrl-row">
     <button id="play-btn" title="Play / Pause">▶</button>
     <select id="speed-sel" title="Playback speed">
-      <option value="5">Slow</option>
-      <option value="15" selected>Normal</option>
-      <option value="40">Fast</option>
-      <option value="100">Turbo</option>
+      <option value="1">Slow</option>
+      <option value="3" selected>Normal</option>
+      <option value="10">Fast</option>
+      <option value="30">Turbo</option>
     </select>
     <input id="slider" type="range" min="607" max="1990" step="1" value="900">
     <div id="slider-label">Year 900 AD</div>
@@ -433,6 +480,7 @@ html,body{{height:100%;background:#111009;font-family:ui-sans-serif,system-ui,sa
 // ── data ──────────────────────────────────────────────────────────────────────
 const NODES = {payload};
 const ERAS  = {eras_js};
+const FLOWS = {flows_js};
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 const CAT_COLOR = {{
@@ -490,6 +538,78 @@ L.tileLayer(
 ).addTo(map);
 
 L.control.zoom({{ position: 'bottomright' }}).addTo(map);
+
+// ── arrow canvas overlay ──────────────────────────────────────────────────────
+const arrowCanvas = document.createElement('canvas');
+arrowCanvas.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:450;';
+map.getContainer().appendChild(arrowCanvas);
+const actx = arrowCanvas.getContext('2d');
+
+function resizeArrowCanvas() {{
+  const c = map.getContainer();
+  arrowCanvas.width  = c.offsetWidth;
+  arrowCanvas.height = c.offsetHeight;
+}}
+resizeArrowCanvas();
+map.on('resize', resizeArrowCanvas);
+
+let activeFlows = [];
+let dashOff = 0;
+
+function drawArrows() {{
+  actx.clearRect(0, 0, arrowCanvas.width, arrowCanvas.height);
+  dashOff = (dashOff + 0.55) % 24;
+
+  for (const f of activeFlows) {{
+    const fp = map.latLngToContainerPoint(L.latLng(f.f[0], f.f[1]));
+    const tp = map.latLngToContainerPoint(L.latLng(f.t[0], f.t[1]));
+    const dx = tp.x - fp.x, dy = tp.y - fp.y;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    if (len < 8) continue;
+
+    const op = f.a;
+
+    // Soft glow pass
+    actx.save();
+    actx.beginPath();
+    actx.moveTo(fp.x, fp.y);
+    actx.lineTo(tp.x, tp.y);
+    actx.strokeStyle = `rgba(232,184,32,${{op * 0.18}})`;
+    actx.lineWidth = 5;
+    actx.setLineDash([]);
+    actx.stroke();
+    actx.restore();
+
+    // Animated dashes
+    actx.save();
+    actx.beginPath();
+    actx.moveTo(fp.x, fp.y);
+    actx.lineTo(tp.x, tp.y);
+    actx.strokeStyle = `rgba(232,184,32,${{op * 0.82}})`;
+    actx.lineWidth = 1.4;
+    actx.setLineDash([7, 5]);
+    actx.lineDashOffset = -dashOff;
+    actx.stroke();
+    actx.restore();
+
+    // Arrowhead
+    const angle = Math.atan2(dy, dx);
+    const tx2 = tp.x - (dx / len) * 4, ty2 = tp.y - (dy / len) * 4;
+    actx.save();
+    actx.translate(tx2, ty2);
+    actx.rotate(angle);
+    actx.beginPath();
+    actx.moveTo(6, 0);
+    actx.lineTo(-5, -3.5);
+    actx.lineTo(-5,  3.5);
+    actx.closePath();
+    actx.fillStyle = `rgba(232,184,32,${{op}})`;
+    actx.fill();
+    actx.restore();
+  }}
+  requestAnimationFrame(drawArrows);
+}}
+requestAnimationFrame(drawArrows);
 
 // ── create markers (initially hidden) ─────────────────────────────────────────
 const renderer = L.canvas({{ padding: 0.5 }});
@@ -563,6 +683,12 @@ function updateMap(yr) {{
   document.getElementById('stat-region').textContent   = regionLabel(yr);
   document.getElementById('slider-label').textContent  = 'Year ' + yr + ' AD';
 
+  // Migration arrows: show flows from the last 25 years, fading with age
+  const FLOW_WIN = 25;
+  activeFlows = FLOWS
+    .filter(f => f.y <= yr && f.y >= yr - FLOW_WIN)
+    .map(f => ({{ ...f, a: Math.max(0.12, 1 - (yr - f.y) / FLOW_WIN) }}));
+
   // Auto-pan: when Americas open up, zoom out to show both continents
   if (yr >= 1510 && !hasPannedAmericas) {{
     hasPannedAmericas = true;
@@ -599,7 +725,7 @@ function startPlay() {{
       slider.value = next;
       updateMap(next);
     }}
-  }}, 50);
+  }}, 120);
 }}
 
 function stopPlay() {{
