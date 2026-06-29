@@ -110,6 +110,8 @@ def absorb_graph(g: dict, offset: int, source_label: str):
                 "cat":     n.get("cat") or classify(n["name"]),
                 "titles":  n.get("titles", ""),
                 "country": n.get("country", ""),
+                "region":  n.get("region", ""),
+                "house":   n.get("house", ""),
                 "mult":    n.get("mult", 1),
                 "sources": {source_label},
             }
@@ -121,6 +123,10 @@ def absorb_graph(g: dict, offset: int, source_label: str):
                 existing["birth"] = n["birth"]
             if existing["death"] is None and n.get("death") is not None:
                 existing["death"] = n["death"]
+            if not existing.get("house") and n.get("house"):
+                existing["house"] = n["house"]
+            if not existing.get("region") and n.get("region"):
+                existing["region"] = n["region"]
             # Keep gen from anchor (antonio-jasso) if already present;
             # otherwise take the minimum (closest to Antonio)
             if "antonio" not in existing["sources"]:
@@ -191,7 +197,7 @@ def main():
     SKIP = {
         "merged",           # merged-lineage.html
         "master",           # master-lineage.html
-        "master-geni-only", # our own output (if it exists)
+        "the-tree", # our own output (if it exists)
         "antonio-jasso",    # antonio-jasso-lineage.html — absorbed as anchor above
         # ancestors-of-beatriz-del-corral is a dup of beatriz-del-corral
         "ancestors-of-beatriz-del-corral",
@@ -316,7 +322,7 @@ def main():
     # 6. Render HTML
     template_path = os.path.join(HERE, "template.html")
     d3_path       = os.path.join(HERE, "d3.min.js")
-    out_path      = os.path.join(HERE, "master-geni-only.html")
+    out_path      = os.path.join(HERE, "the-tree.html")
 
     with open(template_path) as f:
         tpl = f.read()

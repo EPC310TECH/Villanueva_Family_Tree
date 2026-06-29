@@ -11,7 +11,7 @@ Output: ancestor_mappings/migration-map.html
 import json, re, os, math
 
 HERE    = os.path.dirname(os.path.abspath(__file__))
-TREE    = os.path.join(HERE, "antonio-jasso-lineage.html")
+TREE    = os.path.join(HERE, "the-tree.html")
 OUT     = os.path.join(HERE, "migration-map.html")
 
 # ── coordinate tables ─────────────────────────────────────────────────────────
@@ -389,7 +389,7 @@ html,body{{height:100%;background:#111009;font-family:ui-sans-serif,system-ui,sa
 <nav class="topnav">
   <a href="../index.html">Home</a>
   <span class="sep">·</span>
-  <a href="antonio-jasso-lineage.html">Family Tree</a>
+  <a href="the-tree.html">Family Tree</a>
   <span class="sep">·</span>
   <a href="houses/index.html">Noble Houses</a>
 </nav>

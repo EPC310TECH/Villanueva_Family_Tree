@@ -11,6 +11,10 @@ __pycache__/
 
 # Large source PDFs (re-downloadable from Geni.com)
 ancestor_mappings/*.pdf
+ancestor_mappings/pdfs/
+
+# Intermediate build outputs
+ancestor_mappings/out.json
 
 # Editor / IDE
 .vscode/

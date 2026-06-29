@@ -338,10 +338,46 @@ def build_maternal_graph(maternal_branch, indis, antonio_ged, mother_ged, parent
 def generate_html(template_path, graph, title, subtitle):
     with open(template_path, encoding='utf-8') as f:
         tmpl = f.read()
-    graph_json = json.dumps(graph, ensure_ascii=False, separators=(',', ':'))
-    html = tmpl.replace('{{TITLE}}', title)
-    html = html.replace('{{SUBTITLE}}', subtitle)
-    html = html.replace('/*__DATA__*/', graph_json)
+
+    # If the template still has the D3 stub, pull D3 from a sibling that has it baked in
+    if '/*__D3__*/' in tmpl:
+        here = os.path.dirname(template_path)
+        for donor in ('antonio-jasso-lineage.html', 'merged-lineage.html', 'master-lineage.html'):
+            donor_path = os.path.join(here, donor)
+            if not os.path.exists(donor_path):
+                continue
+            with open(donor_path, encoding='utf-8') as f:
+                donor_raw = f.read()
+            scripts = list(re.finditer(r'<script>(.*?)</script>', donor_raw, re.DOTALL))
+            d3 = next((s for s in scripts if '// https://d3js.org' in s.group(1)), None)
+            if d3:
+                d3_block = '<script>' + d3.group(1) + '</script>'
+                tmpl = tmpl.replace('<script>/*__D3__*/</script>', d3_block, 1)
+                break
+
+    LEGEND = [
+        {"key":"royal",      "label":"Royalty",            "color":"#e8b820"},
+        {"key":"noble",      "label":"Nobility",           "color":"#c83040"},
+        {"key":"clergy",     "label":"Clergy",             "color":"#9040c0"},
+        {"key":"military",   "label":"Military / Conquest","color":"#2d78d8"},
+        {"key":"official",   "label":"Office / Civic",     "color":"#18a870"},
+        {"key":"indigenous", "label":"Indigenous",         "color":"#c86828"},
+        {"key":"untitled",   "label":"Untitled",           "color":"#7a6e5a"},
+    ]
+    meta = {"title": title, "subtitle": subtitle}
+
+    graph_json  = json.dumps(graph,  ensure_ascii=False, separators=(',', ':'))
+    legend_json = json.dumps(LEGEND, ensure_ascii=False, separators=(',', ':'))
+    meta_json   = json.dumps(meta,   ensure_ascii=False, separators=(',', ':'))
+
+    def esc(s):
+        return s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+
+    html = tmpl.replace('{{TITLE}}',      esc(title))
+    html = html.replace('{{SUBTITLE}}',   esc(subtitle))
+    html = html.replace('/*__DATA__*/',   graph_json)
+    html = html.replace('/*__LEGEND__*/', legend_json)
+    html = html.replace('/*__META__*/',   meta_json)
     return html
 
 
