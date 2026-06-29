@@ -1,0 +1,608 @@
+{
+  "haro": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/57/614.11._ESCUDO_LOPEZ_DE_HARO_copia.svg",
+    "filename": "614.11. ESCUDO LOPEZ DE HARO copia.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Haro — Wikimedia Commons",
+    "score": 21
+  },
+  "asturias": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Coat_of_Arms_of_the_Prince_of_Asturias_%281761-1868_and_1874-1931%29-Golden_Fleece_and_Order_of_Charles_III_Variant.svg",
+    "filename": "Coat of Arms of the Prince of Asturias (1761-1868 and 1874-1931)-Golden Fleece and Order of Charles III Variant.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Asturias — Wikimedia Commons",
+    "score": 23
+  },
+  "lara": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Escudo_de_armas_de_la_Casa_Manrique_de_Lara.png",
+    "filename": "Escudo de armas de la Casa Manrique de Lara.png",
+    "source": "commons",
+    "caption": "Arms of the House of Lara — Wikimedia Commons",
+    "score": 21
+  },
+  "coimbra": null,
+  "cabrera": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/ESCUDO_ENRIQUEZ_DE_CABRERA.jpg",
+    "filename": "ESCUDO ENRIQUEZ DE CABRERA.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Cabrera — Wikimedia Commons",
+    "score": 18
+  },
+  "castro": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Casa_Carballo%2C_O_Castro_de_Valdeorras_-_escudo_Santiago.jpg",
+    "filename": "Casa Carballo, O Castro de Valdeorras - escudo Santiago.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Castro — Wikimedia Commons",
+    "score": 18
+  },
+  "burgundy": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/21/Coat_of_Arms_of_Margaret_of_Burgundy_as_Queen_Consort_of_Navarre.svg",
+    "filename": "Coat of Arms of Margaret of Burgundy as Queen Consort of Navarre.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Burgundy — Wikimedia Commons",
+    "score": 23
+  },
+  "toulouse": null,
+  "gascogne": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Blason_province_fr_Gascogne.svg",
+    "filename": "Blason province fr Gascogne.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Gascogne — Wikimedia Commons",
+    "score": 23
+  },
+  "guzman": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Escudo_Casa_de_Guzman.svg",
+    "filename": "Escudo Casa de Guzman.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Guzmán — Wikimedia Commons",
+    "score": 17
+  },
+  "trastamara": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Armas_Navarra-Evreux-Arag%C3%B3n-Trastamara.svg",
+    "filename": "Armas Navarra-Evreux-Aragón-Trastamara.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Trastámara — Wikimedia Commons",
+    "score": 17
+  },
+  "villamayor": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Escudo_de_Villamayor_de_Santiago.svg",
+    "filename": "Escudo de Villamayor de Santiago.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Villamayor — Wikimedia Commons",
+    "score": 21
+  },
+  "provence": null,
+  "pallars": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Coat_of_Arms_of_Pallars_Juss%C3%A0.svg",
+    "filename": "Coat of Arms of Pallars Jussà.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Pallars — Wikimedia Commons",
+    "score": 23
+  },
+  "maia": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Maia.svg",
+    "filename": "Coat of arms of Maia.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Maia — Wikimedia Commons",
+    "score": 23
+  },
+  "beziers": null,
+  "bourgogne": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/40/Blason_Bourgogne_Nevers_Rethel.svg",
+    "filename": "Blason Bourgogne Nevers Rethel.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Bourgogne — Wikimedia Commons",
+    "score": 23
+  },
+  "corbeil": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Blason_fr_Jean_de_Corbeil.svg",
+    "filename": "Blason fr Jean de Corbeil.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Corbeil — Wikimedia Commons",
+    "score": 23
+  },
+  "velasco": null,
+  "jimenez": null,
+  "lugo": null,
+  "bigorre": null,
+  "comminges": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/61/Blason_comt%C3%A9_fr_Comminges_%28ancien%29.svg",
+    "filename": "Blason comté fr Comminges (ancien).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Comminges — Wikimedia Commons",
+    "score": 23
+  },
+  "rouergue": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/57/Blason_comtes_de_Rodez.svg",
+    "filename": "Blason comtes de Rodez.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Rouergue — Wikimedia Commons",
+    "score": 7
+  },
+  "silva": null,
+  "anjou": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Blason_duche_fr_Anjou-Sicie-J%C3%A9rusalem.svg",
+    "filename": "Blason duche fr Anjou-Sicie-Jérusalem.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Anjou — Wikimedia Commons",
+    "score": 23
+  },
+  "melgueil": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Blason_comtes_fr_de_Melgueil.svg",
+    "filename": "Blason comtes fr de Melgueil.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Melgueil — Wikimedia Commons",
+    "score": 23
+  },
+  "sabran": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Blason_famille_fr_Sabran.svg",
+    "filename": "Blason famille fr Sabran.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Sabran — Wikimedia Commons",
+    "score": 23
+  },
+  "saldana": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/37/Coat_of_Arms_of_Salda%C3%B1a_%28Palencia%29.svg",
+    "filename": "Coat of Arms of Saldaña (Palencia).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Saldaña — Wikimedia Commons",
+    "score": 11
+  },
+  "vermandois": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Armoiries_Vermandois.svg",
+    "filename": "Armoiries Vermandois.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Vermandois — Wikimedia Commons",
+    "score": 19
+  },
+  "sousa": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Arms_of_Henry_of_Castile_and_Sousa.svg",
+    "filename": "Arms of Henry of Castile and Sousa.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Sousa — Wikimedia Commons",
+    "score": 21
+  },
+  "olague": null,
+  "del-corral": null,
+  "cifuentes": null,
+  "besalu": null,
+  "forcalquier": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Arms_of_the_House_of_Baux_%28Seneschals_of_Provence_and_Forcalquier%29.svg",
+    "filename": "Arms of the House of Baux (Seneschals of Provence and Forcalquier).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Forcalquier — Wikimedia Commons",
+    "score": 21
+  },
+  "normandy": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Duchy_of_Normandy_and_House_of_Hauteville_coats_of_arms.jpg",
+    "filename": "Duchy of Normandy and House of Hauteville coats of arms.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Normandy — Wikimedia Commons",
+    "score": 18
+  },
+  "celanova": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/25/Bras%C3%A3oCelanova.jpg",
+    "filename": "BrasãoCelanova.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Celanova — Wikimedia Commons",
+    "score": 16
+  },
+  "bearn": null,
+  "montpellier": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/21/Blason_seigneurs_de_Montpellier.svg",
+    "filename": "Blason seigneurs de Montpellier.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Montpellier — Wikimedia Commons",
+    "score": 23
+  },
+  "ribadouro": null,
+  "mendoza": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/1/11/Escudo_de_Juan_de_Mendoza_y_Luna.svg",
+    "filename": "Escudo de Juan de Mendoza y Luna.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Mendoza — Wikimedia Commons",
+    "score": 21
+  },
+  "monterroso": null,
+  "foix": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Blason_de_Foix-B%C3%A9arn.svg",
+    "filename": "Blason de Foix-Béarn.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Foix — Wikimedia Commons",
+    "score": 23
+  },
+  "carcassonne": null,
+  "montignac": null,
+  "millau": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Segell-millau-1187-vexillum-nostrum-alfons-II-arago.jpg",
+    "filename": "Segell-millau-1187-vexillum-nostrum-alfons-II-arago.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Millau — Wikimedia Commons",
+    "score": 16
+  },
+  "brioude": null,
+  "braga": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Coat_of_arms_Ferreiros_Braga.jpg",
+    "filename": "Coat of arms Ferreiros Braga.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Braga — Wikimedia Commons",
+    "score": 20
+  },
+  "france": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Blason_pays_fr_France_ancien.svg",
+    "filename": "Blason pays fr France ancien.svg",
+    "source": "commons",
+    "caption": "Arms of the House of France — Wikimedia Commons",
+    "score": 23
+  },
+  "traba": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/29/Traba_escudo.jpg",
+    "filename": "Traba escudo.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Traba — Wikimedia Commons",
+    "score": 18
+  },
+  "castellvell": null,
+  "braganca": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/46/COA_of_Braganca.svg",
+    "filename": "COA of Braganca.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Bragança — Wikimedia Commons",
+    "score": 15
+  },
+  "bobadilla": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Coat_of_Arms_of_the_Firts_Count_of_Bobadilla.svg",
+    "filename": "Coat of Arms of the Firts Count of Bobadilla.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Bobadilla — Wikimedia Commons",
+    "score": 23
+  },
+  "castela": null,
+  "semur": null,
+  "narbonne": null,
+  "courtenay": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/48/Blason_maison_fr_de_Courtenay-Constantinople.svg",
+    "filename": "Blason maison fr de Courtenay-Constantinople.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Courtenay — Wikimedia Commons",
+    "score": 23
+  },
+  "nevers": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Blason_maison_fr_de_Nevers.svg",
+    "filename": "Blason maison fr de Nevers.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Nevers — Wikimedia Commons",
+    "score": 23
+  },
+  "azagra": null,
+  "sarmiento": null,
+  "ribagorza": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Arms_of_Alfonso_IV_of_Ribagorza%2C_Marquis_of_Villena.svg",
+    "filename": "Arms of Alfonso IV of Ribagorza, Marquis of Villena.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Ribagorza — Wikimedia Commons",
+    "score": 21
+  },
+  "cerdanya": null,
+  "limoges": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Blason_famille_fr_Rochechouart_Limoges.svg",
+    "filename": "Blason famille fr Rochechouart Limoges.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Limoges — Wikimedia Commons",
+    "score": 23
+  },
+  "marseille": null,
+  "poitou": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/be/Blason_Poitou_0.svg",
+    "filename": "Blason Poitou 0.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Poitou — Wikimedia Commons",
+    "score": 23
+  },
+  "blois": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Arms_of_the_House_of_Blois-Navarre.svg",
+    "filename": "Arms of the House of Blois-Navarre.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Blois — Wikimedia Commons",
+    "score": 21
+  },
+  "thouars": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Blason_famille_fr_Thouars.svg",
+    "filename": "Blason famille fr Thouars.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Thouars — Wikimedia Commons",
+    "score": 23
+  },
+  "valois": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/42/Blason_comte_fr_Valois_avant_1299.svg",
+    "filename": "Blason comte fr Valois avant 1299.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Valois — Wikimedia Commons",
+    "score": 23
+  },
+  "tonnerre": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Blason_Clermont-Tonnerre.svg",
+    "filename": "Blason Clermont-Tonnerre.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Tonnerre — Wikimedia Commons",
+    "score": 23
+  },
+  "castaneda": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/55/Castaneda_wappen.svg",
+    "filename": "Castaneda wappen.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Castañeda — Wikimedia Commons",
+    "score": 17
+  },
+  "samatan": null,
+  "castillo": null,
+  "lacarra": null,
+  "alcocer": null,
+  "molina": null,
+  "ayala": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Escudo_Casa_de_Ayala.svg",
+    "filename": "Escudo Casa de Ayala.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Ayala — Wikimedia Commons",
+    "score": 21
+  },
+  "villalobos": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Escudo_de_Villalobos.svg",
+    "filename": "Escudo de Villalobos.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Villalobos — Wikimedia Commons",
+    "score": 21
+  },
+  "manzanedo": null,
+  "bierzo": null,
+  "valdes": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/94/Escudo_de_Armas_de_Vald%C3%A9s.svg",
+    "filename": "Escudo de Armas de Valdés.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Valdés — Wikimedia Commons",
+    "score": 11
+  },
+  "amaya": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Escudo_de_Armas_de_Amaya.svg",
+    "filename": "Escudo de Armas de Amaya.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Amaya — Wikimedia Commons",
+    "score": 23
+  },
+  "sobrado": null,
+  "bureba": null,
+  "cisneros": null,
+  "monzon": null,
+  "tost": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Tost_Wappen.jpg",
+    "filename": "Tost Wappen.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Tost — Wikimedia Commons",
+    "score": 18
+  },
+  "montdidier": null,
+  "lorraine": null,
+  "gometz": null,
+  "beaugency": null,
+  "preuilly": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Blason_maison_fr_de_Preuilly_1.svg",
+    "filename": "Blason maison fr de Preuilly 1.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Preuilly — Wikimedia Commons",
+    "score": 23
+  },
+  "saumur": null,
+  "mysia": null,
+  "queralt": null,
+  "gurb": null,
+  "gavarret": null,
+  "montaner": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Escudo_de_Mas_de_las_Matas.svg",
+    "filename": "Escudo de Mas de las Matas.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Montaner — Wikimedia Commons",
+    "score": 5
+  },
+  "reillane": null,
+  "vence": null,
+  "sisteron": null,
+  "mayenne": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Blason_maison_fr_de_Mayenne.svg",
+    "filename": "Blason maison fr de Mayenne.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Mayenne — Wikimedia Commons",
+    "score": 23
+  },
+  "forez": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Blason_comtes_de_Lyon_et_de_Forez_%28ancien%29.svg",
+    "filename": "Blason comtes de Lyon et de Forez (ancien).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Forez — Wikimedia Commons",
+    "score": 23
+  },
+  "deza": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Escudo_de_Armas_de_Su%C3%A1rez_de_Deza.svg",
+    "filename": "Escudo de Armas de Suárez de Deza.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Deza — Wikimedia Commons",
+    "score": 23
+  },
+  "ambia": null,
+  "gandarei": null,
+  "lanhoso": null,
+  "azevedo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/4/41/Armas_de_D._Francisco_Monteiro_Pereira_de_Azevedo.svg",
+    "filename": "Armas de D. Francisco Monteiro Pereira de Azevedo.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Azevedo — Wikimedia Commons",
+    "score": 21
+  },
+  "herrera": null,
+  "campo": null,
+  "luna": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/1/11/Escudo_de_Juan_de_Mendoza_y_Luna.svg",
+    "filename": "Escudo de Juan de Mendoza y Luna.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Luna — Wikimedia Commons",
+    "score": 21
+  },
+  "osorio": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Coat_of_Arms_of_Beltr%C3%A1n_Alfonso_Osorio%2C_18th_duke_of_Alburquerque.svg",
+    "filename": "Coat of Arms of Beltrán Alfonso Osorio, 18th duke of Alburquerque.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Osorio — Wikimedia Commons",
+    "score": 23
+  },
+  "najera": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/de/Blason_Jean_Esteban_Manrique_de_Lara_%281504-1558%29_Duc_de_Najera.svg",
+    "filename": "Blason Jean Esteban Manrique de Lara (1504-1558) Duc de Najera.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Nájera — Wikimedia Commons",
+    "score": 19
+  },
+  "astorga": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Escudo_del_Marquesado_de_Astorga_%28Grande_de_Espa%C3%B1a%29.svg",
+    "filename": "Escudo del Marquesado de Astorga (Grande de España).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Astorga — Wikimedia Commons",
+    "score": 21
+  },
+  "toro": null,
+  "gormaz": null,
+  "gevaudan": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Blason_de_la_famille_de_Caylus_%28G%C3%A9vaudan%29.svg",
+    "filename": "Blason de la famille de Caylus (Gévaudan).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Gévaudan — Wikimedia Commons",
+    "score": 11
+  },
+  "aurillac": null,
+  "salluste": null,
+  "narbona": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/1/13/Blason_fam_fr_Narbonne-Pelet_%28de%29.svg",
+    "filename": "Blason fam fr Narbonne-Pelet (de).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Narbona — Wikimedia Commons",
+    "score": 7
+  },
+  "urgel": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Arms_of_Peter_II%2C_Count_of_Urgell.svg",
+    "filename": "Arms of Peter II, Count of Urgell.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Urgel — Wikimedia Commons",
+    "score": 21
+  },
+  "chalon": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Blason_maison_fr_de_Chalon.svg",
+    "filename": "Blason maison fr de Chalon.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Chalon — Wikimedia Commons",
+    "score": 23
+  },
+  "rennes": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Rennes_Palais_Saint-Georges_blason_droit.jpg",
+    "filename": "Rennes Palais Saint-Georges blason droit.jpg",
+    "source": "commons",
+    "caption": "Arms of the House of Rennes — Wikimedia Commons",
+    "score": 20
+  },
+  "vergy": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Blason_maison_fr_de_Vergy.svg",
+    "filename": "Blason maison fr de Vergy.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Vergy — Wikimedia Commons",
+    "score": 23
+  },
+  "maranon": null,
+  "galicie": null,
+  "beulac": null,
+  "montanolier": null,
+  "nogent": null,
+  "chartres": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Blason_Guillaume_de_Chartres_%28Salles_des_Croisades%29.svg",
+    "filename": "Blason Guillaume de Chartres (Salles des Croisades).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Chartres — Wikimedia Commons",
+    "score": 23
+  },
+  "ramerupt": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/79/Armoiries_Brienne-Ramerupt_ancien.svg",
+    "filename": "Armoiries Brienne-Ramerupt ancien.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Ramerupt — Wikimedia Commons",
+    "score": 19
+  },
+  "roucy": null,
+  "metz": null,
+  "montfort": null,
+  "poitiers": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Bras%C3%A3o_de_arrmas_heraldico_do_chefe_da_casa_de_Poitiers.png",
+    "filename": "Brasão de arrmas heraldico do chefe da casa de Poitiers.png",
+    "source": "commons",
+    "caption": "Arms of the House of Poitiers — Wikimedia Commons",
+    "score": 17
+  },
+  "montgomery": null,
+  "bueil": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/94/Coat_of_Arms_of_Honorat_de_Bueil%2C_lord_of_Fontaines.svg",
+    "filename": "Coat of Arms of Honorat de Bueil, lord of Fontaines.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Bueil — Wikimedia Commons",
+    "score": 23
+  },
+  "montlhery": null,
+  "lemos": null,
+  "saavedra": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Escudo_de_Jos%C3%A9_de_Saavedra_y_Serantes.svg",
+    "filename": "Escudo de José de Saavedra y Serantes.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Saavedra — Wikimedia Commons",
+    "score": 21
+  },
+  "viguera": null,
+  "moncada": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Stemma_Moncada_di_Patern%C3%B2.png",
+    "filename": "Stemma Moncada di Paternò.png",
+    "source": "commons",
+    "caption": "Arms of the House of Moncada — Wikimedia Commons",
+    "score": 19
+  },
+  "gabarret": null,
+  "vilademuls": null,
+  "canavese": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Canavese_CoA.svg",
+    "filename": "Canavese CoA.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Canavese — Wikimedia Commons",
+    "score": 19
+  },
+  "beaujeu": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Blason_maison_de_beaujeu.svg",
+    "filename": "Blason maison de beaujeu.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Beaujeu — Wikimedia Commons",
+    "score": 23
+  },
+  "malleval": null,
+  "sauvian": null,
+  "coucy": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Blason_maison_fr_de_Coucy.svg",
+    "filename": "Blason maison fr de Coucy.svg",
+    "source": "commons",
+    "caption": "Arms of the House of Coucy — Wikimedia Commons",
+    "score": 23
+  },
+  "bretagne": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Blason_L%C3%A9on_%28Bretagne%29.svg",
+    "filename": "Blason Léon (Bretagne).svg",
+    "source": "commons",
+    "caption": "Arms of the House of Bretagne — Wikimedia Commons",
+    "score": 23
+  },
+  "marnel": null,
+  "riba": null,
+  "penagate": null,
+  "tovar": null,
+  "arellano": null,
+  "muret": null
+}

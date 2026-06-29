@@ -18,9 +18,17 @@ display:flex;gap:20px;align-items:center;font-size:.82rem;letter-spacing:.08em;p
 /* hero */
 .hero{background:linear-gradient(180deg,#231f18 0%,#1a1610 100%);border-bottom:1px solid var(--line);
 padding:48px 28px 36px;max-width:900px;margin:0 auto}
+.hero-inner{display:flex;gap:36px;align-items:flex-start}
+.hero-text{flex:1;min-width:0}
 .eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:10px}
 .hero h1{font-size:2.1rem;font-weight:800;color:var(--gold2);letter-spacing:-.01em;margin-bottom:6px;line-height:1.1}
 .hero .subtitle{font-size:.92rem;color:var(--muted);margin-bottom:24px}
+/* shield */
+.shield-wrap{flex-shrink:0;text-align:center;padding-top:4px}
+.shield-img{width:130px;height:auto;max-height:160px;object-fit:contain;
+filter:drop-shadow(0 2px 12px rgba(0,0,0,.7));border-radius:2px}
+.shield-caption{font-size:.6rem;color:var(--muted);margin-top:7px;line-height:1.4;max-width:130px}
+@media(max-width:560px){.hero-inner{flex-direction:column-reverse;gap:20px}.shield-wrap{align-self:center}}
 .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:0}
 .badge{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;
 border-radius:99px;border:1px solid var(--line);color:var(--muted)}
@@ -93,10 +101,15 @@ border-top:1px solid var(--line);margin-top:40px}
 </nav>
 
 <div class="hero">
-  <span class="eyebrow">Noble &amp; Royal House</span>
-  <h1>House of Gometz</h1>
-  <p class="subtitle">4 ancestors · c. 960–1014 AD · 32th great-grandparent of Antonio Jasso</p>
-  <div class="badges"><span class="badge">Untitled</span></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="eyebrow">Noble &amp; Royal House</span>
+      <h1>House of Gometz</h1>
+      <p class="subtitle">4 ancestors · c. 960–1014 AD · 32th great-grandparent of Antonio Jasso</p>
+      <div class="badges"><span class="badge">Untitled</span></div>
+    </div>
+    
+  </div>
 </div>
 
 <div class="section">
