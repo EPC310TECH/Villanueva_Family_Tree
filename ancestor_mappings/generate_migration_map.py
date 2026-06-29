@@ -387,7 +387,7 @@ html,body{{height:100%;background:#111009;font-family:ui-sans-serif,system-ui,sa
 <div id="map"></div>
 
 <nav class="topnav">
-  <a href="../../index.html">Home</a>
+  <a href="../index.html">Home</a>
   <span class="sep">·</span>
   <a href="antonio-jasso-lineage.html">Family Tree</a>
   <span class="sep">·</span>
