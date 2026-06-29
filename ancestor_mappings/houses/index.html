@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Noble &amp; Royal Houses — Villanueva Family Tree</title>
+<style>
+:root{--bg:#1a1610;--surface:#231f18;--card:#2b2620;--gold:#c8a84b;--gold2:#e8b820;
+--parch:#e8dfcc;--muted:#a89b7a;--line:rgba(200,168,75,.15);--red:#c83040;--blue:#2d78d8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--parch);font-family:ui-sans-serif,system-ui,sans-serif;
+padding:0;min-height:100vh}
+a{color:var(--gold);text-decoration:none}a:hover{text-decoration:underline}
+/* nav */
+.topnav{background:rgba(26,22,16,.95);border-bottom:1px solid var(--line);padding:14px 28px;
+display:flex;gap:20px;align-items:center;font-size:.82rem;letter-spacing:.08em;position:sticky;top:0;z-index:99}
+.topnav .sep{color:var(--muted)}
+/* hero */
+.hero{background:linear-gradient(180deg,#231f18 0%,#1a1610 100%);border-bottom:1px solid var(--line);
+padding:48px 28px 36px;max-width:900px;margin:0 auto}
+.eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:10px}
+.hero h1{font-size:2.1rem;font-weight:800;color:var(--gold2);letter-spacing:-.01em;margin-bottom:6px;line-height:1.1}
+.hero .subtitle{font-size:.92rem;color:var(--muted);margin-bottom:24px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:0}
+.badge{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;
+border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.badge.royal{border-color:#e8b820;color:#e8b820}
+.badge.noble{border-color:#c83040;color:#c83040}
+.badge.military{border-color:#2d78d8;color:#2d78d8}
+/* sections */
+.section{max-width:900px;margin:0 auto;padding:36px 28px}
+.section h2{font-size:1.1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+color:var(--muted);margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:10px}
+/* connection card */
+.connect-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 24px}
+.connect-label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+margin-bottom:4px;display:block}
+.connect-rel{font-size:1.05rem;font-weight:700;color:var(--parch);margin-bottom:16px}
+/* path chain */
+.path-chain{display:flex;flex-direction:column;gap:0}
+.path-step{display:flex;align-items:flex-start;gap:12px;padding:6px 0}
+.path-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:5px;flex-shrink:0}
+.path-dot.start{background:var(--gold2);width:10px;height:10px;margin-top:4px}
+.path-dot.end{background:#c83040;width:10px;height:10px;margin-top:4px}
+.path-line-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+.path-vline{width:1px;height:16px;background:var(--line);margin:0 auto}
+.path-info{flex:1}
+.path-name{font-size:.88rem;color:var(--parch);font-weight:500}
+.path-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
+/* history */
+.history-body p{font-size:.9rem;line-height:1.7;color:var(--parch);margin-bottom:14px}
+.history-body strong{color:var(--parch)}
+.history-body em{color:var(--gold)}
+/* members table */
+.member-table{width:100%;border-collapse:collapse;font-size:.83rem}
+.member-table th{text-align:left;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+.member-table td{padding:9px 10px;border-bottom:1px solid rgba(200,168,75,.07);vertical-align:top}
+.member-table tr:hover td{background:rgba(200,168,75,.04)}
+.m-name{color:var(--parch);font-weight:500}
+.m-titles{color:var(--muted);font-size:.78rem;margin-top:2px}
+.cat-badge{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;
+border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.cat-royal{color:#e8b820;border-color:#e8b820}
+.cat-noble{color:#c83040;border-color:#c83040}
+.cat-military{color:#2d78d8;border-color:#2d78d8}
+.cat-official{color:#18a870;border-color:#18a870}
+.cat-untitled{color:#7a6e5a;border-color:#7a6e5a}
+.gen-chip{font-size:.72rem;color:var(--muted);background:rgba(200,168,75,.08);
+padding:2px 7px;border-radius:4px;white-space:nowrap}
+/* index grid */
+.house-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.house-card{background:var(--card);border:1px solid var(--line);border-radius:8px;
+padding:18px 20px;text-decoration:none;display:block;transition:border-color .2s}
+.house-card:hover{border-color:var(--gold);text-decoration:none}
+.hc-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);
+margin-bottom:4px}
+.hc-name{font-size:1rem;font-weight:700;color:var(--parch);margin-bottom:6px}
+.hc-meta{font-size:.76rem;color:var(--muted)}
+/* footer */
+footer{text-align:center;padding:28px;font-size:.76rem;color:var(--muted);
+border-top:1px solid var(--line);margin-top:40px}
+
+.search-wrap{margin-bottom:24px}
+#search{width:100%;background:var(--card);border:1px solid var(--line);border-radius:6px;
+padding:10px 14px;color:var(--parch);font-size:.88rem;outline:none}
+#search:focus{border-color:var(--gold)}
+.house-card.hidden{display:none}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="../../index.html">Home</a>
+  <span class="sep">›</span>
+  <span style="color:var(--parch)">Noble Houses</span>
+</nav>
+
+<div class="hero">
+  <span class="eyebrow">Your Ancestry</span>
+  <h1>Noble &amp; Royal Houses</h1>
+  <p class="subtitle">157 houses · documented in Antonio Jasso's family tree · each page shows your connection and history</p>
+</div>
+
+<div class="section">
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Search houses…" oninput="filterHouses(this.value)">
+  </div>
+  <div class="house-grid" id="grid">
+      <a class="house-card" href="asturias.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 29 ancestors · c. 694–1216 AD</div>
+        <div class="hc-name">House of Asturias</div>
+        <div class="hc-meta">Nearest: D. Sancha Rodríguez de Asturias<br>20th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="burgundy.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 22 ancestors · c. 851–1143 AD</div>
+        <div class="hc-name">House of Burgundy</div>
+        <div class="hc-meta">Nearest: Raymond of Burgundy, Count of Galicia<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="normandy.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 8 ancestors · c. 897–1011 AD</div>
+        <div class="hc-name">House of Normandy</div>
+        <div class="hc-meta">Nearest: Adeliza de Normandie<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="haro.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 31 ancestors · c. 900–1710 AD</div>
+        <div class="hc-name">House of Haro</div>
+        <div class="hc-meta">Nearest: María Josefa (Maria) de Aro y González de Har<br>8th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="castela.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 6 ancestors · c. 799–1242 AD</div>
+        <div class="hc-name">House of Castela</div>
+        <div class="hc-meta">Nearest: Beatriz de Castela, Queen consorte of Portuga<br>24th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="anjou.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 10 ancestors · c. 855–1112 AD</div>
+        <div class="hc-name">House of Anjou</div>
+        <div class="hc-meta">Nearest: Sybille d’Anjou, Countess of Flandre à Béthan<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="viguera.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 3 ancestors · c. 937–980 AD</div>
+        <div class="hc-name">House of Viguera</div>
+        <div class="hc-meta">Nearest: Toda García de Viguera<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bierzo.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 4 ancestors · c. 800–1030 AD</div>
+        <div class="hc-name">House of Bierzo</div>
+        <div class="hc-meta">Nearest: Munio Rodríguez, Count of Bierzo<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="najera.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 3 ancestors · c. 1005–1040 AD</div>
+        <div class="hc-name">House of Nájera</div>
+        <div class="hc-meta">Nearest: García III, el of Nájera, King of Navarre<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="provence.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 15 ancestors · c. 860–1205 AD</div>
+        <div class="hc-name">House of Provence</div>
+        <div class="hc-meta">Nearest: Gersende de Provence, Infanta d'Aragon<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="lemos.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 3 ancestors · dates unknown</div>
+        <div class="hc-name">House of Lemos</div>
+        <div class="hc-meta">Nearest: Elvira Osorio, Lady of Lemos and Sarria<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bourgogne.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 13 ancestors · c. 876–1135 AD</div>
+        <div class="hc-name">House of Bourgogne</div>
+        <div class="hc-meta">Nearest: Constance de Bourgogne, Queen consort of Cast<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montpellier.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 8 ancestors · c. 930–1180 AD</div>
+        <div class="hc-name">House of Montpellier</div>
+        <div class="hc-meta">Nearest: María de Montpellier, Queen of Aragon<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="foix.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 7 ancestors · c. 981–1130 AD</div>
+        <div class="hc-name">House of Foix</div>
+        <div class="hc-meta">Nearest: Estefanía de Foix, Queen of Navarre<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="courtenay.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 6 ancestors · c. 985–1155 AD</div>
+        <div class="hc-name">House of Courtenay</div>
+        <div class="hc-meta">Nearest: Pierre II de Courtenay, Emperor of Constantin<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="limoges.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 5 ancestors · c. 875–944 AD</div>
+        <div class="hc-name">House of Limoges</div>
+        <div class="hc-meta">Nearest: Almode de Limoges, Countess of Charroux &amp; La <br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="poitou.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 5 ancestors · c. 915–1105 AD</div>
+        <div class="hc-name">House of Poitou</div>
+        <div class="hc-meta">Nearest: Inés de Poitou, Queen-Consort of Aragon<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="lorraine.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 4 ancestors · c. 913–990 AD</div>
+        <div class="hc-name">House of Lorraine</div>
+        <div class="hc-meta">Nearest: Adelais d'Ardennes de Lorraine, of Troyes<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="queralt.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 4 ancestors · c. 1125–1125 AD</div>
+        <div class="hc-name">House of Queralt</div>
+        <div class="hc-meta">Nearest: Berenguela de Queralt<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="roucy.html">
+        <div class="hc-label"><span class="badge royal" style="font-size:.6rem;padding:2px 7px">Royal</span> 3 ancestors · c. 1014–1060 AD</div>
+        <div class="hc-name">House of Roucy</div>
+        <div class="hc-meta">Nearest: Felícia de Roucy, Queen Consort of Aragon<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="lara.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 28 ancestors · c. 863–1405 AD</div>
+        <div class="hc-name">House of Lara</div>
+        <div class="hc-meta">Nearest: Beatriz Manrique de Lara y Castilla, Countess<br>16th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="coimbra.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 24 ancestors · c. 680–1220 AD</div>
+        <div class="hc-name">House of Coimbra</div>
+        <div class="hc-meta">Nearest: N.N. Guterres de Coimbra<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="cabrera.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 22 ancestors · c. 867–1255 AD</div>
+        <div class="hc-name">House of Cabrera</div>
+        <div class="hc-meta">Nearest: Sancha Rodríguez de Cabrera<br>23th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="castro.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 22 ancestors · c. 920–1240 AD</div>
+        <div class="hc-name">House of Castro</div>
+        <div class="hc-meta">Nearest: Urraca Fernández de Castro<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="trastamara.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 16 ancestors · c. 866–1160 AD</div>
+        <div class="hc-name">House of Trastámara</div>
+        <div class="hc-meta">Nearest: Fernando Pérez de Traba, Count of Trastámara<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="guzman.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 19 ancestors · c. 940–1300 AD</div>
+        <div class="hc-name">House of Guzmán</div>
+        <div class="hc-meta">Nearest: Juana de Guzmán<br>19th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="maia.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 14 ancestors · c. 955–1150 AD</div>
+        <div class="hc-name">House of Maia</div>
+        <div class="hc-meta">Nearest: Teresa Soares da Maia<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="pallars.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 14 ancestors · c. 855–1010 AD</div>
+        <div class="hc-name">House of Pallars</div>
+        <div class="hc-meta">Nearest: María de Pallars Sobirá<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="velasco.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 11 ancestors · c. 1115–1482 AD</div>
+        <div class="hc-name">House of Velasco</div>
+        <div class="hc-meta">Nearest: Diego Temiño de Velasco, Mayor of Temiño<br>13th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="celanova.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 8 ancestors · c. 911–1120 AD</div>
+        <div class="hc-name">House of Celanova</div>
+        <div class="hc-meta">Nearest: Fruilhe Sanches de Celanova<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="ribadouro.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 8 ancestors · c. 977–1100 AD</div>
+        <div class="hc-name">House of Ribadouro</div>
+        <div class="hc-meta">Nearest: Moninho Ermiges, o Gasco, Lord of Ribadouro<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="monterroso.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 7 ancestors · c. 750–875 AD</div>
+        <div class="hc-name">House of Monterroso</div>
+        <div class="hc-meta">Nearest: D. Fernando Rodriguez de Monterroso<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="braganca.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 7 ancestors · c. 1000–1175 AD</div>
+        <div class="hc-name">House of Bragança</div>
+        <div class="hc-meta">Nearest: D. Elvira García de Bragança<br>24th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="ribagorza.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 5 ancestors · c. 830–945 AD</div>
+        <div class="hc-name">House of Ribagorza</div>
+        <div class="hc-meta">Nearest: Countess Ava Argentina de Ribagorza<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bureba.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1032–1175 AD</div>
+        <div class="hc-name">House of Bureba</div>
+        <div class="hc-meta">Nearest: Sancha Ruiz de Bureba, Lady and Countess of B<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="deza.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 610–860 AD</div>
+        <div class="hc-name">House of Deza</div>
+        <div class="hc-meta">Nearest: Afonso Betote, Count of Tuy and Deza<br>34th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="villamayor.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 15 ancestors · c. 1096–1315 AD</div>
+        <div class="hc-name">House of Villamayor</div>
+        <div class="hc-meta">Nearest: Diego Pérez Sarmiento de Villamayor y Haro, G<br>20th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="jimenez.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 11 ancestors · c. 720–1150 AD</div>
+        <div class="hc-name">House of Jiménez</div>
+        <div class="hc-meta">Nearest: Teresa Ximénez de los Cameros<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="lugo.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 11 ancestors · c. 845–1035 AD</div>
+        <div class="hc-name">House of Lugo</div>
+        <div class="hc-meta">Nearest: Aldara Ériz de Lugo<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="saldana.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 9 ancestors · c. 900–1250 AD</div>
+        <div class="hc-name">House of Saldaña</div>
+        <div class="hc-meta">Nearest: D. Fernan Ruiz de Saldaña<br>22th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="cifuentes.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 8 ancestors · c. 1108–1212 AD</div>
+        <div class="hc-name">House of Cifuentes</div>
+        <div class="hc-meta">Nearest: María Ramírez de Cifuentes, Lady of Aviados a<br>22th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="mendoza.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 7 ancestors · c. 1115–1515 AD</div>
+        <div class="hc-name">House of Mendoza</div>
+        <div class="hc-meta">Nearest: María de Mendoza Arellano<br>14th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="azagra.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 6 ancestors · c. 1140–1140 AD</div>
+        <div class="hc-name">House of Azagra</div>
+        <div class="hc-meta">Nearest: Elvira García de Azagra<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="sobrado.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1005–1070 AD</div>
+        <div class="hc-name">House of Sobrado</div>
+        <div class="hc-meta">Nearest: Gomez Mendes Guedeau o Barroso, Count of Sobr<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="corbeil.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 12 ancestors · c. 910–1070 AD</div>
+        <div class="hc-name">House of Corbeil</div>
+        <div class="hc-meta">Nearest: Ferry III de Corbeil de Châtillon<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="silva.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 10 ancestors · c. 1000–1180 AD</div>
+        <div class="hc-name">House of Silva</div>
+        <div class="hc-meta">Nearest: Martim Gomes da Silva<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="braga.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 7 ancestors · c. 800–950 AD</div>
+        <div class="hc-name">House of Braga</div>
+        <div class="hc-meta">Nearest: Gundemaro Pinioliz de Braga, Count of Oviedo<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bobadilla.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 6 ancestors · c. 1375–1515 AD</div>
+        <div class="hc-name">House of Bobadilla</div>
+        <div class="hc-meta">Nearest: Francisco de Bobadilla, Conquistador de la Nu<br>13th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="castaneda.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 5 ancestors · c. 1210–1290 AD</div>
+        <div class="hc-name">House of Castañeda</div>
+        <div class="hc-meta">Nearest: (María) Mayor Gómez de Castañeda, Lady of Pal<br>21th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="lacarra.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1364–1460 AD</div>
+        <div class="hc-name">House of Lacarra</div>
+        <div class="hc-meta">Nearest: Sancha Velasco de Lacarra<br>14th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="saavedra.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · dates unknown</div>
+        <div class="hc-name">House of Saavedra</div>
+        <div class="hc-meta">Nearest: Maria Fernandez de Saavedra<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="tovar.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · c. 1175–1175 AD</div>
+        <div class="hc-name">House of Tovar</div>
+        <div class="hc-meta">Nearest: Sancha Fernández de Tovar<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="toulouse.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 20 ancestors · c. 785–1103 AD</div>
+        <div class="hc-name">House of Toulouse</div>
+        <div class="hc-meta">Nearest: Elvira Alfonso, Countess of Tolosa<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="rouergue.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 10 ancestors · c. 870–1000 AD</div>
+        <div class="hc-name">House of Rouergue</div>
+        <div class="hc-meta">Nearest: Adelais de Rouergue, Countess consort of Carc<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="sousa.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 9 ancestors · c. 850–1170 AD</div>
+        <div class="hc-name">House of Sousa</div>
+        <div class="hc-meta">Nearest: Elvira Gonçalves de Sousa<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="del-corral.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 8 ancestors · c. 1375–1375 AD</div>
+        <div class="hc-name">House of Del Corral</div>
+        <div class="hc-meta">Nearest: Beatriz del Corral<br>17th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="narbonne.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 6 ancestors · c. 825–885 AD</div>
+        <div class="hc-name">House of Narbonne</div>
+        <div class="hc-meta">Nearest: Hermensinde de Narbonne<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="sarmiento.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 5 ancestors · c. 1230–1425 AD</div>
+        <div class="hc-name">House of Sarmiento</div>
+        <div class="hc-meta">Nearest: María Sarmiento y Manuel<br>17th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="valois.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 5 ancestors · c. 940–1057 AD</div>
+        <div class="hc-name">House of Valois</div>
+        <div class="hc-meta">Nearest: Adèle de Vermandois, Countess of Vermandois e<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="castillo.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1555–1589 AD</div>
+        <div class="hc-name">House of Castillo</div>
+        <div class="hc-meta">Nearest: Diego Bañuelos y del Castillo<br>10th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="molina.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1224–1575 AD</div>
+        <div class="hc-name">House of Molina</div>
+        <div class="hc-meta">Nearest: Luis de Molina Tapia<br>13th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="villalobos.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1120–1575 AD</div>
+        <div class="hc-name">House of Villalobos</div>
+        <div class="hc-meta">Nearest: Leonor Ortiz de Villalobos<br>13th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="manzanedo.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1080–1110 AD</div>
+        <div class="hc-name">House of Manzanedo</div>
+        <div class="hc-meta">Nearest: Inés Manrique de Manzanedo<br>20th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="valdes.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 880–960 AD</div>
+        <div class="hc-name">House of Valdés</div>
+        <div class="hc-meta">Nearest: Mendo González de Valdés, II Count of Portuca<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="amaya.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 760–1030 AD</div>
+        <div class="hc-name">House of Amaya</div>
+        <div class="hc-meta">Nearest: Nuna de Amaya<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="cisneros.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1240–1250 AD</div>
+        <div class="hc-name">House of Cisneros</div>
+        <div class="hc-meta">Nearest: Juana Rodríguez de Cisneros<br>22th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="tost.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 985–1040 AD</div>
+        <div class="hc-name">House of Tost</div>
+        <div class="hc-meta">Nearest: Letgarde (or Sibilla) de Tost, Viscountess of<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montdidier.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 930–1010 AD</div>
+        <div class="hc-name">House of Montdidier</div>
+        <div class="hc-meta">Nearest: Hilduin IV, Count of Montdidier, Lord of Rame<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="lanhoso.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 4 ancestors · c. 1020–1135 AD</div>
+        <div class="hc-name">House of Lanhoso</div>
+        <div class="hc-meta">Nearest: Usco Godins de Lanhoso<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="astorga.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · c. 825–1235 AD</div>
+        <div class="hc-name">House of Astorga</div>
+        <div class="hc-meta">Nearest: Elvira Núñez de Astorga<br>24th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="toro.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · c. 1045–1075 AD</div>
+        <div class="hc-name">House of Toro</div>
+        <div class="hc-meta">Nearest: Pedro Ansúrez, Count of Toro and Zamora<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="metz.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · c. 836–970 AD</div>
+        <div class="hc-name">House of Metz</div>
+        <div class="hc-meta">Nearest: Adalbert II de Metz et Saargau, Duke of Basse<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="malleval.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · c. 945–1003 AD</div>
+        <div class="hc-name">House of Malleval</div>
+        <div class="hc-meta">Nearest: Artaud de Malleval, II<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="marnel.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · c. 1002–1070 AD</div>
+        <div class="hc-name">House of Marnel</div>
+        <div class="hc-meta">Nearest: Teresa Rodrigues Fernandes de Marnel<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="arellano.html">
+        <div class="hc-label"><span class="badge noble" style="font-size:.6rem;padding:2px 7px">Noble</span> 3 ancestors · c. 1103–1103 AD</div>
+        <div class="hc-name">House of Arellano</div>
+        <div class="hc-meta">Nearest: Teresa Sánchez de Arellano<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gascogne.html">
+        <div class="hc-label"> 19 ancestors · c. 728–1004 AD</div>
+        <div class="hc-name">House of Gascogne</div>
+        <div class="hc-meta">Nearest: Arnaud Garcia de Gascogne, Count d'Astarac<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="beziers.html">
+        <div class="hc-label"> 13 ancestors · c. 900–1150 AD</div>
+        <div class="hc-name">House of Béziers</div>
+        <div class="hc-meta">Nearest: Adelaide de Béziers<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bigorre.html">
+        <div class="hc-label"> 11 ancestors · c. 765–1015 AD</div>
+        <div class="hc-name">House of Bigorre</div>
+        <div class="hc-meta">Nearest: Gersende de Bigorre, Countess consort of Foix<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="comminges.html">
+        <div class="hc-label"> 10 ancestors · c. 865–1233 AD</div>
+        <div class="hc-name">House of Comminges</div>
+        <div class="hc-meta">Nearest: Roger I le Vieux de Comminges, Count of Carca<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="melgueil.html">
+        <div class="hc-label"> 10 ancestors · c. 877–1080 AD</div>
+        <div class="hc-name">House of Melgueil</div>
+        <div class="hc-meta">Nearest: Ermesinde de Melgueil, Dame consort of Montpe<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="sabran.html">
+        <div class="hc-label"> 10 ancestors · c. 900–1181 AD</div>
+        <div class="hc-name">House of Sabran</div>
+        <div class="hc-meta">Nearest: Garsende de Sabran, Countess of Forcalquier<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="vermandois.html">
+        <div class="hc-label"> 9 ancestors · c. 848–1085 AD</div>
+        <div class="hc-name">House of Vermandois</div>
+        <div class="hc-meta">Nearest: Agnès de Vermandois<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="olague.html">
+        <div class="hc-label"> 8 ancestors · c. 1590–1696 AD</div>
+        <div class="hc-name">House of Olague</div>
+        <div class="hc-meta">Nearest: Inés Ynes Matiana Muñoz de Olague<br>8th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="besalu.html">
+        <div class="hc-label"> 8 ancestors · c. 970–1075 AD</div>
+        <div class="hc-name">House of Besalú</div>
+        <div class="hc-meta">Nearest: Etiennette de Besalú, Countess consort of Foi<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="forcalquier.html">
+        <div class="hc-label"> 8 ancestors · c. 977–1156 AD</div>
+        <div class="hc-name">House of Forcalquier</div>
+        <div class="hc-meta">Nearest: Garsende, Countess of Forcalquier<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bearn.html">
+        <div class="hc-label"> 8 ancestors · c. 925–1239 AD</div>
+        <div class="hc-name">House of Béarn</div>
+        <div class="hc-meta">Nearest: Constanza de Béarn<br>24th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="carcassonne.html">
+        <div class="hc-label"> 7 ancestors · c. 875–1125 AD</div>
+        <div class="hc-name">House of Carcassonne</div>
+        <div class="hc-meta">Nearest: Arsinde de Carcassonne<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montignac.html">
+        <div class="hc-label"> 7 ancestors · c. 880–1005 AD</div>
+        <div class="hc-name">House of Montignac</div>
+        <div class="hc-meta">Nearest: Amélie de Montignac<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="millau.html">
+        <div class="hc-label"> 7 ancestors · dates unknown</div>
+        <div class="hc-name">House of Millau</div>
+        <div class="hc-meta">Nearest: Gilbert I, Viscount of Millau et Gévaudan<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="brioude.html">
+        <div class="hc-label"> 7 ancestors · c. 885–900 AD</div>
+        <div class="hc-name">House of Brioude</div>
+        <div class="hc-meta">Nearest: NN de Brioude<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="france.html">
+        <div class="hc-label"> 7 ancestors · c. 893–1126 AD</div>
+        <div class="hc-name">House of France</div>
+        <div class="hc-meta">Nearest: Pierre, of France, Lord of Courtenay<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="traba.html">
+        <div class="hc-label"> 7 ancestors · dates unknown</div>
+        <div class="hc-name">House of Traba</div>
+        <div class="hc-meta">Nearest: Teresa Fernández de Traba<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="castellvell.html">
+        <div class="hc-label"> 7 ancestors · c. 1125–1125 AD</div>
+        <div class="hc-name">House of Castellvell</div>
+        <div class="hc-meta">Nearest: Guillema I de Castellvell<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="semur.html">
+        <div class="hc-label"> 6 ancestors · c. 820–1016 AD</div>
+        <div class="hc-name">House of Semur</div>
+        <div class="hc-meta">Nearest: Hélie de Semur, Duchess consort of Burgundy<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="nevers.html">
+        <div class="hc-label"> 6 ancestors · c. 970–1073 AD</div>
+        <div class="hc-name">House of Nevers</div>
+        <div class="hc-meta">Nearest: Ermengarde de Nevers<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="cerdanya.html">
+        <div class="hc-label"> 5 ancestors · c. 901–970 AD</div>
+        <div class="hc-name">House of Cerdanya</div>
+        <div class="hc-meta">Nearest: Guifré II, Count of Cerdanya<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="marseille.html">
+        <div class="hc-label"> 5 ancestors · c. 920–980 AD</div>
+        <div class="hc-name">House of Marseille</div>
+        <div class="hc-meta">Nearest: Etiennette [Douce] de Marseille<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="blois.html">
+        <div class="hc-label"> 5 ancestors · c. 890–989 AD</div>
+        <div class="hc-name">House of Blois</div>
+        <div class="hc-meta">Nearest: Agnès de Blois<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="thouars.html">
+        <div class="hc-label"> 5 ancestors · c. 935–1054 AD</div>
+        <div class="hc-name">House of Thouars</div>
+        <div class="hc-meta">Nearest: Aliénor de Thouars<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="tonnerre.html">
+        <div class="hc-label"> 5 ancestors · c. 935–1023 AD</div>
+        <div class="hc-name">House of Tonnerre</div>
+        <div class="hc-meta">Nearest: Ermengarde de Tonnerre, Ctss of Tonnerre<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="samatan.html">
+        <div class="hc-label"> 5 ancestors · c. 1000–1050 AD</div>
+        <div class="hc-name">House of Samatan</div>
+        <div class="hc-meta">Nearest: Bernard III de Samatan, Count of Comminges<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="alcocer.html">
+        <div class="hc-label"> 4 ancestors · c. 1380–1483 AD</div>
+        <div class="hc-name">House of Alcocer</div>
+        <div class="hc-meta">Nearest: María Francisca de Alcocer y Bañuelos<br>13th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="ayala.html">
+        <div class="hc-label"> 4 ancestors · c. 1040–1609 AD</div>
+        <div class="hc-name">House of Ayala</div>
+        <div class="hc-meta">Nearest: Cecilia López de Ayala y Ortíz de San Pedro<br>12th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="monzon.html">
+        <div class="hc-label"> 4 ancestors · c. 940–960 AD</div>
+        <div class="hc-name">House of Monzon</div>
+        <div class="hc-meta">Nearest: Juliana Ansurez de Monzon<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gometz.html">
+        <div class="hc-label"> 4 ancestors · c. 960–1014 AD</div>
+        <div class="hc-name">House of Gometz</div>
+        <div class="hc-meta">Nearest: Bertrada de Gometz<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="beaugency.html">
+        <div class="hc-label"> 4 ancestors · c. 995–1075 AD</div>
+        <div class="hc-name">House of Beaugency</div>
+        <div class="hc-meta">Nearest: Adeline Presles de Beaugency<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="preuilly.html">
+        <div class="hc-label"> 4 ancestors · c. 905–1000 AD</div>
+        <div class="hc-name">House of Preuilly</div>
+        <div class="hc-meta">Nearest: Paule de Preuilly<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="saumur.html">
+        <div class="hc-label"> 4 ancestors · c. 940–1005 AD</div>
+        <div class="hc-name">House of Saumur</div>
+        <div class="hc-meta">Nearest: Chana de Saumur<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="mysia.html">
+        <div class="hc-label"> 4 ancestors · c. 1000–1090 AD</div>
+        <div class="hc-name">House of Mysia</div>
+        <div class="hc-meta">Nearest: Konstantinos Lascaris de Mysia<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gurb.html">
+        <div class="hc-label"> 4 ancestors · dates unknown</div>
+        <div class="hc-name">House of Gurb</div>
+        <div class="hc-meta">Nearest: Bernat Sendred de Gurb<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gavarret.html">
+        <div class="hc-label"> 4 ancestors · c. 951–1090 AD</div>
+        <div class="hc-name">House of Gavarret</div>
+        <div class="hc-meta">Nearest: Pierre II de Gavarret<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montaner.html">
+        <div class="hc-label"> 4 ancestors · dates unknown</div>
+        <div class="hc-name">House of Montaner</div>
+        <div class="hc-meta">Nearest: Beatriz de Montaner<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="reillane.html">
+        <div class="hc-label"> 4 ancestors · c. 960–995 AD</div>
+        <div class="hc-name">House of Reillane</div>
+        <div class="hc-meta">Nearest: Azalaïs de Reillane<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="vence.html">
+        <div class="hc-label"> 4 ancestors · c. 910–976 AD</div>
+        <div class="hc-name">House of Vence</div>
+        <div class="hc-meta">Nearest: Odile de Vence, Dite "of Provence"<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="sisteron.html">
+        <div class="hc-label"> 4 ancestors · c. 965–1000 AD</div>
+        <div class="hc-name">House of Sisteron</div>
+        <div class="hc-meta">Nearest: Gerberge de Sisteron<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="mayenne.html">
+        <div class="hc-label"> 4 ancestors · c. 1000–1082 AD</div>
+        <div class="hc-name">House of Mayenne</div>
+        <div class="hc-meta">Nearest: Matilda de Mayenne<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="forez.html">
+        <div class="hc-label"> 4 ancestors · c. 935–1065 AD</div>
+        <div class="hc-name">House of Forez</div>
+        <div class="hc-meta">Nearest: Ide Raymonde, Countess douairière of Forez<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="ambia.html">
+        <div class="hc-label"> 4 ancestors · c. 1050–1150 AD</div>
+        <div class="hc-name">House of Ambia</div>
+        <div class="hc-meta">Nearest: Urraca Vasques de Ambia<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gandarei.html">
+        <div class="hc-label"> 4 ancestors · c. 1120–1150 AD</div>
+        <div class="hc-name">House of Gandarei</div>
+        <div class="hc-meta">Nearest: Mor Rodrigues de Gandarei<br>26th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="azevedo.html">
+        <div class="hc-label"> 4 ancestors · c. 1040–1182 AD</div>
+        <div class="hc-name">House of Azevedo</div>
+        <div class="hc-meta">Nearest: Chamôa Fernandes de Azevedo<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="herrera.html">
+        <div class="hc-label"> 3 ancestors · dates unknown</div>
+        <div class="hc-name">House of Herrera</div>
+        <div class="hc-meta">Nearest: Juana de Herrera<br>16th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="campo.html">
+        <div class="hc-label"> 3 ancestors · c. 1514–1585 AD</div>
+        <div class="hc-name">House of Campo</div>
+        <div class="hc-meta">Nearest: Capitan Juan del Campo y de la Torre Valdés<br>12th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="luna.html">
+        <div class="hc-label"> 3 ancestors · c. 1610–1680 AD</div>
+        <div class="hc-name">House of Luna</div>
+        <div class="hc-meta">Nearest: Isabel López de Luna y de Aro y Miramontes<br>10th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="osorio.html">
+        <div class="hc-label"> 3 ancestors · c. 1258–1258 AD</div>
+        <div class="hc-name">House of Osorio</div>
+        <div class="hc-meta">Nearest: Luisa de Osorio<br>23th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gormaz.html">
+        <div class="hc-label"> 3 ancestors · c. 995–995 AD</div>
+        <div class="hc-name">House of Gormaz</div>
+        <div class="hc-meta">Nearest: Elvira Gómez de Gormaz<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gevaudan.html">
+        <div class="hc-label"> 3 ancestors · c. 953–1100 AD</div>
+        <div class="hc-name">House of Gévaudan</div>
+        <div class="hc-meta">Nearest: Douce I de Gévaudan, Countess of Provence<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="aurillac.html">
+        <div class="hc-label"> 3 ancestors · c. 823–895 AD</div>
+        <div class="hc-name">House of Aurillac</div>
+        <div class="hc-meta">Nearest: Tetberge de Aurillac<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="salluste.html">
+        <div class="hc-label"> 3 ancestors · dates unknown</div>
+        <div class="hc-name">House of Salluste</div>
+        <div class="hc-meta">Nearest: Unknown de Salluste<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="narbona.html">
+        <div class="hc-label"> 3 ancestors · c. 924–1128 AD</div>
+        <div class="hc-name">House of Narbona</div>
+        <div class="hc-meta">Nearest: Ermesenda de Narbona, Viscountess of Narbona<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="urgel.html">
+        <div class="hc-label"> 3 ancestors · c. 1057–1170 AD</div>
+        <div class="hc-name">House of Urgel</div>
+        <div class="hc-meta">Nearest: Estefanía de Urgel<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="chalon.html">
+        <div class="hc-label"> 3 ancestors · c. 855–924 AD</div>
+        <div class="hc-name">House of Chalon</div>
+        <div class="hc-meta">Nearest: Lambert d'Autun de Dijon, Count of Chalon<br>34th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="rennes.html">
+        <div class="hc-label"> 3 ancestors · c. 882–940 AD</div>
+        <div class="hc-name">House of Rennes</div>
+        <div class="hc-meta">Nearest: Conan I 'le Tort’ de Rennes, Duke of Bretagne<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="vergy.html">
+        <div class="hc-label"> 3 ancestors · c. 830–980 AD</div>
+        <div class="hc-name">House of Vergy</div>
+        <div class="hc-meta">Nearest: Aremburge de Vergy<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="maranon.html">
+        <div class="hc-label"> 3 ancestors · c. 1035–1054 AD</div>
+        <div class="hc-name">House of Marañón</div>
+        <div class="hc-meta">Nearest: Contanza Sánchez de Marañón<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="galicie.html">
+        <div class="hc-label"> 3 ancestors · c. 940–995 AD</div>
+        <div class="hc-name">House of Galicie</div>
+        <div class="hc-meta">Nearest: Muniadona Ordoñez de Galicie<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="beulac.html">
+        <div class="hc-label"> 3 ancestors · c. 911–937 AD</div>
+        <div class="hc-name">House of Beulac</div>
+        <div class="hc-meta">Nearest: Helloe, Countess of Beulac<br>34th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montanolier.html">
+        <div class="hc-label"> 3 ancestors · c. 917–917 AD</div>
+        <div class="hc-name">House of Montanolier</div>
+        <div class="hc-meta">Nearest: Judith de Montanolier<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="nogent.html">
+        <div class="hc-label"> 3 ancestors · c. 940–969 AD</div>
+        <div class="hc-name">House of Nogent</div>
+        <div class="hc-meta">Nearest: Fulcois, Lord of Nogent-le-Rotrou. Count of M<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="chartres.html">
+        <div class="hc-label"> 3 ancestors · c. 936–974 AD</div>
+        <div class="hc-name">House of Chartres</div>
+        <div class="hc-meta">Nearest: Hugues de Chartres, Viscount of Châteaudun<br>34th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="ramerupt.html">
+        <div class="hc-label"> 3 ancestors · c. 905–1040 AD</div>
+        <div class="hc-name">House of Ramerupt</div>
+        <div class="hc-meta">Nearest: Béatrix de Ramerupt, Dame of Montdidier<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montfort.html">
+        <div class="hc-label"> 3 ancestors · c. 953–1025 AD</div>
+        <div class="hc-name">House of Montfort</div>
+        <div class="hc-meta">Nearest: Simon L'Ainé de Montfort, I<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="poitiers.html">
+        <div class="hc-label"> 3 ancestors · c. 820–937 AD</div>
+        <div class="hc-name">House of Poitiers</div>
+        <div class="hc-meta">Nearest: Guillaume 'Fier-à-Bras' de Poitiers, IV Duke <br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montgomery.html">
+        <div class="hc-label"> 3 ancestors · c. 975–1039 AD</div>
+        <div class="hc-name">House of Montgomery</div>
+        <div class="hc-meta">Nearest: Matilda / Maude de Montgomery, Countess of Mo<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bueil.html">
+        <div class="hc-label"> 3 ancestors · c. 995–1049 AD</div>
+        <div class="hc-name">House of Bueil</div>
+        <div class="hc-meta">Nearest: Barthélémy de Bueil, Lord of L'Île-Bouchard<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montlhery.html">
+        <div class="hc-label"> 3 ancestors · c. 1009–1040 AD</div>
+        <div class="hc-name">House of Montlhéry</div>
+        <div class="hc-meta">Nearest: Mélisende de Montlhéry<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="moncada.html">
+        <div class="hc-label"> 3 ancestors · c. 1091–1208 AD</div>
+        <div class="hc-name">House of Moncada</div>
+        <div class="hc-meta">Nearest: Guillén de Moncada III, Viscount of Béarn<br>25th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="gabarret.html">
+        <div class="hc-label"> 3 ancestors · c. 975–1145 AD</div>
+        <div class="hc-name">House of Gabarret</div>
+        <div class="hc-meta">Nearest: Marie de Gabarret, Viscountess of Béarn<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="vilademuls.html">
+        <div class="hc-label"> 3 ancestors · dates unknown</div>
+        <div class="hc-name">House of Vilademuls</div>
+        <div class="hc-meta">Nearest: Ramon Arnau de Vilademuls<br>28th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="canavese.html">
+        <div class="hc-label"> 3 ancestors · dates unknown</div>
+        <div class="hc-name">House of Canavese</div>
+        <div class="hc-meta">Nearest: Arduino del Canavese, /!\<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="beaujeu.html">
+        <div class="hc-label"> 3 ancestors · c. 960–990 AD</div>
+        <div class="hc-name">House of Beaujeu</div>
+        <div class="hc-meta">Nearest: Guichard II, Lord of Beaujeu<br>34th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="sauvian.html">
+        <div class="hc-label"> 3 ancestors · c. 1043–1085 AD</div>
+        <div class="hc-name">House of Sauvian</div>
+        <div class="hc-meta">Nearest: Engelrade de Sauvian, Dame of Sauvian<br>31th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="montpellier.html">
+        <div class="hc-label"> 3 ancestors · c. 1100–1158 AD</div>
+        <div class="hc-name">House of Montpéllier</div>
+        <div class="hc-meta">Nearest: Guillaume VIII, Senyor of Montpéllier<br>27th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="coucy.html">
+        <div class="hc-label"> 3 ancestors · c. 950–975 AD</div>
+        <div class="hc-name">House of Coucy</div>
+        <div class="hc-meta">Nearest: Jehanne de Coucy<br>34th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="bretagne.html">
+        <div class="hc-label"> 3 ancestors · c. 850–933 AD</div>
+        <div class="hc-name">House of Bretagne</div>
+        <div class="hc-meta">Nearest: Guerech I, Duke of Bretagne<br>32th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="riba.html">
+        <div class="hc-label"> 3 ancestors · c. 1145–1160 AD</div>
+        <div class="hc-name">House of Riba</div>
+        <div class="hc-meta">Nearest: Martim Fernandes de Riba de Vizela<br>29th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="penagate.html">
+        <div class="hc-label"> 3 ancestors · c. 1020–1072 AD</div>
+        <div class="hc-name">House of Penagate</div>
+        <div class="hc-meta">Nearest: Egas Viegas de Penagate<br>33th great-grandparent of Antonio Jasso</div>
+      </a>
+      <a class="house-card" href="muret.html">
+        <div class="hc-label"> 3 ancestors · c. 1050–1100 AD</div>
+        <div class="hc-name">House of Muret</div>
+        <div class="hc-meta">Nearest: Diaz de Muret<br>30th great-grandparent of Antonio Jasso</div>
+      </a>
+  </div>
+</div>
+
+<footer>
+  <a href="../../index.html">Villanueva Family Tree</a> &nbsp;·&nbsp;
+  <a href="../antonio-jasso-lineage.html">Open Full Tree</a>
+</footer>
+
+<script>
+function filterHouses(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.house-card').forEach(c => {
+    c.classList.toggle('hidden', q && !c.textContent.toLowerCase().includes(q));
+  });
+}
+</script>
+</body>
+</html>
