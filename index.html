@@ -232,8 +232,9 @@
     .viz-card-stats { font-size: .76rem; color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border); }
 
     /* featured trio */
-    .featured-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 44px; }
-    @media(max-width:720px){ .featured-trio{grid-template-columns:1fr;} }
+    .featured-trio { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 44px; }
+    @media(max-width:900px){ .featured-trio{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:560px){ .featured-trio{grid-template-columns:1fr;} }
     .feat-card {
       background: var(--card); border: 1px solid rgba(216,175,67,.22); border-radius: 12px;
       padding: 28px 24px; text-decoration: none; color: inherit;
@@ -733,6 +734,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="feat-desc">Watch the family's 1,600-year journey across a map — from ancient Scandinavia through Iberia to colonial New Spain. Slide through time to see where each generation lived.</span>
         <span class="feat-link">Explore the map → </span>
       </a>
+      <a class="feat-card reveal reveal-d3" href="ancestor_mappings/voyage.html">
+        <span class="feat-label">1509–1599 · Casa de la Contratación</span>
+        <span class="feat-n">19,073</span>
+        <span class="feat-name">Pasajeros a Indias</span>
+        <span class="feat-desc">Official passenger records from the Archive of the Indies — 329 entries matching family surnames: Temiño, Bañuelos, Oñate, Bobadilla, Zaldivar, and Gamboa.</span>
+        <span class="feat-link">Browse records → </span>
+      </a>
     </div>
   </div>
 </section>
@@ -752,6 +760,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="roadmap-item"><span class="roadmap-icon">✅</span>Beatriz del Corral full ancestry — documented</div>
       <div class="roadmap-item"><span class="roadmap-icon">✅</span>Extended Iberian nobility — 20+ branches imported</div>
       <div class="roadmap-item"><span class="roadmap-icon">🔄</span>Additional maternal and paternal branches — in progress</div>
+      <div class="roadmap-item"><span class="roadmap-icon">✅</span>Catálogo de Pasajeros a Indias (1509–1599) — 19,464 records indexed</div>
       <div class="roadmap-item"><span class="roadmap-icon">🔄</span>Colonial Mexico records — expanding</div>
       <div class="roadmap-item"><span class="roadmap-icon">📋</span>DNA cross-reference — planned</div>
       <div class="roadmap-item"><span class="roadmap-icon">📋</span>Living relatives network — planned</div>
