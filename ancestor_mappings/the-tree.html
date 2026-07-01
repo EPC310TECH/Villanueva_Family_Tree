@@ -184,7 +184,10 @@ const META   = {"title":"The Ancestry of Antonio Jasso (Geni.com only)","subtitl
   function color(c){return COLORMAP[c]||FALLBACK;}
   const SAINT_RE = /^Saint\s/;
   function isSaint(n){return SAINT_RE.test(n.name);}
-  function nodeColor(n){return isSaint(n)?'#ffffff':color(n.cat);}
+  // Nodes whose surnames appear in the Catálogo de Pasajeros a Indias (1509–1599)
+  const VOYAGE_IDS = new Set([12,13,14,15,16,17,18,19,20,21,35,36,37,40,41,42,43,44,54,55,56,57,58,59,63,64,65,70,71,76,107,108,110,116,117,118,121,122,123,124,129,147,163,175,176,179,2565,3458,3466,3467,3468,3480,3492,3493,3495,3501,3510,3513,3526,3527,3528,3532,3537,3538,3546,3551,3572,3573,3574,3575,3582,3587,3589,3607,3621,3634,3646,3647,3659,3660,3690,3699,3704,3723]);
+  const VOYAGE_COLOR = '#5ec8ff';
+  function nodeColor(n){return isSaint(n)?'#ffffff':VOYAGE_IDS.has(n.id)?VOYAGE_COLOR:color(n.cat);}
   // Logarithmic pedigree-importance sizing: single occurrence = 3px, high collapse up to 15px
   function radius(n){const m=n.mult||1;return Math.min(7.5,1.5+1.9*Math.log10(Math.max(1,m)));}
 
@@ -246,7 +249,8 @@ const META   = {"title":"The Ancestry of Antonio Jasso (Geni.com only)","subtitl
   document.getElementById('legendRows').innerHTML=
     `<div class="leg" style="opacity:.9"><span class="swatch" style="background:#ffffff;box-shadow:0 0 4px rgba(255,255,255,.6)"></span>Saints<span class="n">${saintCount}</span></div>`+
     LEGEND.map(l=>
-    `<div class="leg" data-cat="${l.key}" title="Click to show/hide"><span class="swatch" style="background:${l.color}"></span>${l.label}<span class="n">${counts[l.key]||0}</span></div>`).join('');
+    `<div class="leg" data-cat="${l.key}" title="Click to show/hide"><span class="swatch" style="background:${l.color}"></span>${l.label}<span class="n">${counts[l.key]||0}</span></div>`).join('')+
+    `<div class="leg" style="opacity:.9;margin-top:4px" title="Documented in Catálogo de Pasajeros a Indias (1509–1599)"><span class="swatch" style="background:${VOYAGE_COLOR};box-shadow:0 0 5px rgba(94,200,255,.55)"></span>Pasajeros a Indias<span class="n">${VOYAGE_IDS.size}</span></div>`;
 
   const hiddenCats=new Set();
   document.getElementById('legendRows').addEventListener('click',ev=>{
@@ -421,6 +425,13 @@ const META   = {"title":"The Ancestry of Antonio Jasso (Geni.com only)","subtitl
       if(isSaint(n)){
         ctx.globalAlpha=0.18;ctx.beginPath();ctx.arc(x,y,r+4,0,6.2832);
         ctx.fillStyle='#ffffff';ctx.fill();ctx.globalAlpha=1;
+      }
+      // Voyage glow — blue shimmer for nodes in Catálogo de Pasajeros a Indias
+      if(VOYAGE_IDS.has(n.id)){
+        ctx.globalAlpha=0.22;ctx.beginPath();ctx.arc(x,y,r+3.5,0,6.2832);
+        ctx.fillStyle='#9be0ff';ctx.fill();ctx.globalAlpha=1;
+        ctx.globalAlpha=0.10;ctx.beginPath();ctx.arc(x,y,r+6,0,6.2832);
+        ctx.fillStyle='#5ec8ff';ctx.fill();ctx.globalAlpha=1;
       }
       ctx.beginPath();ctx.arc(x,y,r,0,6.2832);
       ctx.fillStyle=nodeColor(n);
@@ -630,6 +641,7 @@ const META   = {"title":"The Ancestry of Antonio Jasso (Geni.com only)","subtitl
     if(n.gen!=null)rows.push(['Generation',String(n.gen)]);
     if(n.mult>1)rows.push(['Pedigree collapse',n.mult+' separate lines']);
     let body=rows.map(r=>`<div class="row"><div class="k">${r[0]}</div><div class="v">${esc(r[1])}</div></div>`).join('');
+    if(VOYAGE_IDS.has(n.id))body+=`<div class="row" style="border-top:1px solid rgba(94,200,255,.25);margin-top:4px;padding-top:4px"><div class="k" style="color:${VOYAGE_COLOR}">⛵</div><div class="v" style="color:${VOYAGE_COLOR}"><a href="voyage.html" style="color:${VOYAGE_COLOR}">Catálogo de Pasajeros a Indias</a></div></div>`;
     body+=`<div class="kin"><div><b>${kin.ancestors}</b>Ancestors</div><div><b>${kin.descendants}</b>Descendants</div><div><b>${(parentsOf.get(n.id)||[]).length}</b>Parents</div></div>`;
     const sn=encodeURIComponent(n.name.split(',')[0].trim());
     body+=`<div class="links">
