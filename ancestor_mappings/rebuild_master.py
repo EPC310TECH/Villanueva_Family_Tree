@@ -35,15 +35,44 @@ def norm(s: str) -> str:
 
 _uid = [0]
 PLACEHOLDER_RE = re.compile(
-    r"^(n\.?\s*n\.?|no name|\(no name\)|<private>|private|"
+    r"^(n\.?\s*n\.?(\s+n\.?\s*n\.?)*"     # N.N. / NN / NN NN / N.N. N.N. etc.
+    r"|no name|\(no name\)|<private>|private|"
     r"fictitious?|mother|father|unknown|desconoc[io]d[ao]|\-)$"
 )
+
+# Prepositions/articles that vary by language — stripped from merge keys so that
+# "rey DE Pamplona" and "king OF Pamplona" produce the same key.
+_PREPS = re.compile(
+    r"\b(de|del|des|di|du|von|van|of|y|e|la|el|le|les|los|las|the|a|an)\b"
+)
+
+# Title words normalised to a single English form for merge-key comparison.
+# The displayed name is never changed — only the key used for deduplication.
+_TITLE_MAP = {
+    "rey": "king",       "reina": "queen",
+    "rei": "king",       "rainha": "queen",
+    "conde": "count",    "condesa": "countess",
+    "comte": "count",    "comtesse": "countess",
+    "comde": "count",    "comdes": "count",
+    "duque": "duke",     "duquesa": "duchess",
+    "senor": "lord",     "senora": "lady",
+    "marques": "marquis","marquesa": "marquess",
+    "vizconde": "viscount",
+    "obispo": "bishop",  "arzobispo": "archbishop",
+    "capitan": "captain","gobernador": "governor",
+    "infanta": "infante",
+}
 
 def node_key(n: dict) -> str:
     nm = norm(n["name"])
     if PLACEHOLDER_RE.match(nm) or len(nm) < 4:
         _uid[0] += 1
         return f"_uid_{_uid[0]}::{nm}"
+    # Apply language-agnostic normalization: strip prepositions, unify title words.
+    # This lets Spanish/English/French variants of the same person share one key,
+    # e.g. "García rey de Pamplona" and "García King of Pamplona" → same key.
+    nm = _PREPS.sub(" ", nm)
+    nm = re.sub(r"\s+", " ", " ".join(_TITLE_MAP.get(w, w) for w in nm.split())).strip()
     yr = n.get("birth")
     return f"{nm}|{yr}" if yr is not None else f"{nm}|?"
 
@@ -282,6 +311,27 @@ def main():
     out_edges = [{"s": idmap[pk], "t": idmap[ck]}
                  for (pk, ck) in merged_edges
                  if pk in idmap and ck in idmap]
+
+    # 4.5. Collapse excess placeholder parents (keep ≤ 2 per child).
+    # Each lineage file contributes its own NN/Unknown node for every ancestor
+    # whose parents aren't recorded, so popular ancestors can end up with
+    # hundreds of NN parents. Two is enough to represent "both parents unknown".
+    # Orphaned placeholder nodes are pruned by the connectivity filter in step 5.
+    placeholder_ids = {idmap[k] for k in idmap if k.startswith("_uid_")}
+    child_ph_parents: dict = defaultdict(list)
+    for e in out_edges:
+        if e["s"] in placeholder_ids:
+            child_ph_parents[e["t"]].append(e["s"])
+    drop_edges: set = set()
+    for child_id, ph_pids in child_ph_parents.items():
+        if len(ph_pids) > 2:
+            for extra in ph_pids[2:]:
+                drop_edges.add((extra, child_id))
+    if drop_edges:
+        before = len(out_edges)
+        out_edges = [e for e in out_edges if (e["s"], e["t"]) not in drop_edges]
+        print(f"  Pruned {before - len(out_edges):,} excess placeholder-parent edges "
+              f"({len(child_ph_parents)} children had 3+ NN parents)")
 
     # 5. Keep BFS-reachable nodes; drop true isolates (no edges and not on any path to Antonio)
     bfs_ids = set()
