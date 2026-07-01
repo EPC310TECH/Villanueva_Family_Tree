@@ -87,30 +87,70 @@ def load_graph(path: str):
 
 # ── classify (needed for nodes from old HTML without cat) ───────────────────
 
+# Famous historical figures whose titles aren't in their stored name.
+# Key = accent-stripped lowercase name.
+_FAMOUS_CAT: dict[str, str] = {
+    "charlemagne":   "royal",   # Emperor of the Romans / King of the Franks
+    "charles martel": "royal",  # Mayor of the Palace, de facto ruler of Franks
+    "pepin the short": "royal",
+    "clovis i":      "royal",
+    "clovis":        "royal",
+}
+
 CATS = [
     ("royal",    [r"\brey\b", r"\breina\b", r"\brei\b", r"\brainha\b",
                   r"\bduque\b", r"\bduquesa\b", r"\bduke\b", r"\bduchess\b",
+                  r"\bduc de\b", r"\bduc d[e']",             # French duke (not place "Bar-le-Duc")
+                  r"\bduchesse\b",                           # French duchess
+                  r"\bherzog\b", r"\bherzogin\b",            # German duke/duchess
+                  r"\bhertog\b",                             # Dutch duke
                   r"\binfante\b", r"\bprince\b", r"\bprincess\b",
-                  r"\bking\b", r"\bqueen\b", r"\bemperor\b", r"\bempress\b"]),
+                  r"\bprincep\b", r"\bprincipe\b",           # Catalan/Italian
+                  r"\bking\b", r"\bqueen\b", r"\bemperor\b", r"\bempress\b",
+                  r"\bkaiser\b",                             # German emperor
+                  r"\btsar\b", r"\bczar\b",                  # Slavic ruler
+                  r"\bkong\b", r"\bkoning\b",                # Scandinavian/Dutch king
+                  r"\bemir\b", r"\bcaliph\b", r"\bsultan\b", # Islamic rulers
+                  r"\bregent\b",                             # acting ruler
+                  r"\bmayor of\b",                           # Mayor of the Palace (Frankish)
+                  r"\bunder.king\b", r"\bhigh king\b",       # sub/high kings
+                  ]),
     ("noble",    [r"\bconde\b", r"\bcondesa\b", r"\bcount\b", r"\bcountess\b",
-                  r"\bmarques\b", r"\bvizconde\b", r"\bbaron\b",
+                  r"\bcomte\b", r"\bcomtesse\b", r"\bcomtessa\b",  # French/Catalan
+                  r"\bmarques\b", r"\bmarkgraf\b", r"\bmargrave\b", r"\bmargraf\b",
+                  r"\bvizconde\b", r"\bvicomte\b", r"\bvicomtesse\b",
+                  r"\bviscount\b", r"\bviscountess\b",
+                  r"\bgraf\b", r"\bgraaf\b", r"\bgrafin\b",  # German/Dutch count/countess
+                  r"\bbaron\b", r"\bjarl\b",                 # Norse earl
+                  r"\bseigneur\b",                           # French lord
                   r"\bsenor de\b", r"\bsenora de\b", r"\blord\b", r"\blady\b",
                   r"^d\. ", r"\bdom\b", r"\bdona\b", r"\bmosen\b"]),
     ("clergy",   [r"\bfray\b", r"\bobispo\b", r"\barzobispo\b",
-                  r"\bbishop\b", r"\bcardenal\b", r"\bcardinal\b"]),
+                  r"\bbishop\b", r"\bcardenal\b", r"\bcardinal\b",
+                  r"\babbot\b", r"\babbess\b", r"\babbade\b",
+                  r"\bprior\b", r"\bpriore\b",
+                  r"\barchdeacon\b", r"\bdeacon\b",
+                  ]),
     ("military", [r"\bcapitan\b", r"\bcaptain\b", r"\bconquistador",
-                  r"\bcomendador\b", r"\badelantado\b", r"\bgeneral\b"]),
+                  r"\bcomendador\b", r"\badelantado\b", r"\bgeneral\b",
+                  r"\bmarshal\b", r"\bconstable\b", r"\badmiral\b",
+                  r"\bseneschal\b",
+                  ]),
     ("official", [r"\balcalde\b", r"\bgobernador\b", r"\boidor\b",
                   r"\bcorregidor\b", r"\bregidor\b"]),
     ("indigenous",[r"\bcacique\b", r"\bindio\b", r"\bindia\b"]),
 ]
 
-def classify(name: str):
+def classify(name: str) -> str:
+    # Famous names whose titles are not part of the stored name string
+    key = re.sub(r"\s+", " ", re.sub(r"[^a-z ]+", "", strip_accents(name).lower())).strip()
+    if key in _FAMOUS_CAT:
+        return _FAMOUS_CAT[key]
     n = strip_accents(name).lower()
-    for key, pats in CATS:
+    for cat_key, pats in CATS:
         for p in pats:
             if re.search(p, n):
-                return key
+                return cat_key
     return "untitled"
 
 
@@ -118,6 +158,9 @@ def classify(name: str):
 
 merged_nodes: dict[str, dict] = {}   # key -> merged node dict
 merged_edges: set[tuple]       = set()  # (parent_key, child_key)
+
+# Normalise known cat typos from source files before using
+_CAT_TYPOS: dict[str, str] = {"nobility": "noble", "nobles": "noble"}
 
 
 def absorb_graph(g: dict, offset: int, source_label: str):
@@ -131,12 +174,16 @@ def absorb_graph(g: dict, offset: int, source_label: str):
         k = node_keys[n["id"]]
         adj_gen = n["gen"] + offset
         if k not in merged_nodes:
+            # "untitled" is a truthy string, so `n.get("cat") or classify()` would
+            # short-circuit and never reclassify. Always re-run classify() when the
+            # stored cat is absent or "untitled" so new patterns take effect.
+            src_cat = _CAT_TYPOS.get(n.get("cat") or "untitled", n.get("cat") or "untitled")
             merged_nodes[k] = {
                 "name":    n["name"],
                 "gen":     adj_gen,
                 "birth":   n.get("birth"),
                 "death":   n.get("death"),
-                "cat":     n.get("cat") or classify(n["name"]),
+                "cat":     src_cat if src_cat != "untitled" else classify(n["name"]),
                 "titles":  n.get("titles", ""),
                 "country": n.get("country", ""),
                 "region":  n.get("region", ""),
@@ -156,6 +203,15 @@ def absorb_graph(g: dict, offset: int, source_label: str):
                 existing["house"] = n["house"]
             if not existing.get("region") and n.get("region"):
                 existing["region"] = n["region"]
+            # Upgrade "untitled" cat (or fix typos) if this source gives us better data
+            cur_cat = _CAT_TYPOS.get(existing.get("cat", "untitled"), existing.get("cat", "untitled"))
+            if cur_cat != existing.get("cat"):
+                existing["cat"] = cur_cat
+            if existing.get("cat") == "untitled":
+                src_cat = _CAT_TYPOS.get(n.get("cat") or "untitled", n.get("cat") or "untitled")
+                better = src_cat if src_cat != "untitled" else classify(n["name"])
+                if better != "untitled":
+                    existing["cat"] = better
             # Keep gen from anchor (antonio-jasso) if already present;
             # otherwise take the minimum (closest to Antonio)
             if "antonio" not in existing["sources"]:
