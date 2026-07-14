@@ -235,6 +235,18 @@
     .featured-trio { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 44px; }
     @media(max-width:900px){ .featured-trio{grid-template-columns:repeat(2,1fr);} }
     @media(max-width:560px){ .featured-trio{grid-template-columns:1fr;} }
+    .feat-maternal { display:block; margin-top:18px; background:var(--card); border:1px solid rgba(216,175,67,.28); border-radius:6px; padding:28px 32px; text-decoration:none; color:inherit; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
+    .feat-maternal::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),#7ec8e3,var(--gold)); }
+    .feat-maternal:hover { border-color:rgba(126,200,227,.5); transform:translateY(-2px); }
+    .feat-maternal .mat-header { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; }
+    .feat-maternal .mat-text .feat-label { font:600 11px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.28em; text-transform:uppercase; color:#7ec8e3; opacity:.85; }
+    .feat-maternal .mat-text .feat-name { display:block; font-size:22px; font-weight:400; color:var(--parchment,#e9dec3); margin:10px 0 8px; }
+    .feat-maternal .mat-text .feat-desc { font-size:14px; line-height:1.6; color:var(--muted); max-width:560px; }
+    .feat-maternal .mat-stat { text-align:right; flex:none; }
+    .feat-maternal .mat-stat .feat-n { display:block; font:400 48px/1 "Iowan Old Style",Palatino,serif; color:#7ec8e3; }
+    .feat-maternal .mat-stat small { font:500 10px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+    .feat-maternal .feat-link { display:inline-block; margin-top:16px; font:500 12px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.15em; text-transform:uppercase; color:#7ec8e3; }
+    @media(max-width:600px){ .feat-maternal .mat-header{flex-direction:column;} .feat-maternal .mat-stat{text-align:left;} }
     .feat-card {
       background: var(--card); border: 1px solid rgba(216,175,67,.22); border-radius: 12px;
       padding: 28px 24px; text-decoration: none; color: inherit;
@@ -742,6 +754,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="feat-link">Browse records → </span>
       </a>
     </div>
+
+      <a class="feat-maternal reveal" href="ancestor_mappings/maternal-tree.html">
+        <div class="mat-header">
+          <div class="mat-text">
+            <span class="feat-label">Netherlands · Elbertse · DeBruyn · Utrecht</span>
+            <span class="feat-name">Maternal Lineage — Elbertse Family Tree</span>
+            <span class="feat-desc">Maternal ancestry of Antonio Jasso through Maria Margaret Elbertse — the Dutch side of the family, rooted in Utrecht, Netherlands, tracing the Elbertse and DeBruyn lines.</span>
+            <span class="feat-link">Explore maternal tree →</span>
+          </div>
+          <div class="mat-stat">
+            <span class="feat-n">264</span>
+            <small>Persons</small>
+          </div>
+        </div>
+      </a>
   </div>
 </section>
 
