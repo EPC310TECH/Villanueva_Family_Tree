@@ -247,6 +247,11 @@
     .feat-maternal .mat-stat small { font:500 10px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
     .feat-maternal .feat-link { display:inline-block; margin-top:16px; font:500 12px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.15em; text-transform:uppercase; color:#7ec8e3; }
     @media(max-width:600px){ .feat-maternal .mat-header{flex-direction:column;} .feat-maternal .mat-stat{text-align:left;} }
+    .feat-second-row { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; }
+    @media(max-width:800px){ .feat-second-row{grid-template-columns:1fr;} }
+    .feat-deep-names { display:block; background:var(--card); border:1px solid rgba(200,162,69,.3); border-radius:6px; padding:28px 32px; text-decoration:none; color:inherit; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
+    .feat-deep-names::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),transparent); }
+    .feat-deep-names:hover { border-color:rgba(200,162,69,.55); transform:translateY(-2px); }
     .feat-card {
       background: var(--card); border: 1px solid rgba(216,175,67,.22); border-radius: 12px;
       padding: 28px 24px; text-decoration: none; color: inherit;
@@ -755,20 +760,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </a>
     </div>
 
-      <a class="feat-maternal reveal" href="ancestor_mappings/maternal-tree.html">
-        <div class="mat-header">
-          <div class="mat-text">
-            <span class="feat-label">Netherlands · Elbertse · DeBruyn · Utrecht</span>
-            <span class="feat-name">Maternal Lineage — Elbertse Family Tree</span>
-            <span class="feat-desc">Maternal ancestry of Antonio Jasso through Maria Margaret Elbertse — the Dutch side of the family, rooted in Utrecht, Netherlands, tracing the Elbertse and DeBruyn lines.</span>
-            <span class="feat-link">Explore maternal tree →</span>
+      <div class="feat-second-row reveal">
+        <a class="feat-maternal" href="ancestor_mappings/maternal-tree.html">
+          <div class="mat-header">
+            <div class="mat-text">
+              <span class="feat-label">Netherlands · Elbertse · DeBruyn · Utrecht</span>
+              <span class="feat-name">Maternal Lineage — Elbertse Family Tree</span>
+              <span class="feat-desc">Maternal ancestry of Antonio Jasso through Maria Margaret Elbertse — the Dutch side of the family, rooted in Utrecht, Netherlands, tracing the Elbertse and DeBruyn lines.</span>
+              <span class="feat-link">Explore maternal tree →</span>
+            </div>
+            <div class="mat-stat">
+              <span class="feat-n">264</span>
+              <small>Persons</small>
+            </div>
           </div>
-          <div class="mat-stat">
-            <span class="feat-n">264</span>
-            <small>Persons</small>
+        </a>
+        <a class="feat-deep-names" href="ancestor_mappings/deep-names.html">
+          <div class="mat-header">
+            <div class="mat-text">
+              <span class="feat-label" style="color:#c8a245;opacity:.8">Etymology · Origins · Pedigree Weight</span>
+              <span class="feat-name" style="color:#e4dbc6">The Deep Names</span>
+              <span class="feat-desc">37 ancient given names in the paternal tree — Norse, Visigothic, Frankish, and Iberian — where each name comes from, and which ancestors actually carried it.</span>
+              <span class="feat-link" style="color:#c8a245">Explore name origins →</span>
+            </div>
+            <div class="mat-stat">
+              <span class="feat-n" style="color:#c8a245">37</span>
+              <small>Names</small>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
   </div>
 </section>
 

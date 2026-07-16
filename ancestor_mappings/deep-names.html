@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Deep Names — Villanueva Family Tree</title>
+<style>
+:root {
+  --bg:      #0b0908;
+  --card:    #131110;
+  --card2:   #181510;
+  --border:  #2d2820;
+  --ink:     #e4dbc6;
+  --dim:     #8a8070;
+  --gold:    #c8a245;
+  --gold2:   #e0c070;
+  --blue:    #6fa8c0;
+  --rust:    #b86840;
+  --amber:   #c89840;
+  --olive:   #7aaa68;
+  --myth:    #9060b0;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--gold); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── NAV ── */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .55rem 1.4rem;
+  background: #090706;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.nav a { font: 500 11.5px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .06em; color: var(--gold); }
+.nav .sep { color: var(--dim); font-size: 12px; }
+.nav .cur { color: var(--ink); opacity: .6; font: 400 11.5px/1 ui-sans-serif, system-ui, sans-serif; }
+.nav .jumps { margin-left: auto; display: flex; gap: .5rem; }
+.nav .jumps a { color: var(--dim); font-size: 11px; letter-spacing: .12em; }
+.nav .jumps a:hover { color: var(--gold); }
+
+/* ── HERO ── */
+.hero {
+  padding: 3.4rem 1.2rem 2.8rem;
+  text-align: center;
+  background: linear-gradient(170deg, #0d0b08 0%, #100e0a 60%, #0b0908 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(200,162,69,.09), transparent);
+  pointer-events: none;
+}
+.hero-eye {
+  font: 600 10.5px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: .7;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: .04em;
+  line-height: 1.1;
+  margin-bottom: .9rem;
+}
+.hero-rule {
+  width: 260px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: .9rem auto 1.2rem;
+}
+.hero-sub {
+  font-size: 1rem;
+  color: var(--dim);
+  font-style: italic;
+  max-width: 600px;
+  margin: 0 auto 1.8rem;
+  line-height: 1.65;
+}
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  justify-content: center;
+}
+.hstat { text-align: center; }
+.hstat .n { font: 400 2.2rem/1 Palatino, serif; color: var(--gold); display: block; }
+.hstat .l { font: 500 9.5px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); margin-top: .35rem; display: block; }
+
+/* ── INTRO ── */
+.intro-box {
+  max-width: 820px;
+  margin: 2.4rem auto;
+  padding: 1.4rem 1.8rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  font-size: .9rem;
+  color: var(--dim);
+  line-height: 1.75;
+}
+.intro-box p + p { margin-top: .8rem; }
+.intro-box strong { color: var(--ink); }
+.myth-note {
+  background: rgba(144,96,176,.08);
+  border: 1px solid rgba(144,96,176,.25);
+  border-left: 3px solid var(--myth);
+}
+.myth-note strong { color: #b890d8; }
+
+/* ── SECTIONS ── */
+.section { max-width: 1060px; margin: 0 auto; padding: 2rem 1.2rem 3rem; }
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: .4rem;
+  padding-bottom: .7rem;
+  border-bottom: 1px solid var(--border);
+}
+.sec-num {
+  font: 400 2rem/1 Palatino, serif;
+  min-width: 1.8rem;
+}
+.sec-num.norse  { color: var(--blue); }
+.sec-num.visig  { color: var(--rust); }
+.sec-num.frank  { color: var(--amber); }
+.sec-num.iberia { color: var(--olive); }
+.sec-title { font-size: 1.1rem; color: var(--ink); font-weight: 400; letter-spacing: .03em; }
+.sec-range { font: 500 10px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-left: auto; }
+.sec-note {
+  font-size: .83rem;
+  color: var(--dim);
+  font-style: italic;
+  margin: .7rem 0 1.6rem;
+  line-height: 1.6;
+}
+
+/* ── NAMES GRID ── */
+.names-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  gap: 1.1rem;
+}
+@media (max-width: 520px) { .names-grid { grid-template-columns: 1fr; } }
+
+/* ── NAME CARD ── */
+.name-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.2rem 1.4rem;
+  position: relative;
+  overflow: hidden;
+}
+.name-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.name-card.norse::before  { background: linear-gradient(90deg, var(--blue), transparent); }
+.name-card.visig::before  { background: linear-gradient(90deg, var(--rust), transparent); }
+.name-card.frank::before  { background: linear-gradient(90deg, var(--amber), transparent); }
+.name-card.iberia::before { background: linear-gradient(90deg, var(--olive), transparent); }
+.name-card.myth { border-color: rgba(144,96,176,.3); }
+.name-card.myth::before { background: linear-gradient(90deg, var(--myth), transparent); }
+
+.name-head {
+  display: flex;
+  align-items: baseline;
+  gap: .8rem;
+  margin-bottom: .5rem;
+  flex-wrap: wrap;
+}
+.name-word {
+  font-size: 1.55rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.name-word.norse  { color: var(--blue); }
+.name-word.visig  { color: var(--rust); }
+.name-word.frank  { color: var(--amber); }
+.name-word.iberia { color: var(--olive); }
+.name-word.myth   { color: var(--myth); }
+
+.name-tag {
+  font: 500 9px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+  margin-left: auto;
+  flex: none;
+}
+.name-tag.myth   { background: rgba(144,96,176,.15); color: #b890d8; border: 1px solid rgba(144,96,176,.3); }
+.name-tag.hist   { background: rgba(100,100,100,.12); color: var(--dim); border: 1px solid rgba(100,100,100,.2); }
+
+.name-etym {
+  font-size: .85rem;
+  color: var(--dim);
+  font-style: italic;
+  line-height: 1.55;
+  margin-bottom: .9rem;
+  padding-bottom: .85rem;
+  border-bottom: 1px solid var(--border);
+}
+.name-etym em { font-style: normal; color: var(--ink); opacity: .8; }
+
+/* ── PERSON ENTRIES ── */
+.persons { list-style: none; display: flex; flex-direction: column; gap: .75rem; }
+.person {
+  padding: .6rem .75rem;
+  background: rgba(255,255,255,.025);
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,.04);
+}
+.person-name {
+  font-size: .95rem;
+  color: var(--ink);
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: .28rem;
+}
+.person-dates { color: var(--dim); font-size: .83rem; }
+.person-bio {
+  font-size: .82rem;
+  color: var(--dim);
+  line-height: 1.55;
+  margin-top: .28rem;
+}
+.person-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: .5rem;
+  gap: .4rem;
+}
+.conv {
+  font: 600 10px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .1em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+.conv-n {
+  font: 400 1rem/1 Palatino, serif;
+  color: var(--gold);
+}
+.conv-l { font-size: .7rem; color: var(--dim); }
+
+/* ── CLOSING ── */
+.closing {
+  max-width: 820px;
+  margin: 1rem auto 4rem;
+  padding: 1.8rem 2rem;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--gold);
+}
+.closing h3 {
+  font: 400 1rem/1 Palatino, serif;
+  color: var(--gold);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.closing p { font-size: .9rem; color: var(--dim); line-height: 1.75; }
+.closing p + p { margin-top: .85rem; }
+.closing strong { color: var(--ink); }
+
+hr.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+@media (max-width: 680px) {
+  .nav .jumps { display: none; }
+  .hero h1 { font-size: 1.8rem; }
+  .sec-range { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="../index.html">Home</a>
+  <span class="sep">›</span>
+  <span class="cur">The Deep Names</span>
+  <div class="jumps">
+    <a href="#norse">I · Norse</a>
+    <a href="#visig">II · Visigothic</a>
+    <a href="#frank">III · Frankish</a>
+    <a href="#iberia">IV · Iberian</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eye">A Genealogical Atlas · Villanueva / Jasso Tree</div>
+  <h1>The Deep Names</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub">Ancient given names in the paternal tree — where each name comes from, and who in the family actually carried it. Every person listed here is a documented ancestor.</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="n">37</span><span class="l">Names</span></div>
+    <div class="hstat"><span class="n">4</span><span class="l">Layers</span></div>
+    <div class="hstat"><span class="n">gen 20–47</span><span class="l">Depth</span></div>
+    <div class="hstat"><span class="n">3,582</span><span class="l">Peak lines · Toda</span></div>
+  </div>
+</header>
+
+<!-- GUIDE -->
+<div style="max-width:1060px;margin:0 auto;padding:0 1.2rem">
+  <div class="intro-box" style="margin-top:2rem">
+    <p>Generation numbers count parent-to-child steps back from <strong>Antonio Jasso (gen 0)</strong>. <strong>"Converging lines"</strong> is the number of separate paths in the pedigree that funnel through that person — a measure of how structurally central they are to the tree, not how much genetic material they contributed.</p>
+    <p>Names are listed within their layer and sorted by the oldest attested ancestor who carried them. The etymology traces the original language and word-stems, not later folk-etymology.</p>
+  </div>
+  <div class="intro-box myth-note">
+    <p><strong>A note on the deepest layer:</strong> the Kvenland kings (Fornjót, Kári, Snær, Thorri, Gorr) are <strong>legendary, not historical</strong>. They come from Norse sagas — the <em>Orkneyinga saga</em> and <em>Hversu Noregr byggðist</em> — which trace Norwegian dynasties back to personified forces of nature. They are genuine parts of the recorded genealogy, but they belong to myth. Everyone from roughly 700 AD forward is historical.</p>
+  </div>
+</div>
+
+<hr class="divider" style="margin-top:1rem">
+
+<!-- ═══════════════════ I. NORSE & LEGENDARY ═══════════════════ -->
+<section class="section" id="norse">
+  <div class="sec-head">
+    <span class="sec-num norse">I</span>
+    <span class="sec-title">The Norse &amp; Legendary Layer</span>
+    <span class="sec-range">gen 34 – 47</span>
+  </div>
+  <p class="sec-note">Old Norse names drawn from forces of nature, battle, and the divine. The earliest entries are legendary — mythological personifications recorded in the sagas. From Halfdan onward the names become historical.</p>
+
+  <div class="names-grid">
+
+    <div class="name-card norse myth">
+      <div class="name-head"><span class="name-word myth">Thorri</span><span class="name-tag myth">Legendary</span></div>
+      <div class="name-etym">Old Norse <em>Þorri</em> — the name of the fourth winter month in the old Icelandic calendar, still marked today by the midwinter feast <em>Þorrablót</em>. Part of a family of snow-words; not a reference to the god Thor.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">King Thorri Snærsson of Kvenland</div>
+          <div class="person-dates">fl. ~310 · gen 47 · Legendary</div>
+          <div class="person-bio">In the sagas his children are Nór, Gorr, and Gói. The disappearance of his daughter Gói sets the founding myth of Norway in motion.</div>
+          <div class="person-foot"><span class="conv-n">34</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse myth">
+      <div class="name-head"><span class="name-word myth">Snær</span><span class="name-tag myth">Legendary</span></div>
+      <div class="name-etym">Old Norse <em>Snær</em> — literally "snow." His children are named for kinds of snowfall: Þorri, Fönn, Drífa, and Mjöll.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">King Snø "the Old" Karasson of Kvenland</div>
+          <div class="person-dates">Legendary · gen 46</div>
+          <div class="person-bio">His children are all snow: Þorri, Fönn, Drífa, and Mjöll — all Old Norse words for kinds of snowfall.</div>
+          <div class="person-foot"><span class="conv-n">24</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse myth">
+      <div class="name-head"><span class="name-word myth">Frosti</span><span class="name-tag myth">Legendary</span></div>
+      <div class="name-etym">Old Norse <em>Frosti</em> — "frost." Also recorded as a dwarf-name in the Poetic Edda.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Frosti Kárasson, Mythical King of Kvenland</div>
+          <div class="person-dates">Legendary · gen 45</div>
+          <div class="person-bio">Legendary son of Kári the wind.</div>
+          <div class="person-foot"><span class="conv-n">12</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse myth">
+      <div class="name-head"><span class="name-word myth">Kári</span><span class="name-tag myth">Legendary</span></div>
+      <div class="name-etym">Old Norse <em>Kári</em> — in ordinary use, "curly-haired." In the Fornjót myth, the personification of wind. Son of Fornjót, brother to Logi (fire) and Hlér/Ægir (sea): wind, fire, and sea.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">King Kári "the Wind" Fornjótsson of Kvenland</div>
+          <div class="person-dates">Legendary · gen 44</div>
+          <div class="person-bio">The three brothers are wind, fire, and sea — the elemental forces behind the genealogical myth of Scandinavia.</div>
+          <div class="person-foot"><span class="conv-n">6</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse myth">
+      <div class="name-head"><span class="name-word myth">Gorr</span><span class="name-tag myth">Legendary</span></div>
+      <div class="name-etym">Old Norse <em>Górr</em> — meaning debated. In the sagas, Gorr took the sea while his brother Nór took the land: Nór's line became the kings of Norway, Gorr's the sea kings and earls of Orkney.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Gorr Thorrasson, Sea King</div>
+          <div class="person-dates">365 – 418 · gen 38 · Oldest documented person in the tree</div>
+          <div class="person-bio">The oldest documented person in the entire tree, at generation 38.</div>
+          <div class="person-foot"><span class="conv-n">39</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Raum</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Raumr</em> — probably "large man." The name behind the district Raumaríki (modern Romerike, Norway). Alfheim was the mythic land of the elves.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Raum "the Old" Norsson, King of Alfheim</div>
+          <div class="person-dates">370 – 450 · gen 37</div>
+          <div class="person-bio">Son of Nór, placed in the mythic Alfheim between the Glomma and Göta rivers.</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Hildur</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Hildr</em> — "battle." A valkyrie name, and the root inside dozens of Germanic names: Brunhild, Mathilde, Richilde.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Hildur Gudraudsdatter</div>
+          <div class="person-dates">371 – 470 · gen 36</div>
+          <div class="person-bio">One of the two oldest persons in the tree alongside Gorr.</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Halfdan</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Hálfdan</em> — "half-Dane." Originally descriptive: one Danish parent. Recycled relentlessly across Norse dynasties.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Halfdan "the Tall" Frodasson, King of Denmark</div>
+          <div class="person-dates">503 – 580</div>
+        </li>
+        <li class="person">
+          <div class="person-name">Halfdan the Valiant</div>
+          <div class="person-dates">590 – 650</div>
+        </li>
+        <li class="person">
+          <div class="person-name">Halfdan "Gamle" Sveidasson</div>
+          <div class="person-bio">"Halfdan the Old."</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Ivar</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Ívarr</em> — most likely <em>ýr</em> ("yew," the wood of bows) + <em>herr</em> ("warrior") — "bow-warrior."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">King Ivar "Vidfamne" Halfdansson</div>
+          <div class="person-dates">612 – 647</div>
+          <div class="person-bio">"Ivar the Wide-Reaching" — a legendary Swedish king said to have ruled much of Scandinavia and beyond.</div>
+        </li>
+        <li class="person">
+          <div class="person-name">Ivar Halfdansson, Opplendingejarl</div>
+          <div class="person-dates">760 – 824 · Earl of the Uplands, Norway</div>
+          <div class="person-foot"><span class="conv-n">44</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Eystein</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Eysteinn</em> — <em>ey</em> ("luck," or "island") + <em>steinn</em> ("stone") — "lucky stone." His byname <em>Glumra</em> means "the noisy" or "the clamorous."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Eystein Ivarsson "the Noisy" Glumra</div>
+          <div class="person-dates">810 – 870 · Norwegian chieftain, father of Ragnvald</div>
+          <div class="person-foot"><span class="conv-n">53</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Ragnvald</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Rögnvaldr</em> — <em>regin</em> ("the gods, counsel") + <em>valdr</em> ("ruler") — "ruler by the counsel of the gods." The same name, root for root, as English Ronald.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Ragnvald Eysteinsson, Earl of Møre</div>
+          <div class="person-dates">825 – 894</div>
+          <div class="person-bio">One of Harald Fairhair's closest allies in the unification of Norway; granted Orkney and Shetland. Father of Rollo.</div>
+          <div class="person-foot"><span class="conv-n">89</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Ragnar</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Ragnarr</em> — <em>regin</em> ("the gods") + <em>herr</em> ("army") — "warrior of the gods."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Ragnar "Lodbrok" Sigurdsson, King of Denmark and Norway</div>
+          <div class="person-dates">749 – 845</div>
+          <div class="person-bio">The legendary Viking of the sagas. <em>Loðbrók</em> means "hairy-breeches."</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Sigurd</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Sigurðr</em> — <em>sigr</em> ("victory") + <em>vǫrðr</em> ("guardian") — "victory's guardian." The dragon-slayer of the Völsunga saga; Wagner's Siegfried.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Sigurd "Ring" Randversson</div>
+          <div class="person-dates">724 – 812 · Semi-legendary Danish king, father of Ragnar Lodbrok</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Rollo · Hrólfr</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Hrólfr</em>, contracted from <em>Hróðulfr</em> — <em>hróðr</em> ("fame") + <em>úlfr</em> ("wolf") — "famous wolf." Latinized by Frankish scribes as Rollo. His byname <em>Gange</em> means "the Walker" — he was said to be too heavy for any horse.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Gange-Hrólfr "Rollo" Ragnvaldsson</div>
+          <div class="person-dates">d. 928</div>
+          <div class="person-bio">Besieged Paris, took Normandy from Charles the Simple in 911, and founded the ducal line that produced William the Conqueror.</div>
+          <div class="person-foot"><span class="conv-n">665</span><span class="conv-l">converging lines — one of the great bottlenecks of the entire tree</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Gunnor</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Gunnvǫr</em> — <em>gunnr</em> ("war") + <em>vǫr</em> ("vigilant") — "war-watchful." Note: the modern name Nora is a phonetic echo, not a true descendant — Nora comes from Honoria/Eleanora.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Gunnor, Duchess of Normandy</div>
+          <div class="person-dates">936 – 1031</div>
+          <div class="person-bio">Danish noblewoman, wife of Richard I of Normandy. Formidably long-lived and politically central; her kin network staffed the Norman aristocracy for generations.</div>
+          <div class="person-foot"><span class="conv-n">628</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Poppa</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Frankish, uncertain — probably from the Germanic name-stem Popo / Boppo. She and Rollo are the same bottleneck in the pedigree.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Poppa of Bayeux</div>
+          <div class="person-dates">872 – 930</div>
+          <div class="person-bio">Rollo's wife by Norse custom (<em>more danico</em>), mother of William Longsword. Reportedly the captured daughter of a Frankish count.</div>
+          <div class="person-foot"><span class="conv-n">665</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Rurik</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Old Norse <em>Hrøríkr</em> — <em>hróðr</em> ("fame") + <em>ríkr</em> ("ruler") — "famous ruler." The same name, root for root, as Gothic-Spanish <em>Rodrigo</em> — which appears 41 times elsewhere in this tree.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Rurik, Grand Duke of Novgorod</div>
+          <div class="person-dates">830 – 879</div>
+          <div class="person-bio">The Varangian founder of the Rurikid dynasty, which ruled Russia for seven centuries until 1598.</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card norse">
+      <div class="name-head"><span class="name-word norse">Igor</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Russian form of Old Norse <em>Ingvarr</em> — <em>Yngvi</em> (a name of the god Freyr) + <em>herr</em> ("warrior") — "Ing's warrior."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Igor "the Old" Rurikov of Kiev</div>
+          <div class="person-dates">877 – 945 · Grand Prince of Kiev, son of Rurik</div>
+          <div class="person-bio">Killed by the Drevlians while collecting tribute twice in one season; his widow Olga's revenge is one of the set-pieces of the Primary Chronicle.</div>
+          <div class="person-foot"><span class="conv-n">63</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /names-grid -->
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════ II. VISIGOTHIC & ASTURIAN ═══════════════════ -->
+<section class="section" id="visig">
+  <div class="sec-head">
+    <span class="sec-num visig">II</span>
+    <span class="sec-title">The Visigothic &amp; Asturian Layer</span>
+    <span class="sec-range">gen 34 – 43</span>
+  </div>
+  <p class="sec-note">The Visigoths ruled Spain from the 5th century until the Islamic conquest of 711. Their names are Gothic — a Germanic language — which is why they look nothing like later Spanish. The Asturian layer immediately follows: the generation that survived the conquest and began the Reconquista.</p>
+
+  <div class="names-grid">
+
+    <div class="name-card visig">
+      <div class="name-head"><span class="name-word visig">Chindasvinto</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Gothic — the second element is <em>swinþs</em> = "strong." A signature Visigothic name-ending shared with Recceswinth, Sisenand, and others.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Chindasvinth, King of the Visigoths</div>
+          <div class="person-dates">563 – 653</div>
+          <div class="person-bio">Seized the throne at roughly 79 years old, purged the nobility that had made kings disposable, and promulgated the <em>Liber Iudiciorum</em>, the law code that governed Spain for centuries.</div>
+          <div class="person-foot"><span class="conv-n">26</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card visig">
+      <div class="name-head"><span class="name-word visig">Glasvinta · Glasuinda</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Gothic — same <em>swinþs</em> ("strong") ending in its feminine form. Compare the Visigothic queens Goiswintha and Brunhilda.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Princess Flavia Glasuinda Tavira dos Visigodos</div>
+          <div class="person-dates">b. 620 · Visigothic princess</div>
+          <div class="person-foot"><span class="conv-n">40</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Flavia Glasvinta</div>
+          <div class="person-dates">b. 590</div>
+        </li>
+        <li class="person">
+          <div class="person-name">Glasvinta Ferrara</div>
+          <div class="person-dates">b. 645</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card visig">
+      <div class="name-head"><span class="name-word visig">Favila</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Visigothic, uncertain. A Visigothic nobleman of the generation that lost Spain in 711 — the hinge moment of the family's history.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Favila, Duke of Cantabria</div>
+          <div class="person-bio">Father of Pelayo. His generation watched the world they inherited dissolve in a single summer.</div>
+          <div class="person-foot"><span class="conv-n">10</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card visig">
+      <div class="name-head"><span class="name-word visig">Pelayo</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">From Latin <em>Pelagius</em>, from Greek <em>pélagos</em> = "the open sea" — "the man of the sea."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Pelayo, King of Asturias</div>
+          <div class="person-dates">685 – 737</div>
+          <div class="person-bio">The founder of Christian Spain. After the Muslim conquest he withdrew into the Asturian mountains and won the battle of Covadonga (~722), traditionally counted as the first act of the Reconquista — the 770-year process that eventually produced the Castile your family descends from.</div>
+          <div class="person-foot"><span class="conv-n">12</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card visig">
+      <div class="name-head"><span class="name-word visig">Gaudiosa</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">From Latin <em>gaudium</em> = "joy" — "the joyful one."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Gaudiosa</div>
+          <div class="person-dates">675 – 737 · Queen of Asturias, wife of Pelayo</div>
+          <div class="person-bio">She and Pelayo are recorded with the same year of death.</div>
+          <div class="person-foot"><span class="conv-n">12</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card visig">
+      <div class="name-head"><span class="name-word visig">Fruela</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Visigothic <em>Froila</em>, from Gothic <em>frauja</em> = "lord" — roughly "little lord." A satisfying cognate: Gothic <em>frauja</em> ("lord") and Old Norse <em>freyja</em> ("lady," hence the goddess Freya) descend from the same Proto-Germanic root. Fruela and Freya are distant linguistic relatives.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Fruela, Duke of Cantabria</div>
+          <div class="person-dates">710 – 765</div>
+          <div class="person-foot"><span class="conv-n">224</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Fruela Bermúdez de Trava, Count of Trastámara</div>
+          <div class="person-dates">911 – 997</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card visig">
+      <div class="name-head"><span class="name-word visig">Hereswintha</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic — <em>heri</em> ("army") + <em>swinþs</em> ("strong") — "army-strong." The Visigothic strength-ending, applied here to a Saxon noblewoman.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Hereswintha of the Saxons</div>
+          <div class="person-dates">700 – 747</div>
+          <div class="person-foot"><span class="conv-n">372</span><span class="conv-l">converging lines — a major junction of the tree</span></div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════ III. FRANKISH & CAROLINGIAN ═══════════════════ -->
+<section class="section" id="frank">
+  <div class="sec-head">
+    <span class="sec-num frank">III</span>
+    <span class="sec-title">The Frankish &amp; Carolingian Layer</span>
+    <span class="sec-range">gen 28 – 39</span>
+  </div>
+  <p class="sec-note">Most of these are built from a small set of Germanic word-stems, recombined endlessly: <em>ermen</em> (universal), <em>ric</em> (ruler), <em>hild</em> (battle), <em>gard</em> (protection), <em>thrud</em> (strength), <em>adal</em> (noble). The creativity was not in invention but in combination.</p>
+
+  <div class="names-grid">
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Ermengarde</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic — <em>ermen</em> ("whole, universal") + <em>gard</em> ("enclosure, protection") — "universal protection."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Ermengarde of Hesbaye</div>
+          <div class="person-dates">778 – 818 · Empress of the Franks, wife of Louis the Pious, daughter-in-law of Charlemagne</div>
+          <div class="person-foot"><span class="conv-n">93</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Ermengarde of Tours</div>
+          <div class="person-dates">800 – 851 · Empress, wife of Lothair I</div>
+        </li>
+        <li class="person">
+          <div class="person-name">Ermengarde von Argengau</div>
+          <div class="person-dates">691 – 751</div>
+          <div class="person-foot"><span class="conv-n">172</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Emma</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic — a short form of the <em>ermen</em> names above. Emma is Ermengarde, worn down by a thousand years of use.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Emma of Alemannia, Duchess of Swabia</div>
+          <div class="person-dates">727 – 798</div>
+          <div class="person-foot"><span class="conv-n">440</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Emma de Périgord</div>
+          <div class="person-dates">928 – 988</div>
+          <div class="person-foot"><span class="conv-n">524</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Ermentrude</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic — <em>ermen</em> ("universal") + <em>thrud</em> ("strength") — "universal strength."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Ermentrude of Orléans, Queen of the Franks</div>
+          <div class="person-dates">830 – 869 · Wife of Charles the Bald</div>
+          <div class="person-foot"><span class="conv-n">78</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Ermentrude de Chalon</div>
+          <div class="person-dates">b. 725</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Ermesenda</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic — <em>ermen</em> ("universal") + <em>swinþs</em> ("strong") — "universally strong." The Gothic strength-ending, fused onto a Frankish stem.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Ermesenda Eris de Lugo</div>
+          <div class="person-foot"><span class="conv-n">114</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Ermesenda de Narbona, Viscountess of Narbonne</div>
+          <div class="person-dates">1128 – 1177</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Richilde</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic — <em>ric</em> ("power, ruler") + <em>hild</em> ("battle") — "battle-ruler."</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Richilde of Arles</div>
+          <div class="person-dates">822 – 883</div>
+          <div class="person-foot"><span class="conv-n">88</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Richilde of Bourges</div>
+          <div class="person-dates">886 – 946</div>
+          <div class="person-foot"><span class="conv-n">166</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Adelheid</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic — <em>adal</em> ("noble") + <em>heid</em> ("kind, character") — "of noble nature." The parent of Adelaide, Alice, Adela, and Heidi.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Adelheid von Eifelgau</div>
+          <div class="person-dates">820 – 884</div>
+          <div class="person-foot"><span class="conv-n">22</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Adelheid of Holland</div>
+          <div class="person-dates">974 – 1045</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Oda</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic <em>aud</em> = "wealth, fortune." The feminine counterpart of Otto/Odo.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Oda of Thuringia</div>
+          <div class="person-dates">816 – 913</div>
+          <div class="person-foot"><span class="conv-n">73</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Judicael</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Breton — <em>iud</em> ("lord") + <em>hael</em> ("generous") — "generous lord." One of 14 canonized saints in the tree.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Saint Judicael ap Hoel</div>
+          <div class="person-dates">599 – 647 · King of Domnonée in Brittany</div>
+          <div class="person-bio">Abdicated to become a monk and was later canonized.</div>
+          <div class="person-foot"><span class="conv-n">8</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card frank">
+      <div class="name-head"><span class="name-word frank">Aribo</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Germanic, uncertain — possibly from <em>hari</em> ("army") or <em>arn</em> ("eagle"). A Bavarian dynastic name recurring across generations.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Aribo I von Ostmark, Graf im Traungau</div>
+          <div class="person-dates">850 – 909 · Margrave on the Carolingian eastern frontier, now Austria</div>
+        </li>
+        <li class="person">
+          <div class="person-name">Aribo von Traungau, Count Palatine of Bavaria</div>
+          <div class="person-dates">940 – 1000</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════ IV. IBERIAN ═══════════════════ -->
+<section class="section" id="iberia">
+  <div class="sec-head">
+    <span class="sec-num iberia">IV</span>
+    <span class="sec-title">The Iberian Layer</span>
+    <span class="sec-range">gen 20 – 33</span>
+  </div>
+  <p class="sec-note">The closest layer — names from the Iberian peninsula, a mix of Basque, Latin, and older pre-Roman roots that defied the Germanic wave. This is where the family's deepest pedigree collapses: Toda Aznárez at 3,582 lines is the single largest bottleneck in the entire tree.</p>
+
+  <div class="names-grid">
+
+    <div class="name-card iberia">
+      <div class="name-head"><span class="name-word iberia">Urraca</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Iberian — from Spanish <em>urraca</em> = "magpie." Almost certainly a nickname that hardened into a royal name; some argue a Basque origin. The single greatest point of pedigree collapse in the entire tree.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Urraca I, Queen of Castile and León</div>
+          <div class="person-dates">1080 – 1126</div>
+          <div class="person-bio">The first woman to reign as queen regnant in her own right anywhere in Western Europe. The ancestor on whom both of the family's independent royal descents converge.</div>
+          <div class="person-foot"><span class="conv-n">252</span><span class="conv-l">converging lines — greatest single collapse in the tree</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Urraca de Castilla, Queen Consort of Asturias</div>
+          <div class="person-dates">b. 780</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card iberia">
+      <div class="name-head"><span class="name-word iberia">Toda</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Basque / Navarrese, uncertain — possibly from Latin <em>tota</em> ("all"), possibly native Basque. The formidable matriarch of Navarre; grandmother, aunt, or cousin to nearly every Iberian monarch of her century.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Toda Aznárez de Larraún, Queen of Navarre</div>
+          <div class="person-dates">876 – 958</div>
+          <div class="person-bio">A working diplomat between the Christian kingdoms and the Caliphate of Córdoba. She personally led a diplomatic mission to Córdoba to secure medical treatment for her grandson from the caliph's physician.</div>
+          <div class="person-foot"><span class="conv-n">3,582</span><span class="conv-l">converging lines — the deepest bottleneck in the entire pedigree</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card iberia">
+      <div class="name-head"><span class="name-word iberia">Jimena · Ximena</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Basque, debated — possibly from <em>seme</em> ("son"), possibly a form of Simeon. Carried by both a queen of Asturias and a prominent Navarrese noblewoman.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Jimena Garcés de Pamplona, Queen Consort of Asturias</div>
+          <div class="person-dates">855 – 912</div>
+          <div class="person-foot"><span class="conv-n">441</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Jimena (Ximena) Velaz</div>
+          <div class="person-dates">925 – 980</div>
+          <div class="person-foot"><span class="conv-n">191</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card iberia">
+      <div class="name-head"><span class="name-word iberia">Munio</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Iberian, uncertain — possibly from Latin <em>Munnius</em>. Extremely common in medieval Castile; the source of the surname Muñoz ("son of Munio").</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Munio Velaz, II Lord of Bizcaya</div>
+          <div class="person-dates">855 – 926</div>
+          <div class="person-foot"><span class="conv-n">439</span><span class="conv-l">converging lines</span></div>
+        </li>
+        <li class="person">
+          <div class="person-name">Munio Belchides, Lord of Amaya</div>
+          <div class="person-dates">760 – 830</div>
+          <div class="person-foot"><span class="conv-n">119</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card iberia">
+      <div class="name-head"><span class="name-word iberia">Nuño</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Iberian — probably from Latin <em>Nunnius</em>. Source of the surname Núñez. One of the semi-legendary Judges of Castile.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Nuño Rasura Núñez</div>
+          <div class="person-dates">780 – 860</div>
+          <div class="person-bio">One of the two semi-legendary Judges of Castile, said to have governed the Castilians after they refused the kings of León.</div>
+          <div class="person-foot"><span class="conv-n">318</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card iberia">
+      <div class="name-head"><span class="name-word iberia">Aenor</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Occitan / Old French, uncertain. Famous for what happened next: when Aénor of Châtellerault's daughter was born, she was called <em>alia Aenor</em> — "the other Aenor" — which contracted into <strong style="color:var(--ink)">Eleanor</strong>.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Aénor of Châtellerault, Duchess of Aquitaine</div>
+          <div class="person-dates">1103 – 1130</div>
+          <div class="person-bio">Her daughter was Eleanor of Aquitaine.</div>
+        </li>
+        <li class="person">
+          <div class="person-name">Aenor Saumur</div>
+          <div class="person-dates">945 – 1034</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="name-card iberia">
+      <div class="name-head"><span class="name-word iberia">Egas</span><span class="name-tag hist">Historical</span></div>
+      <div class="name-etym">Portuguese, Gothic origin, uncertain. Source of the patronymic Viegas ("son of Egas"). A name of the Galician-Portuguese frontier.</div>
+      <ul class="persons">
+        <li class="person">
+          <div class="person-name">Egas Moniz</div>
+          <div class="person-dates">915 – 954 · Portuguese nobleman</div>
+          <div class="person-foot"><span class="conv-n">54</span><span class="conv-l">converging lines</span></div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CLOSING -->
+<div style="max-width:1060px;margin:0 auto;padding:0 1.2rem">
+  <div class="closing">
+    <h3>A closing note on weight</h3>
+    <p>Every person in this document is a real, documented ancestor. But it's worth being honest about scale: an ancestor at generation 38 contributes something on the order of one part in 250 billion of anyone's actual ancestry. <strong>Gorr the Sea King</strong> is a magnificent story and a genuine line in the record. He is not, in any measurable sense, why anyone in this family looks the way they do.</p>
+    <p>The "converging lines" counts are the better measure of importance here. They show how central a person is to the structure of the pedigree — how many separate roads run through them. <strong>Toda Aznárez at 3,582</strong> and <strong>Rollo at 665</strong> are load-bearing. Gorr, at 39, is the end of a long and beautiful thread.</p>
+    <p>The legendary layer (everything before ~700 AD) records how medieval Scandinavians understood their own origins — a genealogy that begins with wind, snow, and sea. Whether or not Fornjót existed, the fact that Norwegian chieftains traced themselves to him tells you something real about how they thought. That is its own kind of history.</p>
+  </div>
+</div>
+
+<!-- FOOTER NAV -->
+<div style="max-width:1060px;margin:0 auto 3rem;padding:0 1.2rem;text-align:center">
+  <a href="../index.html" style="font:500 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);opacity:.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">← Back to Home</a>
+</div>
+
+</body>
+</html>
