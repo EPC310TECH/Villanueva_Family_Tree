@@ -247,11 +247,15 @@
     .feat-maternal .mat-stat small { font:500 10px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
     .feat-maternal .feat-link { display:inline-block; margin-top:16px; font:500 12px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.15em; text-transform:uppercase; color:#7ec8e3; }
     @media(max-width:600px){ .feat-maternal .mat-header{flex-direction:column;} .feat-maternal .mat-stat{text-align:left;} }
-    .feat-second-row { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; }
-    @media(max-width:800px){ .feat-second-row{grid-template-columns:1fr;} }
+    .feat-second-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-top:18px; }
+    @media(max-width:1000px){ .feat-second-row{grid-template-columns:1fr 1fr;} }
+    @media(max-width:600px){ .feat-second-row{grid-template-columns:1fr;} }
     .feat-deep-names { display:block; background:var(--card); border:1px solid rgba(200,162,69,.3); border-radius:6px; padding:28px 32px; text-decoration:none; color:inherit; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
     .feat-deep-names::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),transparent); }
     .feat-deep-names:hover { border-color:rgba(200,162,69,.55); transform:translateY(-2px); }
+    .feat-chronicles { display:block; background:var(--card); border:1px solid rgba(111,168,192,.25); border-radius:6px; padding:28px 32px; text-decoration:none; color:inherit; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
+    .feat-chronicles::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#6fa8c0,transparent); }
+    .feat-chronicles:hover { border-color:rgba(111,168,192,.5); transform:translateY(-2px); }
     .feat-card {
       background: var(--card); border: 1px solid rgba(216,175,67,.22); border-radius: 12px;
       padding: 28px 24px; text-decoration: none; color: inherit;
@@ -786,6 +790,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="mat-stat">
               <span class="feat-n" style="color:#c8a245">37</span>
               <small>Names</small>
+            </div>
+          </div>
+        </a>
+        <a class="feat-chronicles" href="ancestor_mappings/chronicles.html">
+          <div class="mat-header">
+            <div class="mat-text">
+              <span class="feat-label" style="color:#6fa8c0;opacity:.8">Primary Sources · Charter Citations · FMG</span>
+              <span class="feat-name" style="color:#e4dbc6">Chronicle Records</span>
+              <span class="feat-desc">33 ancestors matched to the Foundation for Medieval Genealogy corpus — charter witnesses, chronicle citations, and burial records from medieval Spanish, Galician, and Byzantine sources.</span>
+              <span class="feat-link" style="color:#6fa8c0">Browse records →</span>
+            </div>
+            <div class="mat-stat">
+              <span class="feat-n" style="color:#6fa8c0">33</span>
+              <small>Records</small>
             </div>
           </div>
         </a>

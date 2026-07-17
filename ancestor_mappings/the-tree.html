@@ -687,6 +687,8 @@ const META   = {"title":"The Ancestry of Antonio Jasso (Geni.com only)","subtitl
   function fmtYears(n){if(n.birth!=null&&n.death!=null)return n.birth+'–'+n.death;if(n.birth!=null)return 'b. '+n.birth;if(n.death!=null)return 'd. '+n.death;return '';}
   function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
   function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  // Deep-link: the-tree.html#node=ID auto-selects that node once the sim settles
+  (function(){const h=location.hash.match(/[#&]node=(\d+)/);if(!h)return;const tid=+h[1];let tries=0;const poll=setInterval(()=>{const n=byId.get(tid);if(n&&n.x!=null){clearInterval(poll);selectNode(n,true);}if(++tries>80)clearInterval(poll);},150);})();
 })();
 </script>
 </body>

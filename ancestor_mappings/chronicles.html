@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chronicle Records — Villanueva Family Tree</title>
+<style>
+:root {
+  --bg:     #0b0908;
+  --card:   #131110;
+  --card2:  #181510;
+  --border: #2d2820;
+  --ink:    #e4dbc6;
+  --dim:    #8a8070;
+  --gold:   #c8a245;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+.nav{display:flex;align-items:center;gap:.7rem;padding:.55rem 1.4rem;background:#090706;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:40}
+.nav a{font:500 11.5px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.06em;color:var(--gold)}
+.nav .sep{color:var(--dim);font-size:12px}
+.nav .cur{color:var(--ink);opacity:.6;font:400 11.5px/1 ui-sans-serif,system-ui,sans-serif}
+
+/* HERO */
+.hero{padding:3rem 1.2rem 2.4rem;text-align:center;background:linear-gradient(170deg,#0d0b08 0%,#100e0a 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 0%,rgba(200,162,69,.08),transparent);pointer-events:none}
+.hero-eye{font:600 10.5px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:1rem}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:400;color:var(--ink);letter-spacing:.04em;line-height:1.1;margin-bottom:.6rem}
+.hero-rule{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.8rem auto 1rem}
+.hero-sub{font-size:.95rem;color:var(--dim);font-style:italic;max-width:560px;margin:0 auto 1.6rem;line-height:1.65}
+.hero-stats{display:flex;flex-wrap:wrap;gap:1rem 2rem;justify-content:center}
+.hstat{text-align:center}
+.hstat .n{font:400 2rem/1 Palatino,serif;color:var(--gold);display:block}
+.hstat .l{font:500 9.5px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-top:.3rem;display:block}
+
+/* LAYOUT */
+.layout{max-width:1100px;margin:0 auto;padding:1.8rem 1.2rem;display:grid;grid-template-columns:200px 1fr;gap:2rem;align-items:start}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.toc{display:none}}
+
+/* TOC */
+.toc{position:sticky;top:52px;padding:.8rem 0}
+.toc-head{font:600 9.5px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.toc-item{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;font:400 12px/1.3 ui-sans-serif,system-ui,sans-serif;color:var(--dim);border-bottom:1px solid rgba(255,255,255,.03)}
+.toc-item:hover{color:var(--ink);text-decoration:none}
+.toc-dot{width:7px;height:7px;border-radius:50%;flex:none}
+.toc-n{margin-left:auto;font-size:11px;color:var(--dim);opacity:.6}
+
+/* SECTIONS */
+.chron-section{margin-bottom:2.8rem}
+.sec-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.sec-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.sec-title{font-size:1.05rem;font-weight:400;letter-spacing:.03em}
+.sec-cnt{margin-left:auto;font:500 10px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+
+/* ENTRY GRID */
+.entries-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:.9rem}
+@media(max-width:500px){.entries-grid{grid-template-columns:1fr}}
+
+/* ENTRY CARD */
+.entry-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem}
+.entry-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem}
+.entry-name{font-size:1rem;color:var(--ink);font-weight:400;line-height:1.25}
+.entry-meta{font:400 11.5px/1 ui-sans-serif,system-ui,sans-serif;color:var(--dim);margin-top:.25rem}
+.entry-link{font:500 10px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);opacity:.65;white-space:nowrap;flex:none;margin-top:.15rem}
+.entry-link:hover{opacity:1;text-decoration:none}
+.entry-bio{font-size:.83rem;color:var(--dim);font-style:italic;line-height:1.6;padding:.5rem .7rem;background:rgba(255,255,255,.025);border-radius:3px;border-left:2px solid rgba(200,162,69,.2)}
+.entry-bur{font:400 11.5px/1 ui-sans-serif,system-ui,sans-serif;color:var(--dim);padding-left:.3rem}
+.entry-bur::before{content:'⚰ ';font-size:10px}
+.entry-src{display:flex;align-items:center;gap:.45rem;font:500 10px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;padding-top:.45rem;border-top:1px solid var(--border);margin-top:.1rem}
+.src-dot{width:6px;height:6px;border-radius:50%;flex:none}
+
+hr.div{border:none;border-top:1px solid var(--border);max-width:1100px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../index.html">Home</a>
+  <span class="sep">›</span>
+  <a href="the-tree.html">Family Tree</a>
+  <span class="sep">›</span>
+  <span class="cur">Chronicle Records</span>
+</nav>
+
+<header class="hero">
+  <div class="hero-eye">Foundation for Medieval Genealogy · Matched Records</div>
+  <h1>Chronicle Records</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub">33 ancestors in the Villanueva / Jasso tree whose names appear in the Foundation for Medieval Genealogy corpus — primary source citations, charter witnesses, and chronicle references matched to documented tree nodes.</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="n">33</span><span class="l">Matched Ancestors</span></div>
+    <div class="hstat"><span class="n">10</span><span class="l">Source Collections</span></div>
+    <div class="hstat"><span class="n">840</span><span class="l">Earliest Birth (est.)</span></div>
+    <div class="hstat"><span class="n">1,353</span><span class="l">FMG Entries Searched</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="toc">
+    <div class="toc-head">Collections</div>
+    <a href="#sec-asturi" class="toc-item"><span class="toc-dot" style="background:#c8a245"></span>Asturias-León<span class="toc-n">3</span></a>
+<a href="#sec-galici" class="toc-item"><span class="toc-dot" style="background:#7aaa68"></span>Galicia<span class="toc-n">6</span></a>
+<a href="#sec-spanis" class="toc-item"><span class="toc-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval<span class="toc-n">7</span></a>
+<a href="#sec-spanis" class="toc-item"><span class="toc-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval<span class="toc-n">9</span></a>
+<a href="#sec-vizcay" class="toc-item"><span class="toc-dot" style="background:#6fa8c0"></span>Vizcaya<span class="toc-n">2</span></a>
+<a href="#sec-navarr" class="toc-item"><span class="toc-dot" style="background:#9060b0"></span>Navarre Nobility<span class="toc-n">1</span></a>
+<a href="#sec-catala" class="toc-item"><span class="toc-dot" style="background:#d0a060"></span>Catalan Nobility<span class="toc-n">1</span></a>
+<a href="#sec-byzant" class="toc-item"><span class="toc-dot" style="background:#5090c0"></span>Byzantium<span class="toc-n">2</span></a>
+<a href="#sec-byzant" class="toc-item"><span class="toc-dot" style="background:#4080b0"></span>Byzantium 1057–1204<span class="toc-n">1</span></a>
+<a href="#sec-burgun" class="toc-item"><span class="toc-dot" style="background:#a08050"></span>Burgundy<span class="toc-n">1</span></a>
+
+  </aside>
+  <main>
+    <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);padding:.9rem 1.1rem;margin-bottom:1.8rem;font-size:.83rem;color:var(--dim);line-height:1.7">
+      Matches were found by normalizing names (stripping titles, particles, and diacritics) and comparing birth years within a 25-year window. The chronicle text shown is drawn verbatim from the FMG record — mostly primary source quotations in Latin or medieval Spanish. Each card links directly to the node in the family tree.
+    </div>
+
+<section class="chron-section" id="sec-asturi">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#c8a245"></span>
+    <span class="sec-title">Asturias-León</span>
+    <span class="sec-cnt">3 records</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Sancha I, Queen of León</div>
+          <div class="entry-meta">1013–1067 · Royalty</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=627" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Geloira regina donated property to Santiago de Compostela by charter dated 18 Aug 1017, subscribed by Adefonsus princeps, Sancia proles Ueremudi, Tarasia proles Ueremudi, Geloira proles Ueremudi . Giloira deouota, Sancia, Tarasia deouota su</div>
+      <div class="entry-src" style="border-color:#c8a24520;color:#c8a245">
+        <span class="src-dot" style="background:#c8a245"></span>Asturias-León (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Cristina de León</div>
+          <div class="entry-meta">d. 1051</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=257" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">The Chronicon Regum Legionensium names Infanta Cristina as the daughter of King Vermudo II by a country girl named Velasquita, who was the daughter of Mantello and Bellalla from Miero near Monte Copián , stating that she married the son of</div>
+      <div class="entry-src" style="border-color:#c8a24520;color:#c8a245">
+        <span class="src-dot" style="background:#c8a245"></span>Asturias-León (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Jimena</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=641" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Ordonius princeps et uxor Gelvira regina donated property to Sahagún by charter dated 25 May 920, subscribed by their children Sanzo, Adefonso principi, Ranemiro, Xemena . Hordonis rex et Gilvira regina confirmed the possessions of the mona</div>
+      <div class="entry-src" style="border-color:#c8a24520;color:#c8a245">
+        <span class="src-dot" style="background:#c8a245"></span>Asturias-León (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-galici">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#7aaa68"></span>
+    <span class="sec-title">Galicia</span>
+    <span class="sec-cnt">6 records</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Gonzalo Betótiz</div>
+          <div class="entry-meta">860–929</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2509" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Conde . Pelagius comes, Froila comes, Lucidius comes, Erus Fredernandi, Ascarius, Petrus, Munio Muniz comes, Osorio comes, Gundesaluus comes subscribed the charter dated 6 May 899 under which Alfonso III King of Asturias consecrated the chu</div>
+      <div class="entry-src" style="border-color:#7aaa6820;color:#7aaa68">
+        <span class="src-dot" style="background:#7aaa68"></span>Galicia (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Muniadomna Díaz</div>
+          <div class="entry-meta">d. 968</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=271" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Ranemirus [brother of Alfonso IV King of Leon] granted villa Crexemir {Creixomil} to Ermegildus et Mummadomna by charter dated 22 Feb 926, witnessed by Aloitus Lucidi, Fredenandus Ouecoz, Fredenandus Alderotiz, Lucidus Aloitis, Froila Gunde</div>
+      <div class="entry-src" style="border-color:#7aaa6820;color:#7aaa68">
+        <span class="src-dot" style="background:#7aaa68"></span>Galicia (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Adosinda Gutiérrez</div>
+          <div class="entry-meta">d. 981</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=276" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">A charter dated 23 Dec 927 records donations by  Gutier Menendiz comes cum coniuge sua domna Ylduara  to the monastery of Santa María de Loyo, an interpolated document recording that  Ylduara cum filiis meis Rudesindus episcopus, Munnio,</div>
+      <div class="entry-src" style="border-color:#7aaa6820;color:#7aaa68">
+        <span class="src-dot" style="background:#7aaa68"></span>Galicia (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Elvira Aloítez, Countess</div>
+          <div class="entry-meta">Dates unknown · Nobility</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1714" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Sisnandus sci. Iacobi apostoli et Iriensis sedis episcopus cum genitore meo Hermegildo donated property to Sobrado by charter dated 30 Dec 955, subscribed by Rudericus Hermegildi prolis, Giluira coniux Ruderici .</div>
+      <div class="entry-src" style="border-color:#7aaa6820;color:#7aaa68">
+        <span class="src-dot" style="background:#7aaa68"></span>Galicia (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Teresa Eriz</div>
+          <div class="entry-meta">d. 929</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2510" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Her marriage is confirmed by a charter dated to which records the settlement of property disputes relating to  el territorio de Salnés  and names  domno Gundisalbus dux comite et comitesa domna Tarasia comite domno Pelagio prolis Gundisa</div>
+      <div class="entry-src" style="border-color:#7aaa6820;color:#7aaa68">
+        <span class="src-dot" style="background:#7aaa68"></span>Galicia (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Ermesenda Gundesindez</div>
+          <div class="entry-meta">d. 924</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=3194" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Her parentage is confirmed by a charter dated 21 Feb 897 which records that Gondesindus prolis Erus et Adosinda accepted as his wife Enderquina conmento Pala filia dux Menemdus Gutierizi et Ermesinda iermana de domna Geluira regina que fuit</div>
+      <div class="entry-src" style="border-color:#7aaa6820;color:#7aaa68">
+        <span class="src-dot" style="background:#7aaa68"></span>Galicia (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-spanis">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#c87850"></span>
+    <span class="sec-title">Spanish Nobility, Early Medieval</span>
+    <span class="sec-cnt">7 records</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Vermudo Vélaz</div>
+          <div class="entry-meta">916–978</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1735" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Uermudo Didaz cum uxore mea Argilo sold hereditate in territorio Legionensi iuxta riuulo Porma in loco Colle to Uermudo Uelaz et uxori uestra Geluire by charter dated 15 Apr 1044 . Nunno presbiter cum matre mea domna Flamla sold medietate h</div>
+      <div class="entry-src" style="border-color:#c8785020;color:#c87850">
+        <span class="src-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Fernándo Díaz</div>
+          <div class="entry-meta">939–1003</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=418" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">His absence from his supposed father´s charter dated 940 indicates that Fernando must not have been born then, or have been an infant considered too young to be named. Fernando Díaz confirmed documents relating to the monastery of Sahagún 1</div>
+      <div class="entry-src" style="border-color:#c8785020;color:#c87850">
+        <span class="src-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Elvira Pinióliz</div>
+          <div class="entry-meta">945–970</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1738" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio"> La condesa Elvira Pinioliz  donated the villa of Gomean to the church of Lugo, for the soul of her husband  conde Vermudo Velaz  buried in the monastery, by charter dated 26 Jan 1027 . The same donation was ratified by another charter</div>
+      <div class="entry-src" style="border-color:#c8785020;color:#c87850">
+        <span class="src-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Oneca</div>
+          <div class="entry-meta">d. 799</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=275" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio"> Mamadonna comitissa  donated  in Caraveio...in Mazoferrario...in Quintana Levaniaga...ex parte matris heredito...et in Villamajore tres divisas, uno de meo patre Gustio Didaz, altera de meo germano Didaco Gustioz, tertia de mea tia domn</div>
+      <div class="entry-src" style="border-color:#c8785020;color:#c87850">
+        <span class="src-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Urraca Alfonso</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1749" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Enderquina Adefonsi filia donated hereditates in divisione inter fratres et gentibus m eis Uilla Eliga , except solare qui fuit de Michael Petriz quem dedi sobrino meo Tello Gutterriz , to the monastery of San Martín and Santa María etiam d</div>
+      <div class="entry-src" style="border-color:#c8785020;color:#c87850">
+        <span class="src-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Lope Fortúnez</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1854" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Conde :  ...Luppo Furtunioniz comes...  subscribed the charter dated 1 Oct 1047 under which Fernando I King of Castile confirmed properties to the bishop of León .</div>
+      <div class="entry-src" style="border-color:#c8785020;color:#c87850">
+        <span class="src-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Vermudo Ovéquiz</div>
+          <div class="entry-meta">d. 1092</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2954" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio"> ...Vermudo Ouequiz...  confirmed the charter dated 22 Nov 1068 under which Alfonso VI King of León granted immunities to Sahagún .</div>
+      <div class="entry-src" style="border-color:#c8785020;color:#c87850">
+        <span class="src-dot" style="background:#c87850"></span>Spanish Nobility, Early Medieval (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-spanis">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#c86060"></span>
+    <span class="sec-title">Spanish Nobility, Later Medieval</span>
+    <span class="sec-cnt">9 records</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Aldonza Muñoz</div>
+          <div class="entry-meta">1034–1104</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1744" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Her parentage is recorded in an 1183 document of the Cathedral of Lugo . 3.</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Garcia Rodríguez</div>
+          <div class="entry-meta">b. 1132</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=3000" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Adefonsus imperator Hispanie cum uxore mea Berengaria donated ecclesiam sancti Vincentii de Salamantica to Cluny by charter dated 29 Oct 1143, confirmed by Garsias Royz majorinus imperatoris in Burgus . 1.</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Rodrigo Fróilaz, Count</div>
+          <div class="entry-meta">d. 1035 · Nobility</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1699" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Maria Pelaiz sold media villa...in loco...Follosum to Pelaio Froillas et Rodrico Froillas  by charter dated 1105 . 1.</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Mayor Díaz</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2575" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Didago Moniz et uxor mea Urraca Tellez cum filio meo Bosone et filia mea Maiore Moniz ceterisque nepotibus meis Enego Gustioz, Didago Gustioz, Ferrando Petriz, Maiore Gustioz, Urraca Gustioz donated property in San Martín de los Álamos to S</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Sancha Fernández</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2647" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">The Nobiliario of Pedro Conde de Barcelos names D. Fernan Fernandez, D.</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Elvira Pérez de Traba</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2784" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">The Nobiliario of Pedro Conde de Barcelos names D. Eva, D.</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Toda Pérez de Traba</div>
+          <div class="entry-meta">d. 1155</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2956" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Maior Roderici cum filiis et filiabus meis Roderico Petriz, Velasco Petriz, Garsia Petriz, Tota Petriz, Urraca Petriz, Sancia Petriz, Gelvira Petriz, Alduara Petriz donated property in Valdunquillo to Sahagún monastery, for the soul of mari</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">María Fernández de Traba</div>
+          <div class="entry-meta">d. 1169</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2958" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">... Comitissa domna Maria...</div>
+      <div class="entry-bur">Buried · Santiago de Compostela</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Rodrigo Pérez de Marañón</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=3116" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">According to Salazar y Castro, he was the son of Pedro Núñez de Aza , but this has not been verified. m ---.</div>
+      <div class="entry-src" style="border-color:#c8606020;color:#c86060">
+        <span class="src-dot" style="background:#c86060"></span>Spanish Nobility, Later Medieval (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-vizcay">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#6fa8c0"></span>
+    <span class="sec-title">Vizcaya</span>
+    <span class="sec-cnt">2 records</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Sancha López</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2896" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Domna Tecla cometissa cum filiis meis donated property to the monastery of San Millán de Cogollo by charter dated 1093, which names domnus meus Lupus comes et eius pater Enneco Lopez and is confirmed by Didaco Lupez et frater meus Sancio Lu</div>
+      <div class="entry-src" style="border-color:#6fa8c020;color:#6fa8c0">
+        <span class="src-dot" style="background:#6fa8c0"></span>Vizcaya (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Velasquita</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2908" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Domna Blasquita de Bernies, filia de seniore Eneco Lopiz et de domna Orotota donated property to the monastery of San Pedro de Siresa by charter dated 28 Aug 1100 . It is not known whether seniore Eneco Lopiz named in this charter was the s</div>
+      <div class="entry-src" style="border-color:#6fa8c020;color:#6fa8c0">
+        <span class="src-dot" style="background:#6fa8c0"></span>Vizcaya (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-navarr">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#9060b0"></span>
+    <span class="sec-title">Navarre Nobility</span>
+    <span class="sec-cnt">1 record</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Fortún</div>
+          <div class="entry-meta">b. 980</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=2901" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">His birth date range is estimated arbitrarily on the assumption that his son Álvaro was 30 years old when first mentioned. m ---.</div>
+      <div class="entry-src" style="border-color:#9060b020;color:#9060b0">
+        <span class="src-dot" style="background:#9060b0"></span>Navarre Nobility (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-catala">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#d0a060"></span>
+    <span class="sec-title">Catalan Nobility</span>
+    <span class="sec-cnt">1 record</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Riquilda</div>
+          <div class="entry-meta">Dates unknown</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1770" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio"> Suniarius...comes et marchio et uxor mea Richildes  donated property to Sant Salvador de Ripoll, for the souls of  genitorum meorum condam Wifredi comiti et Widinildi simulque et fratre me condam Wifredi comiti atque sorori mee condam R</div>
+      <div class="entry-src" style="border-color:#d0a06020;color:#d0a060">
+        <span class="src-dot" style="background:#d0a060"></span>Catalan Nobility (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-byzant">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#5090c0"></span>
+    <span class="sec-title">Byzantium</span>
+    <span class="sec-cnt">2 records</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Leon Skleros</div>
+          <div class="entry-meta">b. 840</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=6318" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">The Historia Leone Bardæ Armenii filio ( Scriptor Incertus ) names Leonem Scleri cognominatum who was expelled from the palace by Emperor Mikhael I (in) and installed as Peloponnesiaci tractus ducem . 1.</div>
+      <div class="entry-src" style="border-color:#5090c020;color:#5090c0">
+        <span class="src-dot" style="background:#5090c0"></span>Byzantium (FMG)
+      </div>
+    </div>
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Konstantinos Skleros</div>
+          <div class="entry-meta">930–991</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1271" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">A seal dated to names Konstantinos Skleros, protospatharios krites of the hippodrone and Moglena . A seal dated to names Konstantinos Skleros, magistros and vestes .</div>
+      <div class="entry-src" style="border-color:#5090c020;color:#5090c0">
+        <span class="src-dot" style="background:#5090c0"></span>Byzantium (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-byzant">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#4080b0"></span>
+    <span class="sec-title">Byzantium 1057–1204</span>
+    <span class="sec-cnt">1 record</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Ioannes Doukas</div>
+          <div class="entry-meta">1012–1088</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=1396" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">The Alexeiad names Ioannes as grandson of the Cæsar Ioannes only a young boy , but does not name his father, when recording that he was living with his grandfather on the latter's estate at Moroboundos at the time of the Komnenoi plot again</div>
+      <div class="entry-src" style="border-color:#4080b020;color:#4080b0">
+        <span class="src-dot" style="background:#4080b0"></span>Byzantium 1057–1204 (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chron-section" id="sec-burgun">
+  <div class="sec-head">
+    <span class="sec-dot" style="background:#a08050"></span>
+    <span class="sec-title">Burgundy</span>
+    <span class="sec-cnt">1 record</span>
+  </div>
+  <div class="entries-grid">
+    <div class="entry-card">
+      <div class="entry-head">
+        <div>
+          <div class="entry-name">Hugues</div>
+          <div class="entry-meta">d. 1000</div>
+        </div>
+        <a class="entry-link" href="the-tree.html#node=4723" title="Open in family tree">Find in tree →</a>
+      </div>
+      <div class="entry-bio">Archdeacon. Girardus dominus ville Arneti donated  ecclesiam...beati Jacobi et terram a ponte Arroy fluminis usque ad divisionem Mimuris et Arneti  to Saint-Bénigne de Dijon, with the consent of  domini mei Aganonis Heduensis episcopi et</div>
+      <div class="entry-src" style="border-color:#a0805020;color:#a08050">
+        <span class="src-dot" style="background:#a08050"></span>Burgundy (FMG)
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+</div>
+
+<div style="max-width:1100px;margin:0 auto 3rem;padding:0 1.2rem;text-align:center">
+  <a href="../index.html" style="font:500 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);opacity:.6" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">← Back to Home</a>
+</div>
+
+</body>
+</html>
