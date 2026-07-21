@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FMG Chronicle Validation · Family Tree</title>
+<style>
+  :root {
+    --bg:#0b0908; --surface:#13110f; --border:#2a2520;
+    --gold:#c8a245; --parch:#e4dbc6; --dim:#8a7d65;
+    --conf:#4a8c5c; --conf-bg:#0d2017; --conf-border:#2a5c3a;
+    --unc:#5c6a7a; --unc-bg:#0f131a; --unc-border:#2a3545;
+    --mark:#c8a24533;
+  }
+  * { box-sizing:border-box; margin:0; padding:0 }
+  body { background:var(--bg); color:var(--parch); font:15px/1.6 Georgia,serif; }
+  a { color:var(--gold); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* ── Header ── */
+  .site-header {
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:2rem 2.5rem 1.5rem; position:sticky; top:0; z-index:10;
+  }
+  .site-header h1 { font-size:1.4rem; color:var(--gold); letter-spacing:.05em; }
+  .site-header p { color:var(--dim); font-size:.88rem; margin-top:.3rem; }
+  .stats-bar {
+    display:flex; gap:2rem; margin-top:1rem; flex-wrap:wrap;
+  }
+  .stat { text-align:center; }
+  .stat .n { font-size:1.5rem; font-weight:bold; color:var(--gold); }
+  .stat .l { font-size:.75rem; color:var(--dim); text-transform:uppercase; letter-spacing:.08em; }
+
+  /* ── Layout ── */
+  .main { max-width:900px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+
+  /* ── Card ── */
+  .card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:6px; margin-bottom:1.5rem; overflow:hidden;
+  }
+  .card header {
+    padding:1rem 1.2rem .8rem; border-bottom:1px solid var(--border);
+    background:#18140f;
+  }
+  .card header h3 { font-size:1.05rem; color:var(--parch); }
+  .tree-link { color:var(--parch); }
+  .tree-link:hover { color:var(--gold); }
+  .meta { font-size:.8rem; color:var(--dim); display:block; margin-top:.2rem; }
+  .bar-wrap {
+    display:flex; align-items:center; gap:.6rem; margin-top:.6rem;
+    background:#0d0a07; border-radius:3px; overflow:hidden; position:relative;
+    height:20px;
+  }
+  .bar { background:var(--conf); height:100%; transition:width .3s; }
+  .bar-label {
+    position:absolute; left:.5rem; font-size:.72rem; color:var(--parch);
+    white-space:nowrap; mix-blend-mode:difference;
+  }
+  .bio {
+    padding:.9rem 1.2rem; font-size:.85rem; line-height:1.7;
+    color:#c4b89a; border-left:3px solid var(--border);
+    margin:.8rem 1.2rem; font-style:italic;
+    max-height:180px; overflow-y:auto; border-radius:0 4px 4px 0;
+  }
+  .neighbors { padding:.8rem 1.2rem 1rem; display:flex; gap:1rem; flex-wrap:wrap; }
+  .nb-group { flex:1; min-width:220px; }
+  .conf-head { font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--conf); margin-bottom:.4rem; }
+  .unc-head  { font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--unc);  margin-bottom:.4rem; }
+  .nb-group ul { list-style:none; }
+  .nb.conf { border-left:2px solid var(--conf); padding:.2rem .5rem; margin:.2rem 0; background:var(--conf-bg); border-radius:0 3px 3px 0; }
+  .nb.unc  { border-left:2px solid var(--unc);  padding:.2rem .5rem; margin:.2rem 0; background:var(--unc-bg);  border-radius:0 3px 3px 0; }
+  .nb-link { font-size:.83rem; color:var(--parch); }
+  .nb.conf .nb-link { color:#7ec89a; }
+  .nb.unc  .nb-link { color:#8a97a8; }
+
+  /* ── Navigation note ── */
+  .nav-note {
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:1rem 1.2rem; margin-bottom:1.5rem; font-size:.85rem; color:var(--dim);
+  }
+  .nav-note strong { color:var(--parch); }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <nav style="display:flex;gap:1.5rem;margin-bottom:.8rem;font-size:.78rem;font-family:ui-sans-serif,system-ui,sans-serif;">
+    <a href="../index.html" style="color:var(--dim);letter-spacing:.06em;text-transform:uppercase;">← Home</a>
+    <a href="chronicles.html" style="color:var(--dim);letter-spacing:.06em;text-transform:uppercase;">Chronicle Records</a>
+    <a href="the-tree.html" style="color:var(--dim);letter-spacing:.06em;text-transform:uppercase;">Family Tree</a>
+  </nav>
+  <h1>FMG Chronicle Validation</h1>
+  <p>Cross-referencing FMG biography text against tree connections — neighbors whose names appear in the bio text are marked as confirmed.</p>
+  <div class="stats-bar">
+    <div class="stat"><div class="n">106</div><div class="l">Ancestors with confirmed links</div></div>
+    <div class="stat"><div class="n">155</div><div class="l">Confirmed connections</div></div>
+    <div class="stat"><div class="n">710</div><div class="l">FMG ancestors checked</div></div>
+    <div class="stat"><div class="n">8%</div><div class="l">Confirmation rate</div></div>
+  </div>
+</header>
+<main class="main">
+  <div class="nav-note">
+    <strong>How to read this:</strong> Each card shows an ancestor with FMG chronicle data.
+    <span style="color:#7ec89a">■ Green</span> neighbors had their name found in the bio text, corroborating the tree connection.
+    <span style="color:#8a97a8">■ Gray</span> neighbors weren't found — often because bios are brief or use different name forms (Latin genitive, local variants).
+    Click any name to jump to that node in the tree.
+  </div>
+  
+<article class="card" id="n650">
+  <header>
+    <h3><a href="the-tree.html#node=650" class="tree-link">Alfonso VII the Emperor, King of Castile and Leon</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1105  d. 1157</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">4/8 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Anales Toledanos record the birth 1 Mar 1106 of  El Rey D. Alfonso, fillo del Conde D. Raymondo è de Doña Urraca  [655] . Crowned King of Galicia 19 Sep 1111 at Santiago de Compostela. He was proclaimed ALFONSO VII el Emperador King of Castile , León and Toledo in 1112. &lt;p cl</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=651" class="nb-link">Raymond of Burgundy, Count of Galicia (1070–1107)</a></li><li class="nb conf"><a href="the-tree.html#node=4144" class="nb-link">Urraca I, reina de Castilla y León (1080–1126)</a></li><li class="nb conf"><a href="the-tree.html#node=690" class="nb-link">Urraca I, Queen of Castile and León (1080–1126)</a></li><li class="nb conf"><a href="the-tree.html#node=1787" class="nb-link">Estefanía &#x27;la Desdichada&#x27; Alfonso, Lady of Infantado of León (1139–1180)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=649" class="nb-link">Fernando II, King of León (1137–1188)</a></li><li class="nb unc"><a href="the-tree.html#node=2063" class="nb-link">Sancha of Castile (1154–1208)</a></li><li class="nb unc"><a href="the-tree.html#node=4057" class="nb-link">Sancho III el Deseado, rey de Castilla (1134–1158)</a></li><li class="nb unc"><a href="the-tree.html#node=830" class="nb-link">Sancho III el Deseado, King of Castile (1134–1158)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3199">
+  <header>
+    <h3><a href="the-tree.html#node=3199" class="tree-link">Teresa Fernández de Traba</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">3/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">&quot; Conde Nuño Pérez de Lara y la condesa doña Teresa Fernández de Trava &quot; donated &quot; las villas de Chillón y de Almadén &quot; to the Order of Calatrava by charter dated 27 Mar 1168 . The Nobiliario of Pedro Conde de Barcelos names &quot; D.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=776" class="nb-link">Teresa de Leão, Condessa of Portugal (1083–1130)</a></li><li class="nb conf"><a href="the-tree.html#node=1694" class="nb-link">Fernando Pérez de Traba, Count of Trastámara (1080–1154)</a></li><li class="nb conf"><a href="the-tree.html#node=3191" class="nb-link">Cde. Álvaro Núñez de Lara, Lord of Lara, Lerma and Pancorbo (1147–1219)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n1836">
+  <header>
+    <h3><a href="the-tree.html#node=1836" class="tree-link">Lope Cabeza Brava Diaz de Haro II, Lord of Vizcaya</a></h3>
+    <span class="meta">Vizcaya (FMG)  ·  b. 1187  d. 1236</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">3/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Nobiliario of Pedro Conde de Barcelos names D. Lope Diaz de Haro Cabezabrava as the child of D. Diego Lopez and his first wife D. Maria Manrique [474] . He succeeded his father in 1214 as Señor de Vizcaya . &lt;span la</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1835" class="nb-link">Diego López III de Haro, XII Lord of Vizcaya (1200–1254)</a></li><li class="nb conf"><a href="the-tree.html#node=1837" class="nb-link">D. Diego II el Bueno López, V Lord of Vizcaya (1152–1214)</a></li><li class="nb conf"><a href="the-tree.html#node=1894" class="nb-link">D. María Manrique de Lara</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n1835">
+  <header>
+    <h3><a href="the-tree.html#node=1835" class="tree-link">Diego López III de Haro, XII Lord of Vizcaya</a></h3>
+    <span class="meta">Vizcaya (FMG)  ·  b. 1200  d. 1254</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">3/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Nobiliario of Pedro Conde de Barcelos names D. Diego Lopez, D. Sancho Lopez, D. Lope Lopez el Chico, A. Alonso Lopez, D. Mencia Lopez as the children of D. Lope Diaz Cabeçabrava and his wife D. Urraca Alonso [491] . He succeeded his father in 1236 as Señor de Vizcaya , Seño</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1834" class="nb-link">Diego López V de Haro, Lord of Vizcaya (1250–1310)</a></li><li class="nb conf"><a href="the-tree.html#node=1836" class="nb-link">Lope Cabeza Brava Diaz de Haro II, Lord of Vizcaya (1187–1236)</a></li><li class="nb conf"><a href="the-tree.html#node=1927" class="nb-link">Urraca de León, Lady consorte of Vizcaya (1197–1242)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n568">
+  <header>
+    <h3><a href="the-tree.html#node=568" class="tree-link">Ramon Berenguer III &quot;the Great&quot; count of Barcelona</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 1082  d. 1131</span>
+    <div class="bar-wrap"><div class="bar" style="width:75%"></div><span class="bar-label">3/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. He and his brother reached an agreement with their cousin Berenguer Ramon de Montcada in 1101 providing for their succession in Montcada if he died without male heirs [2814] . He was an active supporter of Ramon Berenguer III Comte de Barcelona, receiving the castle of Castel Vell in Barcelona in 11</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=569" class="nb-link">Ramon Berenguer II Cap d&#x27;Estopes, Count of Barcelona (1054–1082)</a></li><li class="nb conf"><a href="the-tree.html#node=4331" class="nb-link">Berenguela de Barcelona, reina consorte de León y Castilla (1116–1149)</a></li><li class="nb conf"><a href="the-tree.html#node=2052" class="nb-link">Ramon Berenguer IV &quot;the Saint&quot; count of Barcelona (1114–1162)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=574" class="nb-link">Maud of Apulia (1059–1112)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n570">
+  <header>
+    <h3><a href="the-tree.html#node=570" class="tree-link">Ramon Berenguer I el Vell, Count of Barcelona</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 1023  d. 1076</span>
+    <div class="bar-wrap"><div class="bar" style="width:75%"></div><span class="bar-label">3/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The testament of Berengarii comiti et marchionis dated 9 Feb 1035 names filium meum maiorem Reimundus [300] . He succeeded his father in 1035 as Comte de Barcelona , Girona, i Osona. &lt;span lang=EN-</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4355" class="nb-link">Sança de Castella, comtessa consort de Barcelona (1006–1026)</a></li><li class="nb conf"><a href="the-tree.html#node=569" class="nb-link">Ramon Berenguer II Cap d&#x27;Estopes, Count of Barcelona (1054–1082)</a></li><li class="nb conf"><a href="the-tree.html#node=571" class="nb-link">Berenguer Ramon I el Corbat, XVII Count of Barcelona (1000–1035)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=572" class="nb-link">Sança de Castella, Countess consort of Barcelona (1006–1026)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n219">
+  <header>
+    <h3><a href="the-tree.html#node=219" class="tree-link">Alfonso III el Magno, King of Asturias</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 848  d. 910</span>
+    <div class="bar-wrap"><div class="bar" style="width:75%"></div><span class="bar-label">3/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicle of Alfonso III states that his son Alfonso succeeded King Ordoño in the era 904 (866) [234] . He succeeded his father in 866 as ALFONSO III el Magno King of Asturias . &lt;p class=MsoNormal style=&#x27;margin-le</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3200" class="nb-link">Ordoño I das Astúrias, King of Asturias (830–866)</a></li><li class="nb conf"><a href="the-tree.html#node=3201" class="nb-link">Nuña de Asturias, Queen Consort of Asturias (840–None)</a></li><li class="nb conf"><a href="the-tree.html#node=4215" class="nb-link">Nuña de Asturias, reina consorte de Asturias (840–None)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=218" class="nb-link">Ordoño II, King of León (871–924)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n833">
+  <header>
+    <h3><a href="the-tree.html#node=833" class="tree-link">Ramiro Sánchez de Pamplona</a></h3>
+    <span class="meta">Navarre (FMG)  ·  b. 1057  d. 1116</span>
+    <div class="bar-wrap"><div class="bar" style="width:75%"></div><span class="bar-label">3/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Crónica Latina names  infante Ramiro, que fue hijo del infante Sancho de cierta dueña, hijo del rey García  as father of King García [546] . Ramiro is one of the few examples of an individual, not the s</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=832" class="nb-link">García Ramírez V “el Restaurador”, King of Navarre and Pamplona (1105–1150)</a></li><li class="nb conf"><a href="the-tree.html#node=4532" class="nb-link">García Ramírez V “el Restaurador”, Rey de Navarra y Pamplona (1105–1150)</a></li><li class="nb conf"><a href="the-tree.html#node=834" class="nb-link">Sancho García, Lord of Uncastillo (1030–1074)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4570" class="nb-link">Constanza de Marañón (1035–1060)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4187">
+  <header>
+    <h3><a href="the-tree.html#node=4187" class="tree-link">García I &#x27;el de las Manos Blancas&#x27; Fernández, conde de Castilla</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 938  d. 995</span>
+    <div class="bar-wrap"><div class="bar" style="width:60%"></div><span class="bar-label">3/5 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Fredinando comes cum uxore mea Sancia cometissa donated property to the monastery of San Millán de la Cogolla by charter dated 944, confirmed by Gundissalvo Fernandez, Sancio Fernandez, Garcia Fernandez [278] . He succeeded his father in 970 as Conde de Castilla .</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4164" class="nb-link">Fernán González, conde de Castilla (910–970)</a></li><li class="nb conf"><a href="the-tree.html#node=4169" class="nb-link">Sancha Sánchez de Navarra, reina consorte de León (900–952)</a></li><li class="nb conf"><a href="the-tree.html#node=4186" class="nb-link">Sancho I el de los Buenos Fueros, conde de Castilla (965–1017)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4229" class="nb-link">Elvira de Castilla, reina consorte de León (None–1017)</a></li><li class="nb unc"><a href="the-tree.html#node=371" class="nb-link">Gonzálo Garcés de Castilla (970–1011)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n571">
+  <header>
+    <h3><a href="the-tree.html#node=571" class="tree-link">Berenguer Ramon I el Corbat, XVII Count of Barcelona</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 1000  d. 1035</span>
+    <div class="bar-wrap"><div class="bar" style="width:60%"></div><span class="bar-label">3/5 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Crónica de San Juan de la Peña names Berenguer as the son of Remon Burrel conte de Barchinona [261] . He succeeded his father in 1017 as BERENGUER RAMON I el Curvo Comte de Barcelona , Girona, i Osona. &lt;p class=MsoNormal style=&#x27;m</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=458" class="nb-link">Ramon Borrell I, XVI Count of Barcelona (971–1017)</a></li><li class="nb conf"><a href="the-tree.html#node=4346" class="nb-link">Ermessenda de Carcassona, comtessa consort de Barcelona (975–1058)</a></li><li class="nb conf"><a href="the-tree.html#node=570" class="nb-link">Ramon Berenguer I el Vell, Count of Barcelona (1023–1076)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=459" class="nb-link">Ermessenda de Carcassona, Countess consort of Barcelona (975–1058)</a></li><li class="nb unc"><a href="the-tree.html#node=4860" class="nb-link">Sibylle de Barcelone, duchesse consort de Bourgogne (None–1074)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n308">
+  <header>
+    <h3><a href="the-tree.html#node=308" class="tree-link">Galindo II Aznárez de Aragón, Count of Aragon</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 875  d. 923</span>
+    <div class="bar-wrap"><div class="bar" style="width:60%"></div><span class="bar-label">3/5 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Codex de Roda names Galindo Asnari et Garsea Asnari et domna Sanzia as the children of Asnari Galindones and his wife [40] . He succeeded his father in 893 as Conde de Aragón .  Rex Fortunio Garcianes  reviewed the territories of the</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=326" class="nb-link">Tota Galíndez de Aragón</a></li><li class="nb conf"><a href="the-tree.html#node=307" class="nb-link">Andregoto Galíndez, Countess of Aragon (919–972)</a></li><li class="nb conf"><a href="the-tree.html#node=309" class="nb-link">Aznar II Galíndez, Count of Aragon (830–893)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=310" class="nb-link">Oneca (Iñiga) García de Pamplona (847–931)</a></li><li class="nb unc"><a href="the-tree.html#node=380" class="nb-link">Velasquita Galíndez</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2492">
+  <header>
+    <h3><a href="the-tree.html#node=2492" class="tree-link">Robert &quot;the Strong&quot;, Margrave of Neustria</a></h3>
+    <span class="meta">Anjou &amp; Maine (FMG)  ·  b. 815  d. 866</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">2/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The question of the origin of Robert le Fort is discussed in full in the document FRANCE CAPETIAN KINGS. A document issued by Charles II le Chauve King of the West Franks dated Nov 853 names Dodo episcopus, Hrotbertus et Osbertus as missi in Cinnomannio, Andegavensi, atque Turonico, Corboniso, et Sagiso &lt;span lang=EN-GB style=&#x27;font-size:9.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3864" class="nb-link">Robert I, king of West Francia (866–923)</a></li><li class="nb conf"><a href="the-tree.html#node=701" class="nb-link">Robert I, King of France (860–923)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n2050">
+  <header>
+    <h3><a href="the-tree.html#node=2050" class="tree-link">Alfonso II, Count of Provence</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1180  d. 1209</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">The &quot;Corónicas&quot; Navarras name &quot; al yfant don Pedro, rey d&#x27;Aragón, et al marqués de Provença don Alfonso, et a don Ferrando, abbat de Mont aragón, et una filla que casaron en Ongría &quot; as the children of &quot; el rey don Alfonso d&#x27;Aragón &quot; and hi</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2049" class="nb-link">Gersende de Provence, Infanta d&#x27;Aragon (1205–1268)</a></li><li class="nb conf"><a href="the-tree.html#node=2051" class="nb-link">Alfonso II el Casto, King of Aragon (1157–1195)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2063" class="nb-link">Sancha of Castile (1154–1208)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n690">
+  <header>
+    <h3><a href="the-tree.html#node=690" class="tree-link">Urraca I, Queen of Castile and León</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1080  d. 1126</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">T he Chronicle of Alberic de Trois-Fontaines names &quot; Waracta filia imperatoris Fernandi &quot; . She succeeded her father in 1109 as URRACA I Queen of Castile and León.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=696" class="nb-link">Constance de Bourgogne, Queen consort of Castile and Leon (1046–1093)</a></li><li class="nb conf"><a href="the-tree.html#node=650" class="nb-link">Alfonso VII the Emperor, King of Castile and Leon (1105–1157)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2913" class="nb-link">Elvira Pérez de Lara (1111–1174)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1752">
+  <header>
+    <h3><a href="the-tree.html#node=1752" class="tree-link">Felipe de Castilla y León, Lord of Valdecorneja</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1231  d. 1274</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicon Mundi of Lucas Tudensis names Adefonsum, Fredericum, Fernandum, Philippum, Henricum, Sancium, Emanuelem as the sons of Fernando III King of Castile and his first wife [1037] . Canon of San Salvador de Campo de Mira and of Toledo. Abbot of Castrojeriz 1243.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1751" class="nb-link">Beatriz Fernandez de Castilla (None–1340)</a></li><li class="nb conf"><a href="the-tree.html#node=647" class="nb-link">Saint Ferdinand III, King of Castile &amp; León (1199–1252)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1118" class="nb-link">Elizabeth of Swabia (1205–1235)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1935">
+  <header>
+    <h3><a href="the-tree.html#node=1935" class="tree-link">Guillem Ramon II, Senescal of Catalunya</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  d. 1173</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. A charter dated 5 Aug 1148 records the debt of Ramon Berenguer IV Comte de Barcelona to Guillelmo Raimundi Dapifer et fratri tuo Otoni ac filio tuo Guillelmo de Montcada [2846] .  Guillelmus Raimundi dapifer et filii mei...Guillelmus et Raimundus atque Berengarius  donated  honorem...in</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1936" class="nb-link">Guillem Ramon I, Senescal of Catalunya (1045–1120)</a></li><li class="nb conf"><a href="the-tree.html#node=1934" class="nb-link">Guillem-Ramon II de Moncada (1125–1180)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1937" class="nb-link">Agnès de los Condes de Urgel (1057–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3200">
+  <header>
+    <h3><a href="the-tree.html#node=3200" class="tree-link">Ordoño I das Astúrias, King of Asturias</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 830  d. 866</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicle of Alfonso III records that his son Ordoño succeeded King Ramiro in the era 888 (850) [190] . He succeeded his father in 850 as ORDOÑO I King of Asturias . -</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2849" class="nb-link">Ramiro I, King of Asturias (790–850)</a></li><li class="nb conf"><a href="the-tree.html#node=219" class="nb-link">Alfonso III el Magno, King of Asturias (848–910)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4214" class="nb-link">Urraca de Castilla, reina consorte de Asturias (780–842)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1507">
+  <header>
+    <h3><a href="the-tree.html#node=1507" class="tree-link">Romanos IV Diogenes, Byzantine emperor</a></h3>
+    <span class="meta">Byzantium 1057–1204 (FMG)  ·  b. 1020  d. 1072</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Mikhael Glykas names imperator Romanus Vestarches, Constantini Diogenis filius [694] . Skylitzes records that Romanus Constantinus Diogenis filius patricius was created dux Sardices bestarches by Emperor Konstantinos Doukas &lt;a href=</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1506" class="nb-link">Constantine Diogenes (1050–1074)</a></li><li class="nb conf"><a href="the-tree.html#node=1508" class="nb-link">Constantine Diogenes (1000–1031)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1509" class="nb-link">Princess of Byzantium (1003–1031)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1834">
+  <header>
+    <h3><a href="the-tree.html#node=1834" class="tree-link">Diego López V de Haro, Lord of Vizcaya</a></h3>
+    <span class="meta">Vizcaya (FMG)  ·  b. 1250  d. 1310</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Nobiliario of Pedro Conde de Barcelos names Conde D. Lope, D. Diego, D. Urraca Diaz as the children of D. Diego Lopez señor de Biscaya and his wife D. Constança de Bearne hermana de Gascon de Bearne [577] . He claimed to succeed his nephew as Señor de Vizcaya , Señor de Har</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1931" class="nb-link">Constanza de Béarn (1239–1310)</a></li><li class="nb conf"><a href="the-tree.html#node=1835" class="nb-link">Diego López III de Haro, XII Lord of Vizcaya (1200–1254)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1833" class="nb-link">Fernando Díaz de Haro, Lord of Orduña (1290–1322)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2030">
+  <header>
+    <h3><a href="the-tree.html#node=2030" class="tree-link">Guillem II de Castellvell de Barcelona</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  d. 1178</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Señor de Castellvell. m MAHALTA , daughter of ---. Bofarull suggests that she and her husband could be identified with Guillelmo de Castellvell y su muger Mahalta who sold half of los mansos Curvera y Torre-Dala sitos en el término de Castellvell by charter dated 25 Jan 1131, given the short time which elapsed after the grant of her dowry and the fact that Guillem de Castellvell subscribed numer</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2029" class="nb-link">Guillema I de Castellvell</a></li><li class="nb conf"><a href="the-tree.html#node=2031" class="nb-link">Guillem Ramon II de Castellvell, Senyor of Castellví of Rosanes (1125–None)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2043" class="nb-link">Mafalda de Barcelona (1119–1157)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1755">
+  <header>
+    <h3><a href="the-tree.html#node=1755" class="tree-link">Guerau IV de Cabrera, Count of Urgel</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 1180  d. 1228</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Monfar refers to a charter dated 14 Mar 1195 under which Ponce de Cabrera undertook to transfer la tenencias del castillo de Ager to Ermengaudo domino meo , signed by Marquesas su mujer, Guerau hijo de los dos [1826] . He succeeded his father in 119</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1754" class="nb-link">D. Rodrigo Ponce de Castro de Cabrera (1224–1259)</a></li><li class="nb conf"><a href="the-tree.html#node=1756" class="nb-link">Ponce Velaz de Cabrera, III Vescomte d&#x27;Empúries (1160–1202)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1774" class="nb-link">Milagros (Miracle) de Urgel (1170–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1881">
+  <header>
+    <h3><a href="the-tree.html#node=1881" class="tree-link">Galindo I Aznárez, Count of Aragon</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 820  d. 867</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Codex de Roda names Centolle Asnari et Galindo Asnari et domna Matrona as the children of Asnari Galindones [18] . He succeeded as Conde de Aragón , Pallars, Ribagorza with support from García I Iñíguez King of Pamplona, confirmed by the marriage of his son to the</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1882" class="nb-link">Aznar I Galíndez, Count of Aragon (None–839)</a></li><li class="nb conf"><a href="the-tree.html#node=309" class="nb-link">Aznar II Galíndez, Count of Aragon (830–893)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1883" class="nb-link">N.N. Garcés (790–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2637">
+  <header>
+    <h3><a href="the-tree.html#node=2637" class="tree-link">Rodrigo Osorio de Villalobos</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1180  d. 1277</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Nobiliario of Pedro Conde de Barcelos names D. Alvaro Gil, D. Manrique Gil, D. Gonçalo Giz sin hijos, D. Ruy Gil, D. Gomes Gil, D. Gil Gomez Abad, D. Toda Gil, D. Milia Gil sin hijos as the children of D. Gil Manrique and his wife D. Teresa Fernandez señora de Villalobos [1935] . Señor de Villa</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2648" class="nb-link">Mayor Fernández de Villalobos (1120–None)</a></li><li class="nb conf"><a href="the-tree.html#node=2636" class="nb-link">Álvar Rodríguez Osorio de Villalobos, I Lord of Villaornate (1230–1253)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2638" class="nb-link">Osorio Martínez, Count of León, II Lord of Villalobos (1107–1160)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n6929">
+  <header>
+    <h3><a href="the-tree.html#node=6929" class="tree-link">Robert I, Comte de Dreux</a></h3>
+    <span class="meta">Capetian Dynasty (FMG)  ·  b. 1124  d. 1188</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. William of Tyre names him as brother of Louis VII King of France [405] . He was installed as ROBERT I le Grand Seigneur de Dreux in 1152. - &lt;</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=6928" class="nb-link">Robert II, comte de Dreux (1154–1218)</a></li><li class="nb conf"><a href="the-tree.html#node=2385" class="nb-link">Louis VI the Fat, King of France (1081–1137)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2388" class="nb-link">Adelaide de Savoie, of Maurienne (1092–1154)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1381">
+  <header>
+    <h3><a href="the-tree.html#node=1381" class="tree-link">Ioannes Komnenos</a></h3>
+    <span class="meta">Byzantium 1057–1204 (FMG)  ·  b. 1015  d. 1067</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Nikeforos Bryennios names maiori natu Isaacio iunior Ioannes as the two sons of Comneni Manuelis [39] . His parentage is confirmed by the Alexeiad which describes Emperor Isaakios Komnenos as brother-in-law of Anna Dalas</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1384" class="nb-link">Anna Komnenos (975–1015)</a></li><li class="nb conf"><a href="the-tree.html#node=1382" class="nb-link">Manuel Erotikos Komnenos (955–1020)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1380" class="nb-link">Alexios I, Eastern Roman Emperor (1056–1118)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n207">
+  <header>
+    <h3><a href="the-tree.html#node=207" class="tree-link">Juan García Sarmiento de Villamayor, Divisero of Castile</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1187</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Mayordomo of Alfonso X el Sabio King of Castile and Leon 5 Aug 1252 to 16 Feb 1259, and Jul 1260. Don Iohan Garçía et don Alffonso Garçía et Diago Garçía et donna Teresa Garçía et donna Marina Garçía et Garçí Gutiérrez et Iohanna Gutiérrez donated property in Quintaniella de Vallado to donna Mayor Garçía priora del monasterio de Villamayor by charter dated 28 Feb 1262 &lt;span l</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=208" class="nb-link">Garcí Fernández de Villamayor, Lord of Bureba (1165–1241)</a></li><li class="nb conf"><a href="the-tree.html#node=206" class="nb-link">García Fernández de Villamayor (1235–1289)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=642" class="nb-link">Teresa Núñez de Guzmán (1168–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2268">
+  <header>
+    <h3><a href="the-tree.html#node=2268" class="tree-link">Violante de Castilla, Lady of Vizcaya</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1265  d. 1296</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Crónica de San Juan de la Peña names la primera Violant la otra Costancia et Isabel la quarta Maria as the four daughters of King Jaime and his second wife, stating that Violante married Don Alfonso filio primogenitor del Rey de Castiella [438] . The betrothal contract of &lt;i</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2269" class="nb-link">Alfonso X el Sabio, King of Castile and León (1221–1284)</a></li><li class="nb conf"><a href="the-tree.html#node=2270" class="nb-link">Violante de Aragón, Queen Consort of Castile (1236–1301)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1833" class="nb-link">Fernando Díaz de Haro, Lord of Orduña (1290–1322)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3897">
+  <header>
+    <h3><a href="the-tree.html#node=3897" class="tree-link">Suppo I, duke of Spoleto</a></h3>
+    <span class="meta">Carolingian Nobility (FMG)  ·  b. 760  d. 824</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Of Frankish origin. Count of Brescia, Parma, Piacenza, Modena and Bergamo in 817. The Vita Hludowici Imperatoris names &quot; Rathaldo episcopi et Suppone comite Brixiensi &quot; as missi [in 817] [1104] . &lt;span l</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=7218" class="nb-link">(No Name)</a></li><li class="nb conf"><a href="the-tree.html#node=5332" class="nb-link">(No Name)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=3896" class="nb-link">Duke Adelgis of Spoleto, count palatine of Parma (800–879)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3192">
+  <header>
+    <h3><a href="the-tree.html#node=3192" class="tree-link">Conde Nuño Pérez de Lara, Lord of Monterroso</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1118  d. 1177</span>
+    <div class="bar-wrap"><div class="bar" style="width:66%"></div><span class="bar-label">2/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Nobiliario of Pedro Conde de Barcelos names D. Manrique de Lara, D. Nuño de Lara, D. Rodrigo sin hijos as the children of El Conde D. Pedro and his wife D. Eva [1427] . Conde 1162. - &lt;a href=&quot;#NunoP</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1820" class="nb-link">Pedro González de Lara, Count (1080–1130)</a></li><li class="nb conf"><a href="the-tree.html#node=3191" class="nb-link">Cde. Álvaro Núñez de Lara, Lord of Lara, Lerma and Pancorbo (1147–1219)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1821" class="nb-link">Eva Pérez de Trava, Countess</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n218">
+  <header>
+    <h3><a href="the-tree.html#node=218" class="tree-link">Ordoño II, King of León</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 871  d. 924</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">2/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">The Crónica de Sampiro (interpolated, España Sagrada edition) records that  Adefonsus filius Domini Ordonii  married  Pampilona uxorem ex illorum prosapia generis Xemena  by whom he had  filios...Garseanum, Ordonium, Froilanum et Gundi</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4216" class="nb-link">Jimena Garcés de Pamplona, reina consorte de Asturias (855–912)</a></li><li class="nb conf"><a href="the-tree.html#node=220" class="nb-link">Jimena Garcés de Pamplona, Queen Consort of Asturias (855–912)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=217" class="nb-link">Ramiro II &quot;el Grande&quot;, King of León (898–951)</a></li><li class="nb unc"><a href="the-tree.html#node=219" class="nb-link">Alfonso III el Magno, King of Asturias (848–910)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2056">
+  <header>
+    <h3><a href="the-tree.html#node=2056" class="tree-link">Ramiro I, King of Aragon</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1015  d. 1063</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">2/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">Under the division of territories organised by his father, he received Aragon, succeeding in 1035 as RAMIRO I King of Aragon . - see Chapter 2.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=5268" class="nb-link">Sancho I Ramírez, rey de Aragón (1042–1094)</a></li><li class="nb conf"><a href="the-tree.html#node=2055" class="nb-link">Sancho I Ramírez, King of Aragon, Spain (1042–1094)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4145" class="nb-link">Sancho III el Mayor, rey de Navarra (991–1035)</a></li><li class="nb unc"><a href="the-tree.html#node=2057" class="nb-link">Sancha de Aybar, Lady of Miranda (995–1070)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n412">
+  <header>
+    <h3><a href="the-tree.html#node=412" class="tree-link">Alfonso V &#x27;el Noble&#x27; de León, King of León</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 996  d. 1028</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">2/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicon Regum Legionensium names Alfonso and Teresa as the children of King Vermudo and his wife Elvira [690] . He succeeded his father in 999 as ALFONSO V King of León .</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4229" class="nb-link">Elvira de Castilla, reina consorte de León (None–1017)</a></li><li class="nb conf"><a href="the-tree.html#node=413" class="nb-link">Elvira de Castilla, Queen Consort of León (None–1017)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=258" class="nb-link">Bermudo II el Gotoso, King of León (948–999)</a></li><li class="nb unc"><a href="the-tree.html#node=627" class="nb-link">Sancha I, Queen of León (1013–1067)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2644">
+  <header>
+    <h3><a href="the-tree.html#node=2644" class="tree-link">Rodrigo II de Castela, Count of Porcelos</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 799  d. 873</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">2/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Conde de Castilla. Fernández de Béthencourt states that Rodrigo first Conde de Castilla was the son of King Ramiro I by his second wife [205] , presumably premised on Ramiro&#x27;s second wife being Urraca de Castilla (which is clearly impossible chronologically as discussed abov</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2758" class="nb-link">Diego Rodrigues Porcelo, Count Castile &amp; Castelou (824–885)</a></li><li class="nb conf"><a href="the-tree.html#node=247" class="nb-link">Elvira Rodríguez de Castilla (848–None)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2874" class="nb-link">Bermudo Alvarez (775–851)</a></li><li class="nb unc"><a href="the-tree.html#node=2875" class="nb-link">Controde (ou Gontrada) de León, Senora Gallega (795–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n309">
+  <header>
+    <h3><a href="the-tree.html#node=309" class="tree-link">Aznar II Galíndez, Count of Aragon</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 830  d. 893</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">2/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Codex de Roda names Asnari Galindones as the son of Galindo Asnari and his unnamed wife [38] . He succeeded his father as Conde de Aragón . m</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1881" class="nb-link">Galindo I Aznárez, Count of Aragon (820–867)</a></li><li class="nb conf"><a href="the-tree.html#node=308" class="nb-link">Galindo II Aznárez de Aragón, Count of Aragon (875–923)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4160" class="nb-link">N.N.</a></li><li class="nb unc"><a href="the-tree.html#node=5449" class="nb-link">N.N.</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n5940">
+  <header>
+    <h3><a href="the-tree.html#node=5940" class="tree-link">Adalbert I, margrave of Tuscany &amp; tutor Corsicae</a></h3>
+    <span class="meta">Northern Italy (FMG)  ·  b. 820  d. 886</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">2/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. He succeeded his father as Conte at Lucca, and in 846 became ADALBERTO I Marchese of Tuscany . The Annales Fuldenses record that &quot; Lantbertus Witonis filius et Adalbertus Bonifacii filius &quot; entered Rome in 878 and captured Pope John VIII [714] &lt;/s</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=5939" class="nb-link">Adalbert II &quot;the Rich&quot;, margrave of Tuscany (864–915)</a></li><li class="nb conf"><a href="the-tree.html#node=5941" class="nb-link">Boniface II, margrave of Tuscany (788–838)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=5956" class="nb-link">.... di Toscana</a></li><li class="nb unc"><a href="the-tree.html#node=5943" class="nb-link">Berta Eudoxia of Italy (None–849)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1778">
+  <header>
+    <h3><a href="the-tree.html#node=1778" class="tree-link">Rodrigo Fernández de Castro, Royal Lieutenant</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  d. 1143</span>
+    <div class="bar-wrap"><div class="bar" style="width:40%"></div><span class="bar-label">2/5 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Rodrigo Jiménez de Rada records that  Guterrio Fernandi de Castro  was childless by his wife  Theodam  but had  fratrem...Rodericum Fernandi qui fuit Calvus agnominatus  [404] . - &lt;a hr</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2880" class="nb-link">Gutierre Rodríguez de Castro, Lord of Lemos and Sarria (1140–1195)</a></li><li class="nb conf"><a href="the-tree.html#node=1777" class="nb-link">Fernando Rodriguez de Castro (1125–1185)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=5443" class="nb-link">Fernán García, señor de Hita y Uceda (1073–1135)</a></li><li class="nb unc"><a href="the-tree.html#node=1779" class="nb-link">Fernán García, Lord of Hita and Uceda (1073–1135)</a></li><li class="nb unc"><a href="the-tree.html#node=1782" class="nb-link">Trigidia Fernández</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n276">
+  <header>
+    <h3><a href="the-tree.html#node=276" class="tree-link">Adosinda Gutiérrez</a></h3>
+    <span class="meta">Galicia (FMG)  ·  d. 981</span>
+    <div class="bar-wrap"><div class="bar" style="width:28%"></div><span class="bar-label">2/7 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">A charter dated 23 Dec 927 records donations by  Gutier Menendiz comes cum coniuge sua domna Ylduara  to the monastery of Santa María de Loyo, an interpolated document recording that  Ylduara cum filiis meis Rudesindus episcopus, Munnio,</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=277" class="nb-link">Gutierre Arias de Menéndez, 2nd Count of Sobrado (870–934)</a></li><li class="nb conf"><a href="the-tree.html#node=4277" class="nb-link">Gutierre Arias de Menéndez, 2.º Conde Del Sobrado (870–934)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=6535" class="nb-link">Velasquita Ramírez, reina consorte de León (None–1030)</a></li><li class="nb unc"><a href="the-tree.html#node=3112" class="nb-link">Rodrígo Díaz</a></li><li class="nb unc"><a href="the-tree.html#node=3113" class="nb-link">Marina Froilaz</a></li><li class="nb unc"><a href="the-tree.html#node=397" class="nb-link">conde Fruela Ximeno</a></li><li class="nb unc"><a href="the-tree.html#node=282" class="nb-link">Aldara Ériz de Lugo (880–948)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2946">
+  <header>
+    <h3><a href="the-tree.html#node=2946" class="tree-link">Ramiro Flórez de Cifuentes, Lord of Aviados and Valle of Boñar</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1180</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Nobiliario of Pedro Conde de Barcelos names D. Ramiro Frojas sin hijos, D. Rodrigo Frojas sin hijos, D. Diego Frojas, D. Teresa Frojas as the children of Conde D. Frojas [743] . Barton names Diego, María, Ramiro, Rodrigo, Teresa, Vermudo as th</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2945" class="nb-link">María Ramírez de Cifuentes, Lady of Aviados and Boñar (1212–1280)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n4168">
+  <header>
+    <h3><a href="the-tree.html#node=4168" class="tree-link">Muniadomna de Lara, Condesa consorte de Castilla</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 875  d. 935</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Pérez de Urbel suggests that Muniadomna, wife of Gonzalo Fernández, was the daughter of Ramiro de Asturias King [of Asturias], based on her supposed mother being present in the castle of Lara, which belonged to Muniadomna, when she witnessed two charters (see below for the two charters). He also points out the apparent corroboration from the naming of her second son after his supposed maternal g</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4164" class="nb-link">Fernán González, conde de Castilla (910–970)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n1895">
+  <header>
+    <h3><a href="the-tree.html#node=1895" class="tree-link">Manrique Pérez de Lara, Lord of Molina and Mesa</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1110  d. 1164</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. His mother names her children (in order) Manrique, Álvaro, Nuño, Elvira, María and Milia in a charter dated 1147 [1387] . The Nobiliario of Pedro Conde de Barcelos names D. Manrique de Lara, D. Nuño de Lara, D. Rodrigo sin hijos as the children of El Conde</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1894" class="nb-link">D. María Manrique de Lara</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n622">
+  <header>
+    <h3><a href="the-tree.html#node=622" class="tree-link">Gonzalo Núñez, Primer Lord of Casa of Lara</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1040  d. 1105</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. His birth date range is estimated from the estimated birth date of his son Pedro, and his first known subscription to a charter of the monastery of Oña dated 12 May 1075 [1305] . The parentage of Gonzalo Núñez is not known. His relationship with the Salvadórez family was first proposed in the 17th century by Fray P</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1820" class="nb-link">Pedro González de Lara, Count (1080–1130)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n1936">
+  <header>
+    <h3><a href="the-tree.html#node=1936" class="tree-link">Guillem Ramon I, Senescal of Catalunya</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 1045  d. 1120</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Seneschal of Catalonia [2826] . 1067/68. He owned the castle district of Sentmenat, lending money from the property to Mahalta widow of the assassinated Ramon Berenguer II Comte de Barcelona &lt;span lang=EN-GB style=&#x27;font-size:9.0</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1935" class="nb-link">Guillem Ramon II, Senescal of Catalunya (None–1173)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n2578">
+  <header>
+    <h3><a href="the-tree.html#node=2578" class="tree-link">Gonzalo Ruiz Girón, Royal Steward</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1160  d. 1231</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Nobiliario of Pedro Conde de Barcelos names D. Gonçalo Rodriguez, D. Nuño Rodriguez, D. Pedro Rodriguez, D. Alvaro Rodriguez, D. Teresa Roiz Giron as the children of D. Rodrigo Gonçalez Giron de Cisneros and his wife D. Mayor [1088] . El obispo de Segovia D. Gutierre Roiz y sus hermano</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3276" class="nb-link">Gonzalo Rodríguez Ruiz de Girón, Lord of Cisneros (1210–1258)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n2649">
+  <header>
+    <h3><a href="the-tree.html#node=2649" class="tree-link">Fernando Fernández de Toro</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1075  d. 1129</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Urraca Queen of Castile granted him the villas of Hita and Uceda. The dating clause of a charter dated 1110, under which Alfonso I King of Aragon donated property to Valvanera, records  ...Fernandus Garsea, Fictam...  [363] . He acted as the queen&#x27;s intermediary with</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2648" class="nb-link">Mayor Fernández de Villalobos (1120–None)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n255">
+  <header>
+    <h3><a href="the-tree.html#node=255" class="tree-link">Muniadomna de Lara, Countess Consort of Castile</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 875  d. 935</span>
+    <div class="bar-wrap"><div class="bar" style="width:100%"></div><span class="bar-label">1/1 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Pérez de Urbel suggests that Muniadomna, wife of Gonzalo Fernández, was the daughter of Ramiro de Asturias King [of Asturias], based on her supposed mother being present in the castle of Lara, which belonged to Muniadomna, when she witnessed two charters (see below for the two charters). He also points out the apparent corroboration from the naming of her second son after his supposed maternal g</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=251" class="nb-link">Fernán González, Count of Castile (910–970)</a></li></ul>
+    </div>
+    
+  </section>
+</article>
+<article class="card" id="n1699">
+  <header>
+    <h3><a href="the-tree.html#node=1699" class="tree-link">Rodrigo Fróilaz, Count</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  d. 1035</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">1/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">Maria Pelaiz sold media villa...in loco...Follosum to Pelaio Froillas et Rodrico Froillas  by charter dated 1105 . 1.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1698" class="nb-link">Froila Rodríguez, V Count of Trástamara (975–1040)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1822" class="nb-link">Froila González, Count (945–1017)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3116">
+  <header>
+    <h3><a href="the-tree.html#node=3116" class="tree-link">Rodrigo Pérez de Marañón</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">1/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">According to Salazar y Castro, he was the son of Pedro Núñez de Aza , but this has not been verified. m ---.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3117" class="nb-link">Pedro Núñez de Lara, Lord of Aza and honor of Marañón (None–1116)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=3115" class="nb-link">María Maranhão</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2564">
+  <header>
+    <h3><a href="the-tree.html#node=2564" class="tree-link">Beatriz de Castela, Queen consorte of Portugal</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1242  d. 1303</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">1/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Crónica del Rey Don Alfonso X names doña Mayor Guillen fija de don Pedro Guzman as mother of King Alfonso Xs daughter doña Beatriz, que fué casada con el rey don Alfonso de Portugal [1128] . &lt;span lang=EN-GB s</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2565" class="nb-link">María Mayor Guillén de Guzmán, Lady of Alcocer (1225–1267)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2488" class="nb-link">Afonso de Portugal, Lord of Portalegre (1263–1312)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2051">
+  <header>
+    <h3><a href="the-tree.html#node=2051" class="tree-link">Alfonso II el Casto, King of Aragon</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1157  d. 1195</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">1/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Corónicas Navarras name (in order) don Pedro el rey don Alfonso, que ovo nombre Remón Belenguer et el conte don Pedro de Provença et el conte don Sancho et a la muller del rey don Sancho de Portugal as the children of the conte de Barçalona en esta su muller [dona Peyronela] , stating that the first named Pedro died in Huesca &lt;span lang=EN-GB style=&#x27;font-size:9.0pt;font-style</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2050" class="nb-link">Alfonso II, Count of Provence (1180–1209)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2272" class="nb-link">Pedro II el Católico, King of Aragon (1174–1213)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4167">
+  <header>
+    <h3><a href="the-tree.html#node=4167" class="tree-link">Rodrigo I, 1st conde de Castilla</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 832  d. 873</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">1/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The origin of Rodrigo is unknown. He is referred to as Rodrigo , son of Ramiro I King of Asturias by Fernández de Béthencourt [13] , presumably premised on Ramiro&#x27;s second wife being Urraca de Castilla. This is chronologically impossible a</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=237" class="nb-link">N.N. Rodríguez de Castilla</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4166" class="nb-link">Diego Porcelos, conde de Castilla (810–885)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n367">
+  <header>
+    <h3><a href="the-tree.html#node=367" class="tree-link">Gómez González Salvadores, Count of Bureba</a></h3>
+    <span class="meta">Castilian Nobility (FMG)  ·  b. 1050  d. 1111</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">1/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Domna Sancia cum filio suo domno Gomiz confirmed a charter of the monastery of San Millán de la Cogolla dated 1086 [516] . Conde . - &lt;a href=&quot;SPANISH%20NOBILITY%20LATER%20MEDIEVAL.htm#GomezG</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=374" class="nb-link">Sancha Sánchez (1040–None)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=616" class="nb-link">Gonzalo Goméz Salvadores</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1046">
+  <header>
+    <h3><a href="the-tree.html#node=1046" class="tree-link">Guillaume III Taillefer, Count of Toulouse</a></h3>
+    <span class="meta">Toulouse (FMG)  ·  b. 970  d. 1037</span>
+    <div class="bar-wrap"><div class="bar" style="width:50%"></div><span class="bar-label">1/2 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. His mother names her son Guillaume de Toulouse and his wife Emma in an act dated 1021 [352] . He succeeded his father in [979] as GUILLAUME III Taillefer Comte de Toulouse . &lt;p class=&quot;MsoNormal&quot; style=&quot;margin-left:1.0cm&quot;</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1045" class="nb-link">Pons II Guillaume, Count of Toulouse (995–1060)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1047" class="nb-link">Raymond III, Count of Toulouse &amp; Prince of Gothia (950–978)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2647">
+  <header>
+    <h3><a href="the-tree.html#node=2647" class="tree-link">Sancha Fernández</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">The Nobiliario of Pedro Conde de Barcelos names D. Fernan Fernandez, D.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1783" class="nb-link">Conde Fernando Gonçalves</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1784" class="nb-link">Trigidia Gutiérrez</a></li><li class="nb unc"><a href="the-tree.html#node=2638" class="nb-link">Osorio Martínez, Count of León, II Lord of Villalobos (1107–1160)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n213">
+  <header>
+    <h3><a href="the-tree.html#node=213" class="tree-link">Ordoño Ordóñez, Infante of León</a></h3>
+    <span class="meta">Castilian Nobility (FMG)  ·  b. 1015  d. 1074</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">The Chronicon Mundi of Lucas Tudensis names &quot; Adefonsum Ordonium, Pelagiam comitissam et Eldonciam &quot; as the children of &quot; Christina ex infante Ordonio cco filio Ramiri regis &quot; . Son of Ordoño Ramírez according to Torres Sevilla , but Salaz</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3305" class="nb-link">Ordoño el Ciego Ramírez de León, Infante of León (982–1024)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=212" class="nb-link">García Ordoñez de Aza, Count of Nájera (1040–1108)</a></li><li class="nb unc"><a href="the-tree.html#node=257" class="nb-link">Cristina de León (None–1051)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n777">
+  <header>
+    <h3><a href="the-tree.html#node=777" class="tree-link">Jimena Muñoz</a></h3>
+    <span class="meta">Galicia (FMG)  ·  b. 1055  d. 1128</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">The precise parentage of Jimena Muñoz has been the subject of considerable debate over recent years. The common connection with Ulver, where she was recorded, appears conclusive in determining that she was closely related to Munio Muñoz who</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=778" class="nb-link">Munio Muñoz, Count of Bierzo (1030–1086)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=776" class="nb-link">Teresa de Leão, Condessa of Portugal (1083–1130)</a></li><li class="nb unc"><a href="the-tree.html#node=794" class="nb-link">Velazquita Muñoz</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1776">
+  <header>
+    <h3><a href="the-tree.html#node=1776" class="tree-link">Pedro &quot;el Castellano&quot; Fernández de Castro, Lord of Paredes of Nava and Infantado of León</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1160  d. 1214</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Rodrigo Jiménez de Rada names  Petrum Fernandi, qui postea magnus et coram regibus honoratus  as the son of  Fernandum [=Fernandus Roderici agnomine Castellanus]  and his second wife  rex Fernandus sororem suam...Stephaniam  [492] . The Nobiliario of Pedro Conde de Barcelos names D. Pedro Fernandez de Cas</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1777" class="nb-link">Fernando Rodriguez de Castro (1125–1185)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1787" class="nb-link">Estefanía &#x27;la Desdichada&#x27; Alfonso, Lady of Infantado of León (1139–1180)</a></li><li class="nb unc"><a href="the-tree.html#node=2612" class="nb-link">Fernán Pérez de Castro (1210–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n404">
+  <header>
+    <h3><a href="the-tree.html#node=404" class="tree-link">Sir Rodrigo Diaz Duque de Asturias, El Asturiano, Lord of Nava</a></h3>
+    <span class="meta">Castilian Nobility (FMG)  ·  b. 1023  d. 1091</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Historia Roderici names Rodrigo Díaz el Campeador as son of  Diego Laínez [and] the daughter of Rodrigo Álvarez  [394] . The Corónicas Navarras name Rodric Diaç as the son of Díac Layniç&lt;/i</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=405" class="nb-link">Diego Rodríguez de Asturias, Count of Noroña and Asturias (1005–None)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=411" class="nb-link">Ximena Alfonso de León (1010–1037)</a></li><li class="nb unc"><a href="the-tree.html#node=2831" class="nb-link">D.Gutierre de Rodríguez de Castanheda</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1825">
+  <header>
+    <h3><a href="the-tree.html#node=1825" class="tree-link">Hermenegildo (Mendo o Menendo) Aloítez, Count of Présaras</a></h3>
+    <span class="meta">Galicia (FMG)  ·  b. 898  d. 966</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">.  Argilo cum filiis meis Gundesindo abba, Arias, Guttier, Ermegild  donated property to the monastery of Santa María de Cinis by charter dated 13 Oct 915 which names  pater noster Aloitus  [228] . Donadeo et uxor mea Tidina donated property in villa Codegio to</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1901" class="nb-link">Argilo Aloitez, Countess</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1713" class="nb-link">Rodrigo Menéndez, Count, dueño of Castillo of Aranga</a></li><li class="nb unc"><a href="the-tree.html#node=1900" class="nb-link">Aloito Gutiérrez, Count (None–963)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n28">
+  <header>
+    <h3><a href="the-tree.html#node=28" class="tree-link">Pedro Manrique de Lara y Mendoza, VIII Lord of Amusco</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  d. 1440</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. A later Abreviada (Continuator) of Ayala´s Crónica de Juan I names  de Diego Gomez fijo Pero Manrique  when recording his marriage [83] . Señor de Amusco, Treviño, Navarrete, Ocón, Redecilla y Paredes de Nava. m (1408) &lt;span</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3728" class="nb-link">Diego II Gómez Manrique de Lara, VII Señor de Amusco</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=27" class="nb-link">Beatriz Manrique de Lara y Castilla, Countess (1405–1470)</a></li><li class="nb unc"><a href="the-tree.html#node=3727" class="nb-link">Beatriz Manrique de Lara y Castilla, condesa</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1692">
+  <header>
+    <h3><a href="the-tree.html#node=1692" class="tree-link">Gómez González de Trastámara, Lord of Trastámara</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1160  d. 1208</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">.  Comites Fernandus et Comez Gonsaluiz, filii comitis domini Gondisalui  donated part of  la heredad de Palacios y de Veigas  to  Gunzaluo Gunzaluit  by charter dated 20 Jan 1164, the dating clause of which names  Rex Legionis Dominus Fernandus sub eo comes Dominus Aluarus et eius sobrinus comes dominus Fernando, frater de Gomet Gonzaluiz  [2854] &lt;/span</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1693" class="nb-link">Cde. Gonzalo Fernández de Traba (None–1160)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1691" class="nb-link">María Gómez de Trastámara</a></li><li class="nb unc"><a href="the-tree.html#node=1731" class="nb-link">Berenguela Rodríguez de Sarria (None–1075)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2605">
+  <header>
+    <h3><a href="the-tree.html#node=2605" class="tree-link">Constanza de Aragón, Lady consorte of Escalona</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1238  d. 1275</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Crónica de San Juan de la Peña names la primera Violant la otra Costancia et Isabel la quarta Maria as the four daughters of King Jaime and his second wife, stating that Constanza married Don Manuel hermano del Alfonso rey de Castiella [445] . The Nobiliario of Pedro Conde de Barcelos</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2603" class="nb-link">Violante Manuel de Castilha (1265–1314)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2353" class="nb-link">Violante de Hungría, Queen Consort of Aragon (1215–1251)</a></li><li class="nb unc"><a href="the-tree.html#node=2271" class="nb-link">James I the Conqueror, King of Aragon (1208–1276)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4531">
+  <header>
+    <h3><a href="the-tree.html#node=4531" class="tree-link">Blanca de Navarra, reina consorte de Castilla</a></h3>
+    <span class="meta">Navarre (FMG)  ·  b. 1137  d. 1156</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">([1137]-12 Aug 1156, bur Nájera, Cathedral Santa María de Real). The Annales Compostellani record the death  II Id Aug  in 1146 of  Regina Branca mater istius Aldefonsi Regis Castellæ filia Garsiæ Regis Navarræ  [575] , although the year is clearly incorrect. Rex</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4532" class="nb-link">García Ramírez V “el Restaurador”, Rey de Navarra y Pamplona (1105–1150)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=868" class="nb-link">Marguerite de l&#x27;Aigle (1104–1141)</a></li><li class="nb unc"><a href="the-tree.html#node=829" class="nb-link">Alfonso VIII the Noble Sanchez, King of Castile (1155–1214)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2269">
+  <header>
+    <h3><a href="the-tree.html#node=2269" class="tree-link">Alfonso X el Sabio, King of Castile and León</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1221  d. 1284</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Anales Toledanos record the birth 23 Nov 1221 of  el Infant D. Alfonso, fillo del Rey D. Fernando de Castiella e de la Reyna doña Beatriz, filla del Emperador de Alemaña  [991] . Alférez of his father Fernando III el Santo King of Castile 21 Aug 1242 to 22 Aug 1242. He succeeded his father in 1</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=647" class="nb-link">Saint Ferdinand III, King of Castile &amp; León (1199–1252)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2268" class="nb-link">Violante de Castilla, Lady of Vizcaya (1265–1296)</a></li><li class="nb unc"><a href="the-tree.html#node=1118" class="nb-link">Elizabeth of Swabia (1205–1235)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2270">
+  <header>
+    <h3><a href="the-tree.html#node=2270" class="tree-link">Violante de Aragón, Queen Consort of Castile</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1236  d. 1301</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Crónica de San Juan de la Peña names la primera Violant la otra Costancia et Isabel la quarta Maria as the four daughters of King Jaime and his second wife, stating that Violante married Don Alfonso filio primogenitor del Rey de Castiella [438] . The betrothal contract of &lt;i</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2268" class="nb-link">Violante de Castilla, Lady of Vizcaya (1265–1296)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2353" class="nb-link">Violante de Hungría, Queen Consort of Aragon (1215–1251)</a></li><li class="nb unc"><a href="the-tree.html#node=2271" class="nb-link">James I the Conqueror, King of Aragon (1208–1276)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n302">
+  <header>
+    <h3><a href="the-tree.html#node=302" class="tree-link">García III, el of Nájera, King of Navarre</a></h3>
+    <span class="meta">Navarre (FMG)  ·  b. 1005  d. 1054</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Anales Toledanos record the birth  en el mes de Noviembre  in 1016 of  el Infant fillo del Rey D. Sancho Garcia Sanchez  [373] . Bearing in mind the likely chronology of García´s illegitimate daughter Mencía, it is likely that he was born a few years earlier than 1016. Under</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=834" class="nb-link">Sancho García, Lord of Uncastillo (1030–1074)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=318" class="nb-link">Muniadona de Castilla, Queen Consort of Pamplona (990–1066)</a></li><li class="nb unc"><a href="the-tree.html#node=303" class="nb-link">Sancho III el Mayor, King of Navarre (991–1035)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1855">
+  <header>
+    <h3><a href="the-tree.html#node=1855" class="tree-link">Fortún Garcés el Monje, King of Pamplona</a></h3>
+    <span class="meta">Navarre (FMG)  ·  b. 830  d. 922</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Codex de Roda names Fortunio Garseanis et Sanzio Garseanis et domna Onneca as the children of Garsea Enneconis and his unnamed wife [67] . He succeeded his father in 882 as FORTÚN [ King ] of Pamplona . &lt;p class=MsoNormal st</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=230" class="nb-link">Onneca or Íñiga Fortúnez, Princess of Pamplona (848–890)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1856" class="nb-link">García I Íñiguez, King of Pamplona (810–882)</a></li><li class="nb unc"><a href="the-tree.html#node=1857" class="nb-link">Urraca Mayor (810–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2272">
+  <header>
+    <h3><a href="the-tree.html#node=2272" class="tree-link">Pedro II el Católico, King of Aragon</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1174  d. 1213</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Corónicas Navarras name al yfant don Pedro, rey d&#x27;Aragón, et al marqués de Provença don Alfonso, et a don Ferrando, abbat de Mont aragón, et una filla que casaron en Ongría as the children of el rey don Alfonso d&#x27;Aragón and his wife [335] . The Gestis&lt;</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2051" class="nb-link">Alfonso II el Casto, King of Aragon (1157–1195)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2063" class="nb-link">Sancha of Castile (1154–1208)</a></li><li class="nb unc"><a href="the-tree.html#node=2271" class="nb-link">James I the Conqueror, King of Aragon (1208–1276)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2384">
+  <header>
+    <h3><a href="the-tree.html#node=2384" class="tree-link">Pierre, of France, Lord of Courtenay</a></h3>
+    <span class="meta">Capetian Dynasty (FMG)  ·  b. 1126  d. 1180</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. William of Tyre names him as brother of Louis VII King of France, when recording his arrival in Palestine in 1179 [406] . He succeeded as Seigneur de Courtenay , by right of his wife. Petrus regis frater et Curtiniacensis dominus donated</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2385" class="nb-link">Louis VI the Fat, King of France (1081–1137)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2388" class="nb-link">Adelaide de Savoie, of Maurienne (1092–1154)</a></li><li class="nb unc"><a href="the-tree.html#node=2383" class="nb-link">Pierre II de Courtenay, Emperor of Constantinople (1155–1217)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2604">
+  <header>
+    <h3><a href="the-tree.html#node=2604" class="tree-link">Manuel de Castilla, Lord of Escalona</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1234  d. 1283</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicon Mundi of Lucas Tudensis names Adefonsum, Fredericum, Fernandum, Philippum, Henricum, Sancium, Emanuelem as the sons of Fernando III King of Castile and his first wife [1054] . The Anales Toledanos name  Dñi Emanuelis fratris Regis  when recordin</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=647" class="nb-link">Saint Ferdinand III, King of Castile &amp; León (1199–1252)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2603" class="nb-link">Violante Manuel de Castilha (1265–1314)</a></li><li class="nb unc"><a href="the-tree.html#node=1118" class="nb-link">Elizabeth of Swabia (1205–1235)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n225">
+  <header>
+    <h3><a href="the-tree.html#node=225" class="tree-link">Sancho Garcés, 1st King of Pamplona</a></h3>
+    <span class="meta">Navarre (FMG)  ·  b. 865  d. 925</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Codex de Roda names Sanzio Garseanis et Scemeno Garseanis as the children of Garsea Scemenonis and his second wife domna Dadildi de Paliares soror Regimundi comitis , one manuscript stating that Sancho was cognomento Avarca and succeeded as king in 905, reigned eighteen years and died in 924 &lt;span lang=EN-GB sty</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=256" class="nb-link">Sancha Sánchez de Navarra, Queen Consort of León (900–952)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=226" class="nb-link">García Jiménez de Pamplona (835–885)</a></li><li class="nb unc"><a href="the-tree.html#node=227" class="nb-link">Dadildis de Pallars (855–884)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2054">
+  <header>
+    <h3><a href="the-tree.html#node=2054" class="tree-link">Ramiro II el Monje, King of Aragon</a></h3>
+    <span class="meta">Aragon &amp; Catalonia (FMG)  ·  b. 1086  d. 1157</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Gestis Comitum Barcinonensium names Petrum et Ildefonsum Raimirum as the sons of Sancium , recording that Ramiro was in Monasterio sancti Pontii de Tomeriis Monachus et Sacerdos [248] . The Crónica de</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2055" class="nb-link">Sancho I Ramírez, King of Aragon, Spain (1042–1094)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2059" class="nb-link">Felícia de Roucy, Queen Consort of Aragon (1060–1086)</a></li><li class="nb unc"><a href="the-tree.html#node=2053" class="nb-link">Petronila Ramírez, Queen of Aragon (1136–1173)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1380">
+  <header>
+    <h3><a href="the-tree.html#node=1380" class="tree-link">Alexios I, Eastern Roman Emperor</a></h3>
+    <span class="meta">Byzantium 1057–1204 (FMG)  ·  b. 1056  d. 1118</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Nikeforos Bryennios names (in order) Manuel , Isaacius, Alexius, Adrianus, Nicephorus as the five sons of Ioanni and his wife Anna [123] . His parentage is confirmed by the Alexeiad naming Ioannes Komnen</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1381" class="nb-link">Ioannes Komnenos (1015–1067)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1385" class="nb-link">Anna Dalassene (1020–1102)</a></li><li class="nb unc"><a href="the-tree.html#node=1379" class="nb-link">Theodora Komnene (1096–1140)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n5268">
+  <header>
+    <h3><a href="the-tree.html#node=5268" class="tree-link">Sancho I Ramírez, rey de Aragón</a></h3>
+    <span class="meta">Aragonese Nobility (FMG)  ·  b. 1042  d. 1094</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The charters of Sobrarbe San Victorián, in which Sancho Galíndez is consistently recorded as first in the subscription lists, demonstrate his prominence at the Aragonese court from the accession of King Ramiro I in 1035 until 1084. He is also recorded in charters, during the same period, linked to holdings in Ataresa, Arrosta, Sos and Sobrarbe. The co-identity between Sancho Galíndez Señor en Bo</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2056" class="nb-link">Ramiro I, King of Aragon (1015–1063)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=5267" class="nb-link">Vela de Aragón, Infante Conde (1041–None)</a></li><li class="nb unc"><a href="the-tree.html#node=5285" class="nb-link">Ermisenda de Bigorra, reina consorte de Aragón (1015–1049)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n646">
+  <header>
+    <h3><a href="the-tree.html#node=646" class="tree-link">Fadrique Fernández de Castilla</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1223  d. 1277</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicon Mundi of Lucas Tudensis names Adefonsum, Fredericum, Fernandum, Philippum, Henricum, Sancium, Emanuelem as the sons of Fernando III King of Castile and his first wife [992] . Ferrandus Rex Castelle et Toleti cum uxore mea Regina Beatrice et filiis meis Alfonso, Frederi</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=647" class="nb-link">Saint Ferdinand III, King of Castile &amp; León (1199–1252)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=645" class="nb-link">Teresa de Castilla (1246–1294)</a></li><li class="nb unc"><a href="the-tree.html#node=1118" class="nb-link">Elizabeth of Swabia (1205–1235)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1777">
+  <header>
+    <h3><a href="the-tree.html#node=1777" class="tree-link">Fernando Rodriguez de Castro</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1125  d. 1185</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The De Rebus Hispaniæ of Rodericus Ximenes names Sancium et Fernandum, Elisabeth et Beatiam as the children of Aldefonsi Hispaniarum Regis and his wife Berengariam [798] . T he Chronicle of A</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1778" class="nb-link">Rodrigo Fernández de Castro, Royal Lieutenant (None–1143)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1776" class="nb-link">Pedro &quot;el Castellano&quot; Fernández de Castro, Lord of Paredes of Nava and Infantado of León (1160–1214)</a></li><li class="nb unc"><a href="the-tree.html#node=1786" class="nb-link">Eilo Álvarez (None–1153)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1880">
+  <header>
+    <h3><a href="the-tree.html#node=1880" class="tree-link">Sancho Sánchez, Lord of Erro</a></h3>
+    <span class="meta">Castilian Nobility (FMG)  ·  b. 1075  d. 1127</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. She is not shown in either Torre Sevilla or Sánchez Candeira, unless she was &#x27;Teresa&#x27; who is named in the latter. m [as his first wife,] SANCHO Sánchez Señor de Erro y Tafalla , son of SANCHO Macerátez his [second] wife Andregoto --- (-after [1127]).] GARC</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=375" class="nb-link">Sancho Macerátiz, Tenente en Oca (None–1075)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=378" class="nb-link">Andregoto Gómez</a></li><li class="nb unc"><a href="the-tree.html#node=1879" class="nb-link">María Sánchez Ordóñez de Lemos, Princess of León (None–1121)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1924">
+  <header>
+    <h3><a href="the-tree.html#node=1924" class="tree-link">Guifré II, Count of Cerdanya</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 970  d. 1050</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Gesta Comitum Barcinonensium names (in order) Bernardum, Olibam et Guiffredum as the three sons of Olibano Cabretæ , specifying that Guiffredus succeeded in comitatu Cerritaniæ [945] .</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=450" class="nb-link">Oliba Cabreta I, Count of Cerdanya (920–990)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1923" class="nb-link">Fides de Cerdagne, Countess consort of Rouergue (1000–1051)</a></li><li class="nb unc"><a href="the-tree.html#node=453" class="nb-link">Ermengarda d&#x27;Ampuries, Countess consort of Cerdanya (None–994)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3277">
+  <header>
+    <h3><a href="the-tree.html#node=3277" class="tree-link">Teresa Arias Quijada Froilaz</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  d. 1270</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">([1220]-1246). The Nobiliario of Pedro Conde de Barcelos names D. Diego Gonçalez, D. Nuño Gonçalez, D. Teresa Gonçalez as the children of El Conde D. Gonçalo and his wife D. Maria [1588] . Doña Teresa González de Lara señora de Molina [y] su hermano Nuño González de Lara el Bueno, hijos del</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3278" class="nb-link">Arias Gonzalez Quijada González Quijada</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=3275" class="nb-link">Ruy González de Cisneros (1250–None)</a></li><li class="nb unc"><a href="the-tree.html#node=3279" class="nb-link">Maria Frolaz</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n5624">
+  <header>
+    <h3><a href="the-tree.html#node=5624" class="tree-link">Delà, IX comte d&#x27;Empúries</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  d. 894</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Comte de Empúries . m CHINTOL , daughter of ---. Her marriage is confirmed by a charter dated 23 Feb 941 under which her daughter Virgilia hija del Conde Dela y de la Condesa Chintol donated property to su hermana Ranlo &lt;span lang=EN-GB style=&#x27;font-size:</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=466" class="nb-link">Virgília (None–957)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=5625" class="nb-link">N.N.</a></li><li class="nb unc"><a href="the-tree.html#node=4332" class="nb-link">Sunifred I, IV comte d&#x27;Urgell (810–848)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n831">
+  <header>
+    <h3><a href="the-tree.html#node=831" class="tree-link">Blanca de Navarra, Queen Consort of Castile</a></h3>
+    <span class="meta">Navarre (FMG)  ·  b. 1137  d. 1156</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">([1137]-12 Aug 1156, bur Nájera, Cathedral Santa María de Real). The Annales Compostellani record the death  II Id Aug  in 1146 of  Regina Branca mater istius Aldefonsi Regis Castellæ filia Garsiæ Regis Navarræ  [575] , although the year is clearly incorrect. Rex</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=832" class="nb-link">García Ramírez V “el Restaurador”, King of Navarre and Pamplona (1105–1150)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=868" class="nb-link">Marguerite de l&#x27;Aigle (1104–1141)</a></li><li class="nb unc"><a href="the-tree.html#node=829" class="nb-link">Alfonso VIII the Noble Sanchez, King of Castile (1155–1214)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2579">
+  <header>
+    <h3><a href="the-tree.html#node=2579" class="tree-link">Rodrigo Gutiérrez Girón, Lord Steward</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  d. 1193</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The dating clause of a charter dated 19 Jul 1166 names Rodrigo Girón en Monzón [1067] . Rodrigo Guterre, Petrus Guterri frater suus confirmed a charter dated 28 Oct 1169 &lt;span style=&#x27;font-size:9.0</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3145" class="nb-link">Pedro Rodríguez Girón (None–1223)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2576" class="nb-link">Urraca Diaz</a></li><li class="nb unc"><a href="the-tree.html#node=2580" class="nb-link">Gutierre Téllez, Lord of Aceca (1100–1166)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4455">
+  <header>
+    <h3><a href="the-tree.html#node=4455" class="tree-link">Guifré II Borrell, comte de Barcelona</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 874  d. 911</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Gesta Comitum Barcinonensium names (in order) Radulfum, Guiffredum, Mironem et Suniarium as the four sons of Guiffredus Pilosus comes his wife, specifying that Guifré was killed by poison sine filio and was buried in monasterio Rivipolli [127] &lt;/</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=534" class="nb-link">Guifré I el Pilós, XI Count of Barcelona (840–897)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=757" class="nb-link">Riquilda de Barcelona, Vescomtessa of Narbona (906–962)</a></li><li class="nb unc"><a href="the-tree.html#node=535" class="nb-link">Guinidilda de Ampurias (865–906)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n371">
+  <header>
+    <h3><a href="the-tree.html#node=371" class="tree-link">Gonzálo Garcés de Castilla</a></h3>
+    <span class="meta">Castilian Nobility (FMG)  ·  b. 970  d. 1011</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Garsias Ferdinandez cum coniuge mea Ava comitisa founded the monastery of Infantado de Covarrubias, offering filiam nostram Urracam as a nun there, by charter dated 25 Dec 978, confirmed by Sancio Garsea, Gundisalbo Garsea [464] . Gonzalo García</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=370" class="nb-link">Gonzalo González (1015–None)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=321" class="nb-link">Countess Ava Argentina de Ribagorza (945–995)</a></li><li class="nb unc"><a href="the-tree.html#node=4187" class="nb-link">García I &#x27;el de las Manos Blancas&#x27; Fernández, conde de Castilla (938–995)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n138">
+  <header>
+    <h3><a href="the-tree.html#node=138" class="tree-link">Juan Ortíz de San Pedro</a></h3>
+    <span class="meta">Spanish Nobility, Later Medieval (FMG)  ·  b. 1515  d. 1590</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. m (1586) JUAN de Aragón Señor de Ballobar , son of PEDRO de Aragón, Señor de Ballobar his wife his second wife Leonor Luisa de Gurrea y Castro (-1598). Martín had one illegitimate child by an unknown mistress: 9. &amp;nb</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=137" class="nb-link">Pedro Ortiz Ortiz de San Pedro (1559–None)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=139" class="nb-link">Juan López de Acre</a></li><li class="nb unc"><a href="the-tree.html#node=140" class="nb-link">Inés Ortíz de San Pedro</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1249">
+  <header>
+    <h3><a href="the-tree.html#node=1249" class="tree-link">Mieszko II Lambert</a></h3>
+    <span class="meta">Poland (FMG)  ·  b. 990  d. 1034</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Thietmar refers to the two sons of Boleslaw as his wife Emnilde as &quot; Miesco and another named after his beloved lord [Otto] &quot; [135] . He succeeded his father 1025 as MIESZKO II LAMBERT King of Poland . &lt;p class=&quot;MsoNormal&quot; style=&quot;text-indent:1.0</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1250" class="nb-link">Bolesław I &quot;The Brave&quot; of Poland, Duke and King of Poland (967–1025)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1248" class="nb-link">Richeza of Poland (1013–1075)</a></li><li class="nb unc"><a href="the-tree.html#node=1256" class="nb-link">Emnilda_Hodica, of Lusatia (970–1017)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n388">
+  <header>
+    <h3><a href="the-tree.html#node=388" class="tree-link">Alfonso Muñoz</a></h3>
+    <span class="meta">Spanish Nobility, Early Medieval (FMG)  ·  d. 1055</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">.  ...Guterius Adefonsiz...Munnio Adefonso...Garsea Adefonso...  confirmed the charter dated 2 Aug 1026 under which Didacus Fredenandiz et uxor mea Marina et filiis nostris donated Uilla Reuelle...in Ualle de Ratario...hereditate que fecit Uincenti ad Fafila Olaliz avius istius Didaco Fredenandiz to León Cathedral [628] &lt;/spa</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=498" class="nb-link">Munio Alfonso (985–1051)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=387" class="nb-link">Elio (Ello o Helia o Hedwige) de Sémur-en-Brionnais, Countess of Gastinois (1047–1114)</a></li><li class="nb unc"><a href="the-tree.html#node=503" class="nb-link">Goto Fernández</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1251">
+  <header>
+    <h3><a href="the-tree.html#node=1251" class="tree-link">Mieszko I</a></h3>
+    <span class="meta">Poland (FMG)  ·  b. 930  d. 992</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicæ Polanorum names &quot; Meschonem &quot; as son of &quot; Semimizl &quot;, specifying that he was first called by another name (not specified) and was blind for seven years from birth [31] . He is cited in 963 as MIESZKO I Prince of Poland . &lt;p class</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1250" class="nb-link">Bolesław I &quot;The Brave&quot; of Poland, Duke and King of Poland (967–1025)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=6299" class="nb-link">Siemomysł, Duke of the Polans (900–961)</a></li><li class="nb unc"><a href="the-tree.html#node=1252" class="nb-link">Siemomysł, Duke of the Polans (892–961)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3885">
+  <header>
+    <h3><a href="the-tree.html#node=3885" class="tree-link">Louis II &quot;le Jeune&quot;, Emperor of Italy and Of the Franks</a></h3>
+    <span class="meta">Italy, Kings (FMG)  ·  b. 825  d. 875</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Regino names &quot; Hludowicum, Hlotharium et Carolum &quot; as the three sons of Emperor Lothar his wife [650] . He was sent to Italy as king in 844, crowned in Rome in 844 as LOUIS King of Italy by Pope Sergius II.&amp;nbs</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3886" class="nb-link">Emperor Lothair I (795–855)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=3894" class="nb-link">Ermengarde of Tours (800–851)</a></li><li class="nb unc"><a href="the-tree.html#node=3884" class="nb-link">Ermengardis, Queen of Provence (852–896)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1879">
+  <header>
+    <h3><a href="the-tree.html#node=1879" class="tree-link">María Sánchez Ordóñez de Lemos, Princess of León</a></h3>
+    <span class="meta">Navarre Nobility (FMG)  ·  d. 1121</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. It is not certain that María was the daughter of Sancho Sánchez by his second marriage. However, she is named second in the donations to his children in his charter dated to [1091-1111], before her brother Ramiro. It is unusual for a daughter to be named before a son, the suggestion being that she had some precedence over Ramiro either because he was illegitimate or born from a later marriage. C</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1880" class="nb-link">Sancho Sánchez, Lord of Erro (1075–1127)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1838" class="nb-link">Don Lope Díaz, IV Lord of Vizcaya (None–1170)</a></li><li class="nb unc"><a href="the-tree.html#node=1887" class="nb-link">Elvira García</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4765">
+  <header>
+    <h3><a href="the-tree.html#node=4765" class="tree-link">Aethelwulf, king of Wessex</a></h3>
+    <span class="meta">England, Anglo-Saxon Kings (FMG)  ·  b. 795  d. 858</span>
+    <div class="bar-wrap"><div class="bar" style="width:33%"></div><span class="bar-label">1/3 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Anglo-Saxon Chronicle names Æthelwulf as son of Ecgberht [1483] . He succeeded his father 839 as ÆTHELWULF King of Wessex . &lt;span</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4764" class="nb-link">Alfred the Great, king of the Anglo-Saxons (849–899)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4770" class="nb-link">Rædburh, queen consort of Wessex (783–838)</a></li><li class="nb unc"><a href="the-tree.html#node=4766" class="nb-link">Egbert, king of Wessex (769–838)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n323">
+  <header>
+    <h3><a href="the-tree.html#node=323" class="tree-link">Bernardo I de Ribagorza, Count of Ribagorza</a></h3>
+    <span class="meta">Aragonese Nobility (FMG)  ·  b. 880  d. 950</span>
+    <div class="bar-wrap"><div class="bar" style="width:25%"></div><span class="bar-label">1/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Codex de Roda names Uernardo et domno Miro ac domno Lope seu domno Ysarno as the children of Regemondo and his wife [359] . Conde de Ribagorza . - &lt;a href=&quot;#Bernar</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4192" class="nb-link">Ramón I de Ribagorza y Pallars, Conde de Ribargorza y Pallars (860–920)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4458" class="nb-link">Ava, comtessa consort de Cerdanya (901–962)</a></li><li class="nb unc"><a href="the-tree.html#node=322" class="nb-link">Raymondo II, Count of Ribagorza (908–960)</a></li><li class="nb unc"><a href="the-tree.html#node=325" class="nb-link">Guinigenta ou Gurisenda Asnarez (860–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n252">
+  <header>
+    <h3><a href="the-tree.html#node=252" class="tree-link">Gonzalo Fernández de Lara, Count of Burgos</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 863  d. 932</span>
+    <div class="bar-wrap"><div class="bar" style="width:25%"></div><span class="bar-label">1/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The dating clause of a charter dated 1 Mar 899 records  rex Adefonso in Obieto et comite Munnio Nuniz in Castella et comite Gundissalbo Fernandiz in Uurgos  [170] . Conde en Burgos . His letter dated 912 to the town of Brañosera confirmed the rights granted by hi</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4164" class="nb-link">Fernán González, conde de Castilla (910–970)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=251" class="nb-link">Fernán González, Count of Castile (910–970)</a></li><li class="nb unc"><a href="the-tree.html#node=253" class="nb-link">Fernando Niger de Castrosiero Muñoz (None–870)</a></li><li class="nb unc"><a href="the-tree.html#node=254" class="nb-link">Gotinha Porcellos de Castilla (850–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2633">
+  <header>
+    <h3><a href="the-tree.html#node=2633" class="tree-link">Alfonso de León, Lord of Molina and Mesa</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 1202  d. 1272</span>
+    <div class="bar-wrap"><div class="bar" style="width:25%"></div><span class="bar-label">1/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Chronicon de Cardeña names  Infant D. Alfonso de Molina hermano del Rey D. Ferrando  [898] . Señor de Soria 1223. Señor de Molina y Mesa 1240. - see Part B. SEÑORES de MOLINA &lt;/spa</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2632" class="nb-link">Urraca Alfonso de Molina, Lady consorte of Fuentes (1224–1310)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2914" class="nb-link">Leonor Alonso de Molina (1230–None)</a></li><li class="nb unc"><a href="the-tree.html#node=828" class="nb-link">Berenguela I la Grande, Queen of Castile (1180–1246)</a></li><li class="nb unc"><a href="the-tree.html#node=648" class="nb-link">Alfonso IX, King of Leon and Galicia (1171–1230)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n212">
+  <header>
+    <h3><a href="the-tree.html#node=212" class="tree-link">García Ordoñez de Aza, Count of Nájera</a></h3>
+    <span class="meta">Castilian Nobility (FMG)  ·  b. 1040  d. 1108</span>
+    <div class="bar-wrap"><div class="bar" style="width:25%"></div><span class="bar-label">1/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Conde 1077. - see below . 2. [ TERESA Ordóñez (-after 5 Nov 1124) . Alvaro Díaz y su mujer doña Teresa Ordóñez donated property to the monastery</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=213" class="nb-link">Ordoño Ordóñez, Infante of León (1015–1074)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=211" class="nb-link">Ordoño Garciez de Aza (1092–1150)</a></li><li class="nb unc"><a href="the-tree.html#node=6532" class="nb-link">Osorio García de Cabrera, conde de Cabrera e Ribeira (1085–1165)</a></li><li class="nb unc"><a href="the-tree.html#node=287" class="nb-link">Enderquina N.N (1010–None)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n2385">
+  <header>
+    <h3><a href="the-tree.html#node=2385" class="tree-link">Louis VI the Fat, King of France</a></h3>
+    <span class="meta">Capetian Dynasty (FMG)  ·  b. 1081  d. 1137</span>
+    <div class="bar-wrap"><div class="bar" style="width:25%"></div><span class="bar-label">1/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Historia Regum Francorum Monasterii Sancti Dionysii names Ludovicum regem et filiam unam Constanciam as children of Philippus rex [et] uxorem sororem Roberti Flandrensis comitis [331] . He succeeded</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1546" class="nb-link">Philip I, King of France (1052–1108)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2384" class="nb-link">Pierre, of France, Lord of Courtenay (1126–1180)</a></li><li class="nb unc"><a href="the-tree.html#node=6929" class="nb-link">Robert I, Comte de Dreux (1124–1188)</a></li><li class="nb unc"><a href="the-tree.html#node=1549" class="nb-link">Bertha of Holland (1058–1093)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n797">
+  <header>
+    <h3><a href="the-tree.html#node=797" class="tree-link">Humbert II, Count of Savoy &quot;the Fat&quot;</a></h3>
+    <span class="meta">Northern Italy (FMG)  ·  b. 1065  d. 1103</span>
+    <div class="bar-wrap"><div class="bar" style="width:25%"></div><span class="bar-label">1/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The primary source which confirms his parentage has not yet been identified. He succeeded his father in 1080 as HUMBERT II &quot;le Renforcé&quot; Comte de Maurienne et de Savoie, under the regency of his paternal grandmother. On her death in 1091, he lost much of her territories, retaining only the valley of Susa &lt;s</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=2388" class="nb-link">Adelaide de Savoie, of Maurienne (1092–1154)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=818" class="nb-link">Countess Jeanne Savoy (1040–1095)</a></li><li class="nb unc"><a href="the-tree.html#node=796" class="nb-link">Amadeus III, Count of Savoy &quot;the crusader&quot; (1095–1148)</a></li><li class="nb unc"><a href="the-tree.html#node=798" class="nb-link">Amadeus II, Count of Savoy (1046–1080)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4773">
+  <header>
+    <h3><a href="the-tree.html#node=4773" class="tree-link">Ealhswith</a></h3>
+    <span class="meta">England, Anglo-Saxon Nobility (FMG)  ·  b. 852  d. 905</span>
+    <div class="bar-wrap"><div class="bar" style="width:25%"></div><span class="bar-label">1/4 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Asser records the marriage in 868 of Alfred and &quot; a noble Mercian lady, daughter of Athelred surnamed Mucil earl of the Gaini [and] Edburga of the royal line of Mercia &quot; [155] . Roger of Hoveden records the names of her pare</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4774" class="nb-link">Æthelred &quot;Mucil&quot;, Ealdorman of the Gaini</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1298" class="nb-link">Edward I &quot;the Elder&quot;, King of The Anglo-Saxons (874–924)</a></li><li class="nb unc"><a href="the-tree.html#node=1189" class="nb-link">Ælfthryth, Countess of Flanders (868–929)</a></li><li class="nb unc"><a href="the-tree.html#node=4775" class="nb-link">Ædburh</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4533">
+  <header>
+    <h3><a href="the-tree.html#node=4533" class="tree-link">García III, el de Nájera, rey de Navarra</a></h3>
+    <span class="meta">Navarre (FMG)  ·  b. 1005  d. 1054</span>
+    <div class="bar-wrap"><div class="bar" style="width:20%"></div><span class="bar-label">1/5 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Anales Toledanos record the birth  en el mes de Noviembre  in 1016 of  el Infant fillo del Rey D. Sancho Garcia Sanchez  [373] . Bearing in mind the likely chronology of García´s illegitimate daughter Mencía, it is likely that he was born a few years earlier than 1016. Under</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=834" class="nb-link">Sancho García, Lord of Uncastillo (1030–1074)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=5516" class="nb-link">Sancha de Navarra, abadesa de San Martín de Cuevagallegos (None–1065)</a></li><li class="nb unc"><a href="the-tree.html#node=301" class="nb-link">Infanta de Navarra Urraca Garcés, Lady d&#x27;Alberite (1050–1108)</a></li><li class="nb unc"><a href="the-tree.html#node=4145" class="nb-link">Sancho III el Mayor, rey de Navarra (991–1035)</a></li><li class="nb unc"><a href="the-tree.html#node=4185" class="nb-link">Muniadona de Castilla, reina consorte de Pamplona (990–1066)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n699">
+  <header>
+    <h3><a href="the-tree.html#node=699" class="tree-link">Hugues Capet, Roi des Francs</a></h3>
+    <span class="meta">Capetian Dynasty (FMG)  ·  b. 940  d. 996</span>
+    <div class="bar-wrap"><div class="bar" style="width:20%"></div><span class="bar-label">1/5 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Rodulfus Glauber names Hugoni, Parisiensis ducis filio illius Magni Hugonis , specifying that his mother was Ottone sorore [131] . He was elected HUGUES Capet King of France by an assembly of nobles at Senlis</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=700" class="nb-link">Hugh &quot;Magnus&quot; of Paris, Count of Paris, duke of the Franks (898–956)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4724" class="nb-link">Gisèle de France (970–None)</a></li><li class="nb unc"><a href="the-tree.html#node=921" class="nb-link">Hedwige de France, Countess of Mons (969–1013)</a></li><li class="nb unc"><a href="the-tree.html#node=698" class="nb-link">Robert II Capet, &quot;the Pious&quot; king of the Franks (972–1031)</a></li><li class="nb unc"><a href="the-tree.html#node=703" class="nb-link">Hedwige of Saxony (922–958)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3880">
+  <header>
+    <h3><a href="the-tree.html#node=3880" class="tree-link">Richilde of Arles</a></h3>
+    <span class="meta">Carolingian Nobility (FMG)  ·  b. 822  d. 883</span>
+    <div class="bar-wrap"><div class="bar" style="width:20%"></div><span class="bar-label">1/5 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Annales Bertiniani record the marriage &quot; 869 VII Id Oct &quot; of &quot; sororem Bosonis Richildem &quot; and King Charles II &lt;span style=&quot;font-size:9.0pt;font-sty</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=5737" class="nb-link">Richilde, empress (None–910)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=1312" class="nb-link">Richard II, Duke of Burgundy (867–921)</a></li><li class="nb unc"><a href="the-tree.html#node=3881" class="nb-link">Boson &quot;l&#x27;Ancien&quot; d&#x27;Arles, comte de Turin, Valois &amp; d&#x27;Italie (800–855)</a></li><li class="nb unc"><a href="the-tree.html#node=3882" class="nb-link">Engeltrude (804–883)</a></li><li class="nb unc"><a href="the-tree.html#node=3870" class="nb-link">Boson d&#x27;Autun, Comte de Vienne, Dux de Provence (841–887)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n449">
+  <header>
+    <h3><a href="the-tree.html#node=449" class="tree-link">Bernat Tallaferro, Count of Besalú</a></h3>
+    <span class="meta">Catalan Nobility (FMG)  ·  b. 970  d. 1020</span>
+    <div class="bar-wrap"><div class="bar" style="width:16%"></div><span class="bar-label">1/6 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The Gesta Comitum Barcinonensium names (in order) Bernardum, Olibam et Guiffredum as the three sons of Olibano Cabretæ , specifying that Bernardus filius eius succeeded in comitatu Bisulduni [641] .  Mi</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=450" class="nb-link">Oliba Cabreta I, Count of Cerdanya (920–990)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=453" class="nb-link">Ermengarda d&#x27;Ampuries, Countess consort of Cerdanya (None–994)</a></li><li class="nb unc"><a href="the-tree.html#node=5579" class="nb-link">Constança de Besalú, comtessa consort d&#x27;Urgell (1010–1066)</a></li><li class="nb unc"><a href="the-tree.html#node=4467" class="nb-link">Ermengarda d&#x27;Ampuries, comtessa consort de Cerdanya (None–994)</a></li><li class="nb unc"><a href="the-tree.html#node=533" class="nb-link">Guillem I, Count of Besalú (998–1052)</a></li><li class="nb unc"><a href="the-tree.html#node=602" class="nb-link">Garsenda de Besalú, Vescomtessa consort of Narbona (981–1066)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n1856">
+  <header>
+    <h3><a href="the-tree.html#node=1856" class="tree-link">García I Íñiguez, King of Pamplona</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 810  d. 882</span>
+    <div class="bar-wrap"><div class="bar" style="width:16%"></div><span class="bar-label">1/6 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. The manuscript of the Codex de Roda entitled Versi domna Leodegundia regina names Leodegundiam Ordonii filiam and indicates her position as Queen of Pamplona after her marriage [250] . She has been identified as a possible second wife of &lt;a href=&quot;NAVARRE.htm#</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=1884" class="nb-link">Íñigo (Enneco) Arista de Pamplona, 1st King of Pamplona (790–851)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=2854" class="nb-link">Sancho Garcés de Pamplona (835–None)</a></li><li class="nb unc"><a href="the-tree.html#node=310" class="nb-link">Oneca (Iñiga) García de Pamplona (847–931)</a></li><li class="nb unc"><a href="the-tree.html#node=4216" class="nb-link">Jimena Garcés de Pamplona, reina consorte de Asturias (855–912)</a></li><li class="nb unc"><a href="the-tree.html#node=1885" class="nb-link">Oneca Velazquez de Pamplona (None–816)</a></li><li class="nb unc"><a href="the-tree.html#node=1855" class="nb-link">Fortún Garcés el Monje, King of Pamplona (830–922)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4182">
+  <header>
+    <h3><a href="the-tree.html#node=4182" class="tree-link">Diego Muñoz, 1er. Conde de Saldaña</a></h3>
+    <span class="meta">Spanish Nobility, Early Medieval (FMG)  ·  b. 900  d. 951</span>
+    <div class="bar-wrap"><div class="bar" style="width:16%"></div><span class="bar-label">1/6 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Ranimirus rex, Ossorio Munniz, Didacus Munniz, Gisubado Braolioniz, Virmudus Nunniz, Abaiube iben Tepite, Recemirus iben December donated property to Sahagún by charter dated 11 Nov 944 [1318] . Conde de Saldaña.</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4204" class="nb-link">Gómez Díaz, Conde de Saldaña y Liébana (None–986)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=418" class="nb-link">Fernándo Díaz (939–1003)</a></li><li class="nb unc"><a href="the-tree.html#node=843" class="nb-link">Tigridia Díaz de Saldaña (960–None)</a></li><li class="nb unc"><a href="the-tree.html#node=245" class="nb-link">Munio Gómez</a></li><li class="nb unc"><a href="the-tree.html#node=248" class="nb-link">N.N. Guterres de Coimbra</a></li><li class="nb unc"><a href="the-tree.html#node=317" class="nb-link">Elvira Díaz (930–976)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n3831">
+  <header>
+    <h3><a href="the-tree.html#node=3831" class="tree-link">Charles Martel</a></h3>
+    <span class="meta">Merovingian Nobility (FMG)  ·  b. 676  d. 741</span>
+    <div class="bar-wrap"><div class="bar" style="width:16%"></div><span class="bar-label">1/6 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. Fredegar (Continuator) records that Pépin married another wife (&quot; aliam duxit uxorem &quot;) &quot; nobilem Chalpaida &quot; by whom he had &quot; filium Carlo &quot; [182] . He succeeded his father in 717 as maior domus in Austrasia. &lt;/</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=3832" class="nb-link">Pépin ll &quot;the Fat&quot; d&#x27;Héristal, Mayor of the Palace of Austrasia (640–714)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=4737" class="nb-link">N.N. d&#x27;Austrasie (740–None)</a></li><li class="nb unc"><a href="the-tree.html#node=3919" class="nb-link">Bernard, count &amp; Abbot of St. Quentin (725–784)</a></li><li class="nb unc"><a href="the-tree.html#node=3892" class="nb-link">Landrade of Hesbaye (715–None)</a></li><li class="nb unc"><a href="the-tree.html#node=3830" class="nb-link">Pépin III, King of the Franks (715–768)</a></li><li class="nb unc"><a href="the-tree.html#node=3835" class="nb-link">Alpais (654–705)</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4148">
+  <header>
+    <h3><a href="the-tree.html#node=4148" class="tree-link">Sancho Garcés, 1er. Rey de Pamplona</a></h3>
+    <span class="meta">Asturias-León (FMG)  ·  b. 865  d. 925</span>
+    <div class="bar-wrap"><div class="bar" style="width:14%"></div><span class="bar-label">1/7 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. As discussed above, a charter dated 21 Feb 897 suggests that King Ordoño IIs sons Sancho and Alfonso may not have been born from the kings known wife Elvira Menéndez. Sanchos birth date range is estimated on the basis of this charter, which names his younger brother Ramiro, although as noted above there is a possibility that the document was a later creation and that the date should not be co</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=4169" class="nb-link">Sancha Sánchez de Navarra, reina consorte de León (900–952)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=226" class="nb-link">García Jiménez de Pamplona (835–885)</a></li><li class="nb unc"><a href="the-tree.html#node=227" class="nb-link">Dadildis de Pallars (855–884)</a></li><li class="nb unc"><a href="the-tree.html#node=241" class="nb-link">Velasquita Sánchez de Pamplona (910–None)</a></li><li class="nb unc"><a href="the-tree.html#node=4147" class="nb-link">García I Sánchez I de Pamplona, rey de Navarra (919–970)</a></li><li class="nb unc"><a href="the-tree.html#node=6548" class="nb-link">Urraca de Navarra, reina consorte de León (None–956)</a></li><li class="nb unc"><a href="the-tree.html#node=348" class="nb-link">Lupa Sánchez</a></li></ul></div>
+  </section>
+</article>
+<article class="card" id="n4164">
+  <header>
+    <h3><a href="the-tree.html#node=4164" class="tree-link">Fernán González, conde de Castilla</a></h3>
+    <span class="meta">Castile (FMG)  ·  b. 910  d. 970</span>
+    <div class="bar-wrap"><div class="bar" style="width:14%"></div><span class="bar-label">1/7 neighbors confirmed</span></div>
+  </header>
+  <blockquote class="bio">. His date of birth is discussed above under his mother.  Moma Donna cometessa cum filiis meis  donated delineated land to Santa María de Lara by charter dated 28 Jan 923, confirmed by  Fredinando Gundesalviz, Ramiro Gundisalviz  [187] . His parentage is confirmed by the charter of his</blockquote>
+  <section class="neighbors">
+    <div class="nb-group">
+      <h4 class="conf-head">Confirmed in bio</h4>
+      <ul><li class="nb conf"><a href="the-tree.html#node=6521" class="nb-link">Gonzalo Fernández de Lara, Conde de Lara, Bureva y Aza (932–970)</a></li></ul>
+    </div>
+    <div class="nb-group"><h4 class="unc-head">Not found in bio</h4><ul><li class="nb unc"><a href="the-tree.html#node=291" class="nb-link">Pedro de Palencia, Lord of Aça</a></li><li class="nb unc"><a href="the-tree.html#node=4163" class="nb-link">Urraca Fernández de Castilla, reina consorte de Navarra (None–1007)</a></li><li class="nb unc"><a href="the-tree.html#node=4168" class="nb-link">Muniadomna de Lara, Condesa consorte de Castilla (875–935)</a></li><li class="nb unc"><a href="the-tree.html#node=4206" class="nb-link">Muniadona Fernández, condesa de Castilla (940–1015)</a></li><li class="nb unc"><a href="the-tree.html#node=4187" class="nb-link">García I &#x27;el de las Manos Blancas&#x27; Fernández, conde de Castilla (938–995)</a></li><li class="nb unc"><a href="the-tree.html#node=252" class="nb-link">Gonzalo Fernández de Lara, Count of Burgos (863–932)</a></li></ul></div>
+  </section>
+</article>
+</main>
+</body>
+</html>

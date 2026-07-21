@@ -235,27 +235,75 @@
     .featured-trio { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 44px; }
     @media(max-width:900px){ .featured-trio{grid-template-columns:repeat(2,1fr);} }
     @media(max-width:560px){ .featured-trio{grid-template-columns:1fr;} }
-    .feat-maternal { display:block; margin-top:18px; background:var(--card); border:1px solid rgba(216,175,67,.28); border-radius:6px; padding:28px 32px; text-decoration:none; color:inherit; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
-    .feat-maternal::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),#7ec8e3,var(--gold)); }
-    .feat-maternal:hover { border-color:rgba(126,200,227,.5); transform:translateY(-2px); }
-    .feat-maternal .mat-header { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; }
-    .feat-maternal .mat-text .feat-label { font:600 11px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.28em; text-transform:uppercase; color:#7ec8e3; opacity:.85; }
-    .feat-maternal .mat-text .feat-name { display:block; font-size:22px; font-weight:400; color:var(--parchment,#e9dec3); margin:10px 0 8px; }
-    .feat-maternal .mat-text .feat-desc { font-size:14px; line-height:1.6; color:var(--muted); max-width:560px; }
-    .feat-maternal .mat-stat { text-align:right; flex:none; }
-    .feat-maternal .mat-stat .feat-n { display:block; font:400 48px/1 "Iowan Old Style",Palatino,serif; color:#7ec8e3; }
-    .feat-maternal .mat-stat small { font:500 10px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
-    .feat-maternal .feat-link { display:inline-block; margin-top:16px; font:500 12px/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.15em; text-transform:uppercase; color:#7ec8e3; }
-    @media(max-width:600px){ .feat-maternal .mat-header{flex-direction:column;} .feat-maternal .mat-stat{text-align:left;} }
-    .feat-second-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-top:18px; }
-    @media(max-width:1000px){ .feat-second-row{grid-template-columns:1fr 1fr;} }
-    @media(max-width:600px){ .feat-second-row{grid-template-columns:1fr;} }
-    .feat-deep-names { display:block; background:var(--card); border:1px solid rgba(200,162,69,.3); border-radius:6px; padding:28px 32px; text-decoration:none; color:inherit; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
-    .feat-deep-names::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),transparent); }
-    .feat-deep-names:hover { border-color:rgba(200,162,69,.55); transform:translateY(-2px); }
-    .feat-chronicles { display:block; background:var(--card); border:1px solid rgba(111,168,192,.25); border-radius:6px; padding:28px 32px; text-decoration:none; color:inherit; position:relative; overflow:hidden; transition:border-color .2s,transform .2s; }
-    .feat-chronicles::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#6fa8c0,transparent); }
-    .feat-chronicles:hover { border-color:rgba(111,168,192,.5); transform:translateY(-2px); }
+    /* research rail */
+    .research-rail {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      margin-top: 0;
+      border: 1px solid rgba(200,162,69,.14);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--card);
+    }
+    .rail-item {
+      display: block;
+      padding: 20px 22px 18px;
+      text-decoration: none;
+      color: inherit;
+      border-right: 1px solid rgba(200,162,69,.1);
+      position: relative;
+      transition: background .15s;
+    }
+    .rail-item:last-child { border-right: none; }
+    .rail-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .rail-item:hover { background: rgba(255,255,255,.025); }
+    .rail-n {
+      display: block;
+      font: 400 32px/1 "Iowan Old Style",Palatino,ui-serif,serif;
+      margin-bottom: 7px;
+    }
+    .rail-name {
+      display: block;
+      font: 600 13px/1.25 ui-sans-serif,system-ui,sans-serif;
+      color: #e4dbc6;
+      margin-bottom: 4px;
+    }
+    .rail-sub {
+      display: block;
+      font: 400 10.5px/1 ui-sans-serif,system-ui,sans-serif;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .rail-arrow {
+      display: block;
+      font: 500 10px/1 ui-sans-serif,system-ui,sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-top: 14px;
+      opacity: .7;
+      transition: opacity .15s;
+    }
+    .rail-item:hover .rail-arrow { opacity: 1; }
+    @media(max-width:500px)  { .research-rail { grid-template-columns: 1fr; } .rail-item { border-right:none; border-bottom:1px solid rgba(200,162,69,.1); } .rail-item:last-child { border-bottom:none; } }
+    .rail-item:nth-child(1)::before { background:#7ec8e3; }
+    .rail-item:nth-child(1) .rail-n, .rail-item:nth-child(1) .rail-arrow { color:#7ec8e3; }
+    .rail-item:nth-child(2)::before { background:var(--gold); }
+    .rail-item:nth-child(2) .rail-n, .rail-item:nth-child(2) .rail-arrow { color:var(--gold); }
+    .rail-item:nth-child(3)::before { background:#6fa8c0; }
+    .rail-item:nth-child(3) .rail-n, .rail-item:nth-child(3) .rail-arrow { color:#6fa8c0; }
+    .rail-item:nth-child(4)::before { background:#4a8c5c; }
+    .rail-item:nth-child(4) .rail-n, .rail-item:nth-child(4) .rail-arrow { color:#4a8c5c; }
+    .rail-item:nth-child(5)::before { background:#9070c8; }
+    .rail-item:nth-child(5) .rail-n, .rail-item:nth-child(5) .rail-arrow { color:#9070c8; }
+    .rail-item:nth-child(6)::before { background:#d4a450; }
+    .rail-item:nth-child(6) .rail-n, .rail-item:nth-child(6) .rail-arrow { color:#d4a450; }
+    @media(max-width:900px)  { .research-rail { grid-template-columns: repeat(3,1fr); } .rail-item:nth-child(3),.rail-item:nth-child(6) { border-right:none; } }
     .feat-card {
       background: var(--card); border: 1px solid rgba(216,175,67,.22); border-radius: 12px;
       padding: 28px 24px; text-decoration: none; color: inherit;
@@ -355,6 +403,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <p class="scroll-hint">↓ &nbsp; scroll to learn more</p>
 </section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 24px">
+  <div class="research-rail reveal">
+    <a class="rail-item" href="ancestor_mappings/maternal-tree.html">
+      <span class="rail-n">264</span>
+      <span class="rail-name">Maternal Lineage</span>
+      <span class="rail-sub">Elbertse · Netherlands · Utrecht</span>
+      <span class="rail-arrow">Explore →</span>
+    </a>
+    <a class="rail-item" href="ancestor_mappings/deep-names.html">
+      <span class="rail-n">37</span>
+      <span class="rail-name">The Deep Names</span>
+      <span class="rail-sub">Etymology · Origins · Pedigree weight</span>
+      <span class="rail-arrow">Explore →</span>
+    </a>
+    <a class="rail-item" href="ancestor_mappings/chronicles.html">
+      <span class="rail-n">711</span>
+      <span class="rail-name">Chronicle Records</span>
+      <span class="rail-sub">FMG · Charter citations · Burials</span>
+      <span class="rail-arrow">Browse →</span>
+    </a>
+    <a class="rail-item" href="ancestor_mappings/validate.html">
+      <span class="rail-n">155</span>
+      <span class="rail-name">Chronicle Validation</span>
+      <span class="rail-sub">Bio cross-reference · Confirmed links</span>
+      <span class="rail-arrow">View →</span>
+    </a>
+    <a class="rail-item" href="ancestor_mappings/surname-flow.html">
+      <span class="rail-n">389</span>
+      <span class="rail-name">Surname Flow</span>
+      <span class="rail-sub">389 surnames · 13 centuries · Gantt</span>
+      <span class="rail-arrow">Explore →</span>
+    </a>
+    <a class="rail-item" href="ancestor_mappings/pedigree-chart.html">
+      <span class="rail-n">5,118</span>
+      <span class="rail-name">Pedigree Chart</span>
+      <span class="rail-sub">19 dynasty columns · 48 generations</span>
+      <span class="rail-arrow">View →</span>
+    </a>
+  </div>
+</div>
 
 <hr class="divider">
 
@@ -764,50 +853,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </a>
     </div>
 
-      <div class="feat-second-row reveal">
-        <a class="feat-maternal" href="ancestor_mappings/maternal-tree.html">
-          <div class="mat-header">
-            <div class="mat-text">
-              <span class="feat-label">Netherlands · Elbertse · DeBruyn · Utrecht</span>
-              <span class="feat-name">Maternal Lineage — Elbertse Family Tree</span>
-              <span class="feat-desc">Maternal ancestry of Antonio Jasso through Maria Margaret Elbertse — the Dutch side of the family, rooted in Utrecht, Netherlands, tracing the Elbertse and DeBruyn lines.</span>
-              <span class="feat-link">Explore maternal tree →</span>
-            </div>
-            <div class="mat-stat">
-              <span class="feat-n">264</span>
-              <small>Persons</small>
-            </div>
-          </div>
-        </a>
-        <a class="feat-deep-names" href="ancestor_mappings/deep-names.html">
-          <div class="mat-header">
-            <div class="mat-text">
-              <span class="feat-label" style="color:#c8a245;opacity:.8">Etymology · Origins · Pedigree Weight</span>
-              <span class="feat-name" style="color:#e4dbc6">The Deep Names</span>
-              <span class="feat-desc">37 ancient given names in the paternal tree — Norse, Visigothic, Frankish, and Iberian — where each name comes from, and which ancestors actually carried it.</span>
-              <span class="feat-link" style="color:#c8a245">Explore name origins →</span>
-            </div>
-            <div class="mat-stat">
-              <span class="feat-n" style="color:#c8a245">37</span>
-              <small>Names</small>
-            </div>
-          </div>
-        </a>
-        <a class="feat-chronicles" href="ancestor_mappings/chronicles.html">
-          <div class="mat-header">
-            <div class="mat-text">
-              <span class="feat-label" style="color:#6fa8c0;opacity:.8">Primary Sources · Charter Citations · FMG</span>
-              <span class="feat-name" style="color:#e4dbc6">Chronicle Records</span>
-              <span class="feat-desc">33 ancestors matched to the Foundation for Medieval Genealogy corpus — charter witnesses, chronicle citations, and burial records from medieval Spanish, Galician, and Byzantine sources.</span>
-              <span class="feat-link" style="color:#6fa8c0">Browse records →</span>
-            </div>
-            <div class="mat-stat">
-              <span class="feat-n" style="color:#6fa8c0">33</span>
-              <small>Records</small>
-            </div>
-          </div>
-        </a>
-      </div>
   </div>
 </section>
 
@@ -827,6 +872,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="roadmap-item"><span class="roadmap-icon">✅</span>Extended Iberian nobility — 20+ branches imported</div>
       <div class="roadmap-item"><span class="roadmap-icon">🔄</span>Additional maternal and paternal branches — in progress</div>
       <div class="roadmap-item"><span class="roadmap-icon">✅</span>Catálogo de Pasajeros a Indias (1509–1599) — 19,464 records indexed</div>
+      <div class="roadmap-item"><span class="roadmap-icon">✅</span>711 FMG chronicle records + bio cross-reference validation</div>
+      <div class="roadmap-item"><span class="roadmap-icon">✅</span>Pedigree chart — 5,118 ancestors across 19 dynasty columns</div>
+      <div class="roadmap-item"><span class="roadmap-icon">✅</span>Patrilineal dynasty chart — birth-year axis, 507 male lineage chains</div>
       <div class="roadmap-item"><span class="roadmap-icon">🔄</span>Colonial Mexico records — expanding</div>
       <div class="roadmap-item"><span class="roadmap-icon">📋</span>DNA cross-reference — planned</div>
       <div class="roadmap-item"><span class="roadmap-icon">📋</span>Living relatives network — planned</div>

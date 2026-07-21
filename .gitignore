@@ -26,3 +26,10 @@ private/
 
 # Local-only visualizations
 pedigree_collapse_viz.html
+
+# FMG source HTML pages (copyrighted, re-downloadable via fetch_fmg.py)
+history/
+
+# Reference images and local dev scripts
+Figma_Family_Tree.png
+fetch_fmg.py
